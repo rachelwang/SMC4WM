@@ -1,7 +1,3 @@
-<a href="https://scan.coverity.com/projects/1715">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/1715/badge.svg"/>
-</a>
 
 ``SMC4WM`` is a Statistical Model Checker for some types of probabilistic graphical models. 
 
