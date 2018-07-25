@@ -15,9 +15,12 @@ Compile
 Usage
 =====
 
-The command line:
+The command line is as follows:
 
-"      SMC_wm <testfile> <modelfile> <propertyfile>", where
+        KaStat_sq <testfile> <modelfile> <ruleAname> <ruleBname> <influType> <KaSim> <simulationTime> <KaFlow>
+        
+where:
+
     
     "      <testfile> is a text file containing a sequence of test specifications, give the path to it;"
     
