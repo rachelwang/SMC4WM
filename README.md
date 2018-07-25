@@ -15,7 +15,7 @@ Compile
 Usage
 =====
 
-The commend line:
+The command line:
 
 " SMC_wm <testfile> <modelfile> <propertyfile>", where
     
