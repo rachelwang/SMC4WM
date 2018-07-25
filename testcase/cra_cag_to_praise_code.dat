@@ -1,0 +1,1924 @@
+random NonCereals_Food_aid_shipments : Integer -> Real;
+random Beans_dry_Production : Integer -> Real;
+random Closed_shrubland_Burned_Area : Integer -> Real;
+random conflict : Integer -> Real;
+random conflict' : Integer -> Real;
+random food_insecurity : Integer -> Real;
+random food_insecurity' : Integer -> Real;
+random intervention : Integer -> Real;
+random intervention' : Integer -> Real;
+random crop_technology : Integer -> Real;
+random crop_technology' : Integer -> Real;
+random precipitation : Integer -> Real;
+random precipitation' : Integer -> Real;
+random flooding : Integer -> Real;
+random flooding' : Integer -> Real;
+
+
+random beta_conflict_food_insecurity : Real;
+random beta_conflict_intervention : Real;
+random beta_conflict_crop_technology : Real;
+random beta_precipitation_food_insecurity : Real;
+random beta_precipitation_flooding : Real;
+for all t in Integer :
+        conflict(t+1) = conflict(t)
+                 + beta_conflict_food_insecurity * food_insecurity'(t)
+                 + beta_conflict_intervention * intervention'(t)
+                 + beta_conflict_crop_technology * crop_technology'(t)
+                 + conflict'(t);
+for all t in Integer : NonCereals_Food_aid_shipments(t) = Normal(29265.0 * intervention(t), 2926.5);
+for all t in Integer : Beans_dry_Production(t) = Normal(6000.0 * precipitation(t), 600.0);
+for all t in Integer : Closed_shrubland_Burned_Area(t) = Normal(121929.0437 * flooding(t), 12192.90437);
+
+
+
+for all t in Integer :
+        food_insecurity(t+1) = food_insecurity(t)
+                 + food_insecurity'(t);
+
+for all t in Integer :
+        intervention(t+1) = intervention(t)
+                 + intervention'(t);
+
+for all t in Integer :
+        crop_technology(t+1) = crop_technology(t)
+                 + crop_technology'(t);
+
+for all t in Integer :
+        precipitation(t+1) = precipitation(t)
+                 + beta_precipitation_food_insecurity * food_insecurity'(t)
+                 + beta_precipitation_flooding * flooding'(t)
+                 + precipitation'(t);
+
+for all t in Integer :
+        flooding(t+1) = flooding(t)
+                 + flooding'(t);
+
+if beta_conflict_food_insecurity <= -3.11336722818822 then 0
+else
+if beta_conflict_food_insecurity <= -3.0502966055283958 then 7.990534121802594e-05
+else
+if beta_conflict_food_insecurity <= -2.987225982868571 then 0.00010312435158738152
+else
+if beta_conflict_food_insecurity <= -2.9241553602087462 then 8.816795494429565e-05
+else
+if beta_conflict_food_insecurity <= -2.861084737548922 then 6.593234088372799e-05
+else
+if beta_conflict_food_insecurity <= -2.7980141148890976 then 5.322326819247656e-05
+else
+if beta_conflict_food_insecurity <= -2.734943492229273 then 4.4846472618990145e-05
+else
+if beta_conflict_food_insecurity <= -2.671872869569448 then 2.3209620391684518e-05
+else
+if beta_conflict_food_insecurity <= -2.6088022469096237 then 1.8084185109495994e-05
+else
+if beta_conflict_food_insecurity <= -2.5457316242497994 then 3.669773557321539e-05
+else
+if beta_conflict_food_insecurity <= -2.4826610015899746 then 3.5887422440842544e-05
+else
+if beta_conflict_food_insecurity <= -2.41959037893015 then 3.2772740358705194e-05
+else
+if beta_conflict_food_insecurity <= -2.3565197562703255 then 9.77447252882952e-05
+else
+if beta_conflict_food_insecurity <= -2.293449133610501 then 0.00016049298043347627
+else
+if beta_conflict_food_insecurity <= -2.2303785109506764 then 9.871437666275912e-05
+else
+if beta_conflict_food_insecurity <= -2.1673078882908516 then 3.302644971306938e-05
+else
+if beta_conflict_food_insecurity <= -2.1042372656310273 then 3.5739304938104056e-05
+else
+if beta_conflict_food_insecurity <= -2.041166642971203 then 3.685564948889876e-05
+else
+if beta_conflict_food_insecurity <= -1.9780960203113782 then 1.8207815031346046e-05
+else
+if beta_conflict_food_insecurity <= -1.9150253976515537 then 2.3001987308104537e-05
+else
+if beta_conflict_food_insecurity <= -1.8519547749917291 then 4.468308968868093e-05
+else
+if beta_conflict_food_insecurity <= -1.7888841523319046 then 5.315791450334734e-05
+else
+if beta_conflict_food_insecurity <= -1.72581352967208 then 6.580949143977214e-05
+else
+if beta_conflict_food_insecurity <= -1.6627429070122555 then 8.989445911247332e-05
+else
+if beta_conflict_food_insecurity <= -1.599672284352431 then 0.00012425397544704028
+else
+if beta_conflict_food_insecurity <= -1.5366016616926064 then 0.00017288249787765551
+else
+if beta_conflict_food_insecurity <= -1.4735310390327818 then 0.00021816047970074545
+else
+if beta_conflict_food_insecurity <= -1.4104604163729573 then 0.00023046114304617275
+else
+if beta_conflict_food_insecurity <= -1.3473897937131327 then 0.00022099053147019946
+else
+if beta_conflict_food_insecurity <= -1.2843191710533082 then 0.0001843400351958663
+else
+if beta_conflict_food_insecurity <= -1.2212485483934836 then 0.0002119929200247533
+else
+if beta_conflict_food_insecurity <= -1.158177925733659 then 0.0002662768645998078
+else
+if beta_conflict_food_insecurity <= -1.0951073030738345 then 0.0002430283198082425
+else
+if beta_conflict_food_insecurity <= -1.0320366804140098 then 0.0002251364466833273
+else
+if beta_conflict_food_insecurity <= -0.9689660577541854 then 0.0002402244080893022
+else
+if beta_conflict_food_insecurity <= -0.9058954350943611 then 0.00026723299376586697
+else
+if beta_conflict_food_insecurity <= -0.8428248124345363 then 0.00026591862855954455
+else
+if beta_conflict_food_insecurity <= -0.7797541897747116 then 0.00023406588761193687
+else
+if beta_conflict_food_insecurity <= -0.7166835671148872 then 0.00019288125097403062
+else
+if beta_conflict_food_insecurity <= -0.6536129444550629 then 0.0002065647883703095
+else
+if beta_conflict_food_insecurity <= -0.5905423217952381 then 0.0003449047156646578
+else
+if beta_conflict_food_insecurity <= -0.5274716991354134 then 0.0005769079333679588
+else
+if beta_conflict_food_insecurity <= -0.46440107647558904 then 0.0007857177189882116
+else
+if beta_conflict_food_insecurity <= -0.4013304538157647 then 0.0009360181545021862
+else
+if beta_conflict_food_insecurity <= -0.33825983115593994 then 0.0011439989839489295
+else
+if beta_conflict_food_insecurity <= -0.27518920849611517 then 0.00157666556998704
+else
+if beta_conflict_food_insecurity <= -0.21211858583629084 then 0.002306975061279781
+else
+if beta_conflict_food_insecurity <= -0.1490479631764665 then 0.00335873144591495
+else
+if beta_conflict_food_insecurity <= -0.08597734051664174 then 0.005522054999798071
+else
+if beta_conflict_food_insecurity <= -0.02290671785681697 then 0.011056697639629631
+else
+if beta_conflict_food_insecurity <= 0.040163904803007355 then 0.02166024732005298
+else
+if beta_conflict_food_insecurity <= 0.10323452746283168 then 0.030319688099960294
+else
+if beta_conflict_food_insecurity <= 0.16630515012265645 then 0.030086184557751517
+else
+if beta_conflict_food_insecurity <= 0.22937577278248122 then 0.027608635905871454
+else
+if beta_conflict_food_insecurity <= 0.29244639544230555 then 0.02759753735760861
+else
+if beta_conflict_food_insecurity <= 0.3555170181021299 then 0.02988418955934502
+else
+if beta_conflict_food_insecurity <= 0.41858764076195465 then 0.03373317428575886
+else
+if beta_conflict_food_insecurity <= 0.4816582634217794 then 0.03722398325831527
+else
+if beta_conflict_food_insecurity <= 0.5447288860816037 then 0.03933231398850756
+else
+if beta_conflict_food_insecurity <= 0.6077995087414281 then 0.04085756462259847
+else
+if beta_conflict_food_insecurity <= 0.6708701314012528 then 0.04283181801539882
+else
+if beta_conflict_food_insecurity <= 0.7339407540610776 then 0.044918019256635355
+else
+if beta_conflict_food_insecurity <= 0.7970113767209019 then 0.04707311830154279
+else
+if beta_conflict_food_insecurity <= 0.8600819993807263 then 0.047928785809500704
+else
+if beta_conflict_food_insecurity <= 0.923152622040551 then 0.04629478415087768
+else
+if beta_conflict_food_insecurity <= 0.9862232447003758 then 0.04415198755254747
+else
+
+if beta_conflict_food_insecurity <= 1.0492938673602006 then 0.04205947180939445
+
+else
+
+if beta_conflict_food_insecurity <= 1.1123644900200245 then 0.04026855998246083
+
+else
+
+if beta_conflict_food_insecurity <= 1.1754351126798492 then 0.03869966267635442
+
+else
+
+if beta_conflict_food_insecurity <= 1.238505735339674 then 0.036086378645857564
+
+else
+
+if beta_conflict_food_insecurity <= 1.301576357999498 then 0.032248919865826356
+
+else
+
+if beta_conflict_food_insecurity <= 1.3646469806593227 then 0.028790516660412033
+
+else
+
+if beta_conflict_food_insecurity <= 1.4277176033191474 then 0.02731671556188353
+
+else
+
+if beta_conflict_food_insecurity <= 1.4907882259789722 then 0.028289783387283537
+
+else
+
+if beta_conflict_food_insecurity <= 1.553858848638797 then 0.030947812235477986
+
+else
+
+if beta_conflict_food_insecurity <= 1.6169294712986209 then 0.02810791566390997
+
+else
+
+if beta_conflict_food_insecurity <= 1.6800000939584456 then 0.017358910181246384
+
+else
+
+if beta_conflict_food_insecurity <= 1.7430707166182704 then 0.008428293731152217
+
+else
+
+if beta_conflict_food_insecurity <= 1.8061413392780943 then 0.004487246987480176
+
+else
+
+if beta_conflict_food_insecurity <= 1.869211961937919 then 0.002912734215914152
+
+else
+
+if beta_conflict_food_insecurity <= 1.9322825845977438 then 0.002006620203764132
+
+else
+
+if beta_conflict_food_insecurity <= 1.9953532072575686 then 0.0013826363519581063
+
+else
+
+if beta_conflict_food_insecurity <= 2.0584238299173934 then 0.0010497313546072294
+
+else
+
+if beta_conflict_food_insecurity <= 2.1214944525772172 then 0.0008825309221660103
+
+else
+
+if beta_conflict_food_insecurity <= 2.184565075237042 then 0.0007175753166604606
+
+else
+
+if beta_conflict_food_insecurity <= 2.247635697896867 then 0.0004874789454070824
+
+else
+
+if beta_conflict_food_insecurity <= 2.3107063205566907 then 0.0002788067162665184
+
+else
+
+if beta_conflict_food_insecurity <= 2.3737769432165154 then 0.00018912669619485897
+
+else
+
+if beta_conflict_food_insecurity <= 2.43684756587634 then 0.00020666755197903475
+
+else
+
+if beta_conflict_food_insecurity <= 2.499918188536165 then 0.0002479816449380058
+
+else
+
+if beta_conflict_food_insecurity <= 2.5629888111959898 then 0.0002713193682218846
+
+else
+
+if beta_conflict_food_insecurity <= 2.6260594338558136 then 0.0002580177668777365
+
+else
+
+if beta_conflict_food_insecurity <= 2.6891300565156384 then 0.00023239100755952368
+
+else
+
+if beta_conflict_food_insecurity <= 2.752200679175463 then 0.0002264384697875014
+
+else
+
+if beta_conflict_food_insecurity <= 2.815271301835287 then 0.00025718936906732093
+
+else
+
+if beta_conflict_food_insecurity <= 2.878341924495112 then 0.0002540152646433778
+
+else
+
+if beta_conflict_food_insecurity <= 2.9414125471549366 then 0.00019067433497213236
+
+else
+
+if beta_conflict_food_insecurity <= 3.0044831698147614 then 0.00019649901362795463
+
+else
+
+if beta_conflict_food_insecurity <= 3.067553792474586 then 0.00022712212576566116
+
+else
+
+if beta_conflict_food_insecurity <= 3.1306244151344105 then 0.00021583144101675552
+
+else 0;
+
+if beta_conflict_intervention <= -3.1306244151344105 then 0
+
+else
+
+if beta_conflict_intervention <= -3.0675537924745857 then 0.00014438286334887855
+
+else
+
+if beta_conflict_intervention <= -3.0044831698147614 then 0.0001985437629456546
+
+else
+
+if beta_conflict_intervention <= -2.941412547154937 then 0.00021378306145962756
+
+else
+
+if beta_conflict_intervention <= -2.8783419244951123 then 0.00020468881616730937
+
+else
+
+if beta_conflict_intervention <= -2.8152713018352875 then 0.00021021307478373446
+
+else
+
+if beta_conflict_intervention <= -2.752200679175463 then 0.00023716128276200926
+
+else
+
+if beta_conflict_intervention <= -2.689130056515639 then 0.00024635104794039055
+
+else
+
+if beta_conflict_intervention <= -2.626059433855814 then 0.00023691455904763866
+
+else
+
+if beta_conflict_intervention <= -2.5629888111959893 then 0.00023899760629115087
+
+else
+
+if beta_conflict_intervention <= -2.499918188536165 then 0.000253798169402395
+
+else
+
+if beta_conflict_intervention <= -2.4368475658763407 then 0.0002593883672813414
+
+else
+
+if beta_conflict_intervention <= -2.373776943216516 then 0.00024227857268741394
+
+else
+
+if beta_conflict_intervention <= -2.310706320556691 then 0.0002167758085755669
+
+else
+
+if beta_conflict_intervention <= -2.247635697896867 then 0.0002259312029686481
+
+else
+
+if beta_conflict_intervention <= -2.1845650752370425 then 0.0003186178597347324
+
+else
+
+if beta_conflict_intervention <= -2.1214944525772177 then 0.0004957789136002198
+
+else
+
+if beta_conflict_intervention <= -2.058423829917393 then 0.0006991059550541187
+
+else
+
+if beta_conflict_intervention <= -1.9953532072575686 then 0.000886800433779438
+
+else
+
+if beta_conflict_intervention <= -1.932282584597744 then 0.001109195140756031
+
+else
+
+if beta_conflict_intervention <= -1.8692119619379195 then 0.001485181938848383
+
+else
+
+if beta_conflict_intervention <= -1.806141339278095 then 0.0021251313670796034
+
+else
+
+if beta_conflict_intervention <= -1.7430707166182704 then 0.003204723140671577
+
+else
+
+if beta_conflict_intervention <= -1.6800000939584459 then 0.0053832027008029444
+
+else
+
+if beta_conflict_intervention <= -1.6169294712986213 then 0.010052077041074126
+
+else
+
+if beta_conflict_intervention <= -1.5538588486387968 then 0.017807599760837012
+
+else
+
+if beta_conflict_intervention <= -1.4907882259789722 then 0.02562206080679982
+
+else
+
+if beta_conflict_intervention <= -1.4277176033191477 then 0.02910207399313063
+
+else
+
+if beta_conflict_intervention <= -1.364646980659323 then 0.02868985851828806
+
+else
+
+if beta_conflict_intervention <= -1.3015763579994986 then 0.028163880826270454
+
+else
+
+if beta_conflict_intervention <= -1.238505735339674 then 0.02947823093769295
+
+else
+
+if beta_conflict_intervention <= -1.1754351126798495 then 0.032388632001928666
+
+else
+
+if beta_conflict_intervention <= -1.112364490020025 then 0.03570007742017884
+
+else
+
+if beta_conflict_intervention <= -1.0492938673602001 then 0.03835453670067806
+
+else
+
+if beta_conflict_intervention <= -0.9862232447003758 then 0.04030983437822834
+
+else
+
+if beta_conflict_intervention <= -0.9231526220405515 then 0.04215719272908666
+
+else
+
+if beta_conflict_intervention <= -0.8600819993807267 then 0.044157615568402184
+
+else
+
+if beta_conflict_intervention <= -0.7970113767209019 then 0.046062442331469354
+
+else
+
+if beta_conflict_intervention <= -0.7339407540610776 then 0.04712295216808852
+
+else
+
+if beta_conflict_intervention <= -0.6708701314012533 then 0.0466047501407229
+
+else
+
+if beta_conflict_intervention <= -0.6077995087414285 then 0.04489789149141945
+
+else
+
+if beta_conflict_intervention <= -0.5447288860816037 then 0.04288005265268183
+
+else
+
+if beta_conflict_intervention <= -0.4816582634217794 then 0.04097571135024114
+
+else
+
+if beta_conflict_intervention <= -0.4185876407619551 then 0.03912674430272751
+
+else
+
+if beta_conflict_intervention <= -0.3555170181021303 then 0.0367810446980935
+
+else
+
+if beta_conflict_intervention <= -0.29244639544230555 then 0.033633291775649984
+
+else
+
+if beta_conflict_intervention <= -0.22937577278248122 then 0.030417002905213528
+
+else
+
+if beta_conflict_intervention <= -0.1663051501226569 then 0.028414699536881076
+
+else
+
+if beta_conflict_intervention <= -0.10323452746283213 then 0.028341821213096256
+
+else
+
+if beta_conflict_intervention <= -0.040163904803007355 then 0.0292060383044488
+
+else
+
+if beta_conflict_intervention <= 0.02290671785681697 then 0.027523187160977024
+
+else
+
+if beta_conflict_intervention <= 0.0859773405166413 then 0.020955252740826727
+
+else
+
+if beta_conflict_intervention <= 0.14904796317646607 then 0.012614642584703526
+
+else
+
+if beta_conflict_intervention <= 0.21211858583629084 then 0.006732092318715535
+
+else
+
+if beta_conflict_intervention <= 0.27518920849611517 then 0.00381771907410671
+
+else
+
+if beta_conflict_intervention <= 0.3382598311559395 then 0.0024529596487051653
+
+else
+
+if beta_conflict_intervention <= 0.40133045381576427 then 0.0016849382053972157
+
+else
+
+if beta_conflict_intervention <= 0.46440107647558904 then 0.0012231993505831405
+
+else
+
+if beta_conflict_intervention <= 0.5274716991354134 then 0.0009590022557276
+
+else
+
+if beta_conflict_intervention <= 0.5905423217952377 then 0.0007696380382561756
+
+else
+
+if beta_conflict_intervention <= 0.6536129444550625 then 0.0005712794175345583
+
+else
+
+if beta_conflict_intervention <= 0.7166835671148872 then 0.0003762916645820764
+
+else
+
+if beta_conflict_intervention <= 0.7797541897747116 then 0.00024873772767056255
+
+else
+
+if beta_conflict_intervention <= 0.8428248124345359 then 0.0002131508301901727
+
+else
+
+if beta_conflict_intervention <= 0.9058954350943607 then 0.00023214907471359947
+
+else
+
+if beta_conflict_intervention <= 0.9689660577541854 then 0.0002556279360124572
+
+else
+
+if beta_conflict_intervention <= 1.0320366804140102 then 0.0002581351531974573
+
+else
+
+if beta_conflict_intervention <= 1.095107303073834 then 0.00024395010474985635
+
+else
+
+if beta_conflict_intervention <= 1.1581779257336589 then 0.00023544828042905286
+
+else
+
+if beta_conflict_intervention <= 1.2212485483934836 then 0.0002432573434753155
+
+else
+
+if beta_conflict_intervention <= 1.2843191710533075 then 0.00024414488897031946
+
+else
+
+if beta_conflict_intervention <= 1.3473897937131323 then 0.00021953044680605717
+
+else
+
+if beta_conflict_intervention <= 1.410460416372957 then 0.00020351883769772068
+
+else
+
+if beta_conflict_intervention <= 1.4735310390327818 then 0.00021418445767089852
+
+else
+
+if beta_conflict_intervention <= 1.5366016616926066 then 0.0002220728707008405
+
+else
+
+if beta_conflict_intervention <= 1.5996722843524305 then 0.00020741685125073498
+
+else
+
+if beta_conflict_intervention <= 1.6627429070122552 then 0.0001712745982284795
+
+else
+
+if beta_conflict_intervention <= 1.72581352967208 then 0.00012872399437648422
+
+else
+
+if beta_conflict_intervention <= 1.788884152331904 then 9.382158037723911e-05
+
+else
+
+if beta_conflict_intervention <= 1.8519547749917287 then 6.969638378917305e-05
+
+else
+
+if beta_conflict_intervention <= 1.9150253976515534 then 5.439617727505738e-05
+
+else
+
+if beta_conflict_intervention <= 1.9780960203113782 then 4.143095518487244e-05
+
+else
+
+if beta_conflict_intervention <= 2.041166642971203 then 2.838896444476995e-05
+
+else
+
+if beta_conflict_intervention <= 2.104237265631027 then 2.512913023900703e-05
+
+else
+
+if beta_conflict_intervention <= 2.1673078882908516 then 3.17256362652473e-05
+
+else
+
+if beta_conflict_intervention <= 2.2303785109506764 then 3.6864449572859265e-05
+
+else
+
+if beta_conflict_intervention <= 2.2934491336105003 then 5.319414435009318e-05
+
+else
+
+if beta_conflict_intervention <= 2.356519756270325 then 9.574835607995436e-05
+
+else
+
+if beta_conflict_intervention <= 2.41959037893015 then 0.00012304915228293113
+
+else
+
+if beta_conflict_intervention <= 2.4826610015899746 then 9.527151267181332e-05
+
+else
+
+if beta_conflict_intervention <= 2.5457316242497994 then 5.287839721132331e-05
+
+else
+
+if beta_conflict_intervention <= 2.6088022469096233 then 3.680301590402542e-05
+
+else
+
+if beta_conflict_intervention <= 2.671872869569448 then 3.165598722744991e-05
+
+else
+
+if beta_conflict_intervention <= 2.734943492229273 then 2.5092407710818245e-05
+
+else
+
+if beta_conflict_intervention <= 2.7980141148890967 then 2.8492527910483168e-05
+
+else
+
+if beta_conflict_intervention <= 2.8610847375489215 then 4.1569132267092354e-05
+
+else
+
+if beta_conflict_intervention <= 2.9241553602087462 then 5.4425516539405603e-05
+
+else
+
+if beta_conflict_intervention <= 2.987225982868571 then 6.862634589721307e-05
+
+else
+
+if beta_conflict_intervention <= 3.0502966055283958 then 8.504289099487192e-05
+
+else
+
+if beta_conflict_intervention <= 3.11336722818822 then 9.069384447086142e-05
+
+else 0;
+
+if beta_conflict_crop_technology <= -2.2700314472610703 then 0
+
+else
+
+if beta_conflict_crop_technology <= -2.2479467748378315 then 3.544397849451201e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.2258621024145926 then 3.359534827511486e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.2037774299913537 then 2.8626618262486946e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.181692757568115 then 2.2045211611784752e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.159608085144876 then 1.569688029422128e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.137523412721637 then 1.128275446385182e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.1154387402983983 then 1.026703592411971e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.0933540678751594 then 1.4131722289492328e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.0712693954519206 then 2.4643799358397658e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.0491847230286817 then 4.3786952886978934e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.027100050605443 then 7.331746224130308e-05
+
+else
+
+if beta_conflict_crop_technology <= -2.005015378182204 then 0.00011433978866536083
+
+else
+
+if beta_conflict_crop_technology <= -1.982930705758965 then 0.00016745850744064936
+
+else
+
+if beta_conflict_crop_technology <= -1.960846033335726 then 0.00023360605455328783
+
+else
+
+if beta_conflict_crop_technology <= -1.9387613609124872 then 0.0003147690500198016
+
+else
+
+if beta_conflict_crop_technology <= -1.9166766884892483 then 0.00041341699327784084
+
+else
+
+if beta_conflict_crop_technology <= -1.8945920160660095 then 0.0005302796709501182
+
+else
+
+if beta_conflict_crop_technology <= -1.8725073436427704 then 0.0006618476550114983
+
+else
+
+if beta_conflict_crop_technology <= -1.8504226712195315 then 0.0008000084812540593
+
+else
+
+if beta_conflict_crop_technology <= -1.8283379987962927 then 0.0009353468790598195
+
+else
+
+if beta_conflict_crop_technology <= -1.8062533263730538 then 0.0010634014187851928
+
+else
+
+if beta_conflict_crop_technology <= -1.784168653949815 then 0.00119141300992253
+
+else
+
+if beta_conflict_crop_technology <= -1.762083981526576 then 0.0013429449155654115
+
+else
+
+if beta_conflict_crop_technology <= -1.7399993091033372 then 0.0015587512226249173
+
+else
+
+if beta_conflict_crop_technology <= -1.7179146366800984 then 0.0018935074532953303
+
+else
+
+if beta_conflict_crop_technology <= -1.6958299642568595 then 0.0024090896123090204
+
+else
+
+if beta_conflict_crop_technology <= -1.6737452918336206 then 0.0031654520684524503
+
+else
+
+if beta_conflict_crop_technology <= -1.6516606194103818 then 0.004208864339239376
+
+else
+
+if beta_conflict_crop_technology <= -1.629575946987143 then 0.005555202812192433
+
+else
+
+if beta_conflict_crop_technology <= -1.607491274563904 then 0.00716747849222337
+
+else
+
+if beta_conflict_crop_technology <= -1.5854066021406652 then 0.008935252358746433
+
+else
+
+if beta_conflict_crop_technology <= -1.5633219297174263 then 0.010673836380036167
+
+else
+
+if beta_conflict_crop_technology <= -1.5412372572941875 then 0.012159826953617227
+
+else
+
+if beta_conflict_crop_technology <= -1.5191525848709486 then 0.013199160352418103
+
+else
+
+if beta_conflict_crop_technology <= -1.4970679124477098 then 0.01369679467009176
+
+else
+
+if beta_conflict_crop_technology <= -1.4749832400244707 then 0.013688347106317788
+
+else
+
+if beta_conflict_crop_technology <= -1.4528985676012318 then 0.013315925852446049
+
+else
+
+if beta_conflict_crop_technology <= -1.430813895177993 then 0.012766781579218043
+
+else
+
+if beta_conflict_crop_technology <= -1.408729222754754 then 0.01221370101593289
+
+else
+
+if beta_conflict_crop_technology <= -1.3866445503315152 then 0.011785354165434045
+
+else
+
+if beta_conflict_crop_technology <= -1.3645598779082764 then 0.011566668285211
+
+else
+
+if beta_conflict_crop_technology <= -1.3424752054850373 then 0.011609641066186399
+
+else
+
+if beta_conflict_crop_technology <= -1.3203905330617984 then 0.011937070599485206
+
+else
+
+if beta_conflict_crop_technology <= -1.2983058606385596 then 0.012537594662814892
+
+else
+
+if beta_conflict_crop_technology <= -1.2762211882153207 then 0.013362938892508742
+
+else
+
+if beta_conflict_crop_technology <= -1.2541365157920819 then 0.014337278359655963
+
+else
+
+if beta_conflict_crop_technology <= -1.232051843368843 then 0.015377683986092674
+
+else
+
+if beta_conflict_crop_technology <= -1.2099671709456041 then 0.016414982001773108
+
+else
+
+if beta_conflict_crop_technology <= -1.1878824985223653 then 0.017404134102159807
+
+else
+
+if beta_conflict_crop_technology <= -1.1657978260991264 then 0.01832146249777021
+
+else
+
+if beta_conflict_crop_technology <= -1.1437131536758876 then 0.019155137308391027
+
+else
+
+if beta_conflict_crop_technology <= -1.1216284812526487 then 0.01989834705281745
+
+else
+
+if beta_conflict_crop_technology <= -1.0995438088294098 then 0.02055012050545192
+
+else
+
+if beta_conflict_crop_technology <= -1.077459136406171 then 0.021120967276975287
+
+else
+
+if beta_conflict_crop_technology <= -1.055374463982932 then 0.02163543942370016
+
+else
+
+if beta_conflict_crop_technology <= -1.0332897915596932 then 0.022125332258224002
+
+else
+
+if beta_conflict_crop_technology <= -1.0112051191364544 then 0.022614550049106348
+
+else
+
+if beta_conflict_crop_technology <= -0.9891204467132153 then 0.023104117575503492
+
+else
+
+if beta_conflict_crop_technology <= -0.9670357742899764 then 0.023567420585854714
+
+else
+
+if beta_conflict_crop_technology <= -0.9449511018667376 then 0.023959938243955394
+
+else
+
+if beta_conflict_crop_technology <= -0.9228664294434987 then 0.024238615308342495
+
+else
+
+if beta_conflict_crop_technology <= -0.9007817570202599 then 0.02437999701264682
+
+else
+
+if beta_conflict_crop_technology <= -0.878697084597021 then 0.02438715395434381
+
+else
+
+if beta_conflict_crop_technology <= -0.8566124121737821 then 0.024282237380339786
+
+else
+
+if beta_conflict_crop_technology <= -0.8345277397505433 then 0.024089633562716657
+
+else
+
+if beta_conflict_crop_technology <= -0.8124430673273044 then 0.02381937173778817
+
+else
+
+if beta_conflict_crop_technology <= -0.7903583949040656 then 0.02345972707074057
+
+else
+
+if beta_conflict_crop_technology <= -0.7682737224808267 then 0.022983089688291516
+
+else
+
+if beta_conflict_crop_technology <= -0.7461890500575878 then 0.02236267477444236
+
+else
+
+if beta_conflict_crop_technology <= -0.724104377634349 then 0.021591826069696403
+
+else
+
+if beta_conflict_crop_technology <= -0.7020197052111099 then 0.020694927088749746
+
+else
+
+if beta_conflict_crop_technology <= -0.679935032787871 then 0.01972185945493476
+
+else
+
+if beta_conflict_crop_technology <= -0.6578503603646322 then 0.018726855617119172
+
+else
+
+if beta_conflict_crop_technology <= -0.6357656879413933 then 0.01774301114326876
+
+else
+
+if beta_conflict_crop_technology <= -0.6136810155181545 then 0.0167681853592219
+
+else
+
+if beta_conflict_crop_technology <= -0.5915963430949156 then 0.015772052297172358
+
+else
+
+if beta_conflict_crop_technology <= -0.5695116706716767 then 0.014720742680377394
+
+else
+
+if beta_conflict_crop_technology <= -0.5474269982484379 then 0.013603872403665408
+
+else
+
+if beta_conflict_crop_technology <= -0.525342325825199 then 0.012447096144331649
+
+else
+
+if beta_conflict_crop_technology <= -0.5032576534019602 then 0.01130293838299207
+
+else
+
+if beta_conflict_crop_technology <= -0.4811729809787213 then 0.010226754139752887
+
+else
+
+if beta_conflict_crop_technology <= -0.45908830855548244 then 0.009253424240278486
+
+else
+
+if beta_conflict_crop_technology <= -0.4370036361322436 then 0.008388161733119166
+
+else
+
+if beta_conflict_crop_technology <= -0.4149189637090045 then 0.007614096427391982
+
+else
+
+if beta_conflict_crop_technology <= -0.39283429128576564 then 0.00690841615217453
+
+else
+
+if beta_conflict_crop_technology <= -0.3707496188625268 then 0.006255295032846483
+
+else
+
+if beta_conflict_crop_technology <= -0.3486649464392879 then 0.0056488317441560935
+
+else
+
+if beta_conflict_crop_technology <= -0.32658027401604905 then 0.005087535720148426
+
+else
+
+if beta_conflict_crop_technology <= -0.3044956015928102 then 0.004566968990171199
+
+else
+
+if beta_conflict_crop_technology <= -0.28241092916957133 then 0.00407643596343531
+
+else
+
+if beta_conflict_crop_technology <= -0.26032625674633225 then 0.0036014530089017536
+
+else
+
+if beta_conflict_crop_technology <= -0.2382415843230934 then 0.003129874998476199
+
+else
+
+if beta_conflict_crop_technology <= -0.21615691189985453 then 0.00265789333595047
+
+else
+
+if beta_conflict_crop_technology <= -0.19407223947661567 then 0.0021925690043930507
+
+else
+
+if beta_conflict_crop_technology <= -0.1719875670533768 then 0.001749520107353215
+
+else
+
+if beta_conflict_crop_technology <= -0.14990289463013795 then 0.0013470302739209791
+
+else
+
+if beta_conflict_crop_technology <= -0.1278182222068991 then 0.0009997382594699924
+
+else
+
+if beta_conflict_crop_technology <= -0.10573354978366023 then 0.00071488382300735
+
+else
+
+if beta_conflict_crop_technology <= -0.08364887736042116 then 0.0004920629574607402
+
+else 0;
+
+if beta_precipitation_food_insecurity <= -3.139601904471262 then 0
+
+else
+
+if beta_precipitation_food_insecurity <= -3.076163307118414 then 0.0036112048398938535
+
+else
+
+if beta_precipitation_food_insecurity <= -3.012724709765566 then 0.0039965331816666505
+
+else
+
+if beta_precipitation_food_insecurity <= -2.949286112412718 then 0.00400733116765066
+
+else
+
+if beta_precipitation_food_insecurity <= -2.88584751505987 then 0.003674038253949173
+
+else
+
+if beta_precipitation_food_insecurity <= -2.8224089177070217 then 0.003117716039951572
+
+else
+
+if beta_precipitation_food_insecurity <= -2.7589703203541736 then 0.0024870472976658824
+
+else
+
+if beta_precipitation_food_insecurity <= -2.6955317230013254 then 0.0018995005355150914
+
+else
+
+if beta_precipitation_food_insecurity <= -2.632093125648477 then 0.001415448345223583
+
+else
+
+if beta_precipitation_food_insecurity <= -2.568654528295629 then 0.0010456406401458803
+
+else
+
+if beta_precipitation_food_insecurity <= -2.5052159309427813 then 0.0007742266828264996
+
+else
+
+if beta_precipitation_food_insecurity <= -2.441777333589933 then 0.0005793553362208421
+
+else
+
+if beta_precipitation_food_insecurity <= -2.378338736237085 then 0.00044324754620651016
+
+else
+
+if beta_precipitation_food_insecurity <= -2.3149001388842367 then 0.00035309981145348855
+
+else
+
+if beta_precipitation_food_insecurity <= -2.2514615415313886 then 0.0002982998155960608
+
+else
+
+if beta_precipitation_food_insecurity <= -2.1880229441785404 then 0.00026851253913282193
+
+else
+
+if beta_precipitation_food_insecurity <= -2.124584346825692 then 0.0002539974606506369
+
+else
+
+if beta_precipitation_food_insecurity <= -2.0611457494728445 then 0.0002469826951088381
+
+else
+
+if beta_precipitation_food_insecurity <= -1.9977071521199963 then 0.00024248475269717765
+
+else
+
+if beta_precipitation_food_insecurity <= -1.934268554767148 then 0.00023803082770046784
+
+else
+
+if beta_precipitation_food_insecurity <= -1.8708299574143 then 0.00023276399460739238
+
+else
+
+if beta_precipitation_food_insecurity <= -1.807391360061452 then 0.00022653064336767583
+
+else
+
+if beta_precipitation_food_insecurity <= -1.7439527627086038 then 0.00021916043307744243
+
+else
+
+if beta_precipitation_food_insecurity <= -1.6805141653557556 then 0.00020999986804446448
+
+else
+
+if beta_precipitation_food_insecurity <= -1.6170755680029076 then 0.0001979012784202892
+
+else
+
+if beta_precipitation_food_insecurity <= -1.5536369706500595 then 0.00018178844706792324
+
+else
+
+if beta_precipitation_food_insecurity <= -1.4901983732972113 then 0.0001614748738844628
+
+else
+
+if beta_precipitation_food_insecurity <= -1.426759775944363 then 0.00013810551942933079
+
+else
+
+if beta_precipitation_food_insecurity <= -1.3633211785915151 then 0.00011386217555470917
+
+else
+
+if beta_precipitation_food_insecurity <= -1.299882581238667 then 9.117420496611342e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -1.2364439838858188 then 7.200750169386708e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -1.1730053865329708 then 5.760654990161781e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -1.1095667891801226 then 4.861797367971415e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -1.0461281918272745 then 4.525103732107557e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.9826895944744263 then 4.719364770547372e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.9192509971215781 then 5.32915291291255e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.8558123997687304 then 6.131615381547791e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.7923738024158822 then 6.82684642436267e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.728935205063034 then 7.137941533815616e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.6654966077101858 then 6.935774333016787e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.6020580103573376 then 6.304619369511016e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.5386194130044895 then 5.4988530078872685e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.4751808156516417 then 4.823910228850707e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.41174221829879354 then 4.5247441465795366e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.34830362094594536 then 4.739637262419033e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.2848650235930972 then 5.515188851079572e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.221426426240249 then 6.840139774119463e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.15798782888740082 then 8.660251628033384e-05
+
+else
+
+if beta_precipitation_food_insecurity <= -0.09454923153455308 then 0.00010866007849288375
+
+else
+
+if beta_precipitation_food_insecurity <= -0.0311106341817049 then 0.0001327620573080062
+
+else
+
+if beta_precipitation_food_insecurity <= 0.03232796317114328 then 0.00015653299472579622
+
+else
+
+if beta_precipitation_food_insecurity <= 0.09576656052399146 then 0.00017766257376432298
+
+else
+
+if beta_precipitation_food_insecurity <= 0.15920515787683964 then 0.00019472758658619713
+
+else
+
+if beta_precipitation_food_insecurity <= 0.22264375522968782 then 0.00020763554254840116
+
+else
+
+if beta_precipitation_food_insecurity <= 0.286082352582536 then 0.00021733395314347523
+
+else
+
+if beta_precipitation_food_insecurity <= 0.34952094993538374 then 0.00022502069297377226
+
+else
+
+if beta_precipitation_food_insecurity <= 0.4129595472882319 then 0.00023147754721486116
+
+else
+
+if beta_precipitation_food_insecurity <= 0.4763981446410801 then 0.00023695294979232467
+
+else
+
+if beta_precipitation_food_insecurity <= 0.5398367419939283 then 0.00024154964294367345
+
+else
+
+if beta_precipitation_food_insecurity <= 0.6032753393467765 then 0.0002458976709835701
+
+else
+
+if beta_precipitation_food_insecurity <= 0.6667139366996246 then 0.00025203078075961694
+
+else
+
+if beta_precipitation_food_insecurity <= 0.7301525340524724 then 0.00026432768809761547
+
+else
+
+if beta_precipitation_food_insecurity <= 0.7935911314053206 then 0.00029000182873050167
+
+else
+
+if beta_precipitation_food_insecurity <= 0.8570297287581687 then 0.00033860032617377873
+
+else
+
+if beta_precipitation_food_insecurity <= 0.9204683261110169 then 0.00042095502348712266
+
+else
+
+if beta_precipitation_food_insecurity <= 0.9839069234638647 then 0.0005495902498757978
+
+else
+
+if beta_precipitation_food_insecurity <= 1.0473455208167133 then 0.0007434046742120717
+
+else
+
+if beta_precipitation_food_insecurity <= 1.110784118169561 then 0.0010384820609441426
+
+else
+
+if beta_precipitation_food_insecurity <= 1.1742227155224096 then 0.0015039571594510964
+
+else
+
+if beta_precipitation_food_insecurity <= 1.2376613128752574 then 0.0022568125210392035
+
+else
+
+if beta_precipitation_food_insecurity <= 1.301099910228106 then 0.0034624529195572008
+
+else
+
+if beta_precipitation_food_insecurity <= 1.3645385075809537 then 0.005303098415374583
+
+else
+
+if beta_precipitation_food_insecurity <= 1.4279771049338015 then 0.007904403332307566
+
+else
+
+if beta_precipitation_food_insecurity <= 1.49141570228665 then 0.011240805964537321
+
+else
+
+if beta_precipitation_food_insecurity <= 1.5548542996394978 then 0.01507806890394819
+
+else
+
+if beta_precipitation_food_insecurity <= 1.6182928969923465 then 0.019016898522024036
+
+else
+
+if beta_precipitation_food_insecurity <= 1.6817314943451942 then 0.022644819625750347
+
+else
+
+if beta_precipitation_food_insecurity <= 1.745170091698042 then 0.02571551439664266
+
+else
+
+if beta_precipitation_food_insecurity <= 1.8086086890508906 then 0.028237204696091728
+
+else
+
+if beta_precipitation_food_insecurity <= 1.8720472864037383 then 0.030412806802262014
+
+else
+
+if beta_precipitation_food_insecurity <= 1.935485883756587 then 0.03248553202376519
+
+else
+
+if beta_precipitation_food_insecurity <= 1.9989244811094347 then 0.034602990059056246
+
+else
+
+if beta_precipitation_food_insecurity <= 2.0623630784622833 then 0.03677444475398683
+
+else
+
+if beta_precipitation_food_insecurity <= 2.125801675815131 then 0.038910113981224716
+
+else
+
+if beta_precipitation_food_insecurity <= 2.1892402731679788 then 0.04088093269224074
+
+else
+
+if beta_precipitation_food_insecurity <= 2.2526788705208274 then 0.042552901729084276
+
+else
+
+if beta_precipitation_food_insecurity <= 2.316117467873675 then 0.0437965484594997
+
+else
+
+if beta_precipitation_food_insecurity <= 2.3795560652265237 then 0.044497443390289576
+
+else
+
+if beta_precipitation_food_insecurity <= 2.4429946625793715 then 0.044580956836865825
+
+else
+
+if beta_precipitation_food_insecurity <= 2.50643325993222 then 0.044037361587438484
+
+else
+
+if beta_precipitation_food_insecurity <= 2.569871857285068 then 0.04292504743105881
+
+else
+
+if beta_precipitation_food_insecurity <= 2.6333104546379156 then 0.04134791335737622
+
+else
+
+if beta_precipitation_food_insecurity <= 2.696749051990764 then 0.03942540593477674
+
+else
+
+if beta_precipitation_food_insecurity <= 2.760187649343612 then 0.037273510713134304
+
+else
+
+if beta_precipitation_food_insecurity <= 2.8236262466964606 then 0.03499210462960295
+
+else
+
+if beta_precipitation_food_insecurity <= 2.8870648440493083 then 0.03263775903377299
+
+else
+
+if beta_precipitation_food_insecurity <= 2.950503441402156 then 0.03017916349181101
+
+else
+
+if beta_precipitation_food_insecurity <= 3.0139420387550047 then 0.027474257280630215
+
+else
+
+if beta_precipitation_food_insecurity <= 3.0773806361078524 then 0.02432409068872185
+
+else
+
+if beta_precipitation_food_insecurity <= 3.1408192334607015 then 0.02060935795233165
+
+else 0;
+
+if beta_precipitation_flooding <= -3.1408192334607015 then 0
+
+else
+
+if beta_precipitation_flooding <= -3.0773806361078533 then 0.00822458817698782
+
+else
+
+if beta_precipitation_flooding <= -3.013942038755005 then 0.009974809338977892
+
+else
+
+if beta_precipitation_flooding <= -2.950503441402157 then 0.011673852082832985
+
+else
+
+if beta_precipitation_flooding <= -2.887064844049309 then 0.013267764234149609
+
+else
+
+if beta_precipitation_flooding <= -2.823626246696461 then 0.014733370750208205
+
+else
+
+if beta_precipitation_flooding <= -2.760187649343613 then 0.016070522391139867
+
+else
+
+if beta_precipitation_flooding <= -2.6967490519907646 then 0.017288066390825182
+
+else
+
+if beta_precipitation_flooding <= -2.6333104546379165 then 0.018390366514293165
+
+else
+
+if beta_precipitation_flooding <= -2.5698718572850687 then 0.01936929543669946
+
+else
+
+if beta_precipitation_flooding <= -2.50643325993222 then 0.020203164373663794
+
+else
+
+if beta_precipitation_flooding <= -2.4429946625793724 then 0.020861236200543653
+
+else
+
+if beta_precipitation_flooding <= -2.379556065226524 then 0.021311252743390154
+
+else
+
+if beta_precipitation_flooding <= -2.316117467873676 then 0.021527450000019658
+
+else
+
+if beta_precipitation_flooding <= -2.252678870520828 then 0.021497076214309723
+
+else
+
+if beta_precipitation_flooding <= -2.1892402731679796 then 0.02122404872847108
+
+else
+
+if beta_precipitation_flooding <= -2.125801675815132 then 0.020729047810702842
+
+else
+
+if beta_precipitation_flooding <= -2.0623630784622833 then 0.020046034169391814
+
+else
+
+if beta_precipitation_flooding <= -1.9989244811094355 then 0.019215768213033717
+
+else
+
+if beta_precipitation_flooding <= -1.9354858837565874 then 0.01827738761953348
+
+else
+
+if beta_precipitation_flooding <= -1.8720472864037392 then 0.017259681526938048
+
+else
+
+if beta_precipitation_flooding <= -1.8086086890508912 then 0.01617450395739818
+
+else
+
+if beta_precipitation_flooding <= -1.745170091698043 then 0.015015323082153692
+
+else
+
+if beta_precipitation_flooding <= -1.6817314943451949 then 0.013763194529105367
+
+else
+
+if beta_precipitation_flooding <= -1.618292896992347 then 0.01239982154233764
+
+else
+
+if beta_precipitation_flooding <= -1.5548542996394987 then 0.010923582122432387
+
+else
+
+if beta_precipitation_flooding <= -1.4914157022866505 then 0.009361677751986397
+
+else
+
+if beta_precipitation_flooding <= -1.4279771049338024 then 0.007772134964474558
+
+else
+
+if beta_precipitation_flooding <= -1.3645385075809544 then 0.0062336449265866945
+
+else
+
+if beta_precipitation_flooding <= -1.3010999102281062 then 0.004826986384143479
+
+else
+
+if beta_precipitation_flooding <= -1.237661312875258 then 0.00361567182397415
+
+else
+
+if beta_precipitation_flooding <= -1.17422271552241 then 0.002633287293829444
+
+else
+
+if beta_precipitation_flooding <= -1.110784118169562 then 0.0018812057662037783
+
+else
+
+if beta_precipitation_flooding <= -1.0473455208167137 then 0.0013354758673969648
+
+else
+
+if beta_precipitation_flooding <= -0.9839069234638655 then 0.0009584198924620675
+
+else
+
+if beta_precipitation_flooding <= -0.9204683261110174 then 0.0007100113589972922
+
+else
+
+if beta_precipitation_flooding <= -0.8570297287581696 then 0.0005558374729949276
+
+else
+
+if beta_precipitation_flooding <= -0.7935911314053214 then 0.00047087936263901447
+
+else
+
+if beta_precipitation_flooding <= -0.7301525340524733 then 0.00044017372767416303
+
+else
+
+if beta_precipitation_flooding <= -0.6667139366996251 then 0.0004581333473363437
+
+else
+
+if beta_precipitation_flooding <= -0.6032753393467769 then 0.0005280365136387464
+
+else
+
+if beta_precipitation_flooding <= -0.5398367419939287 then 0.0006623453248090503
+
+else
+
+if beta_precipitation_flooding <= -0.476398144641081 then 0.0008834589208442065
+
+else
+
+if beta_precipitation_flooding <= -0.4129595472882328 then 0.0012235720639984838
+
+else
+
+if beta_precipitation_flooding <= -0.34952094993538463 then 0.0017218512031404063
+
+else
+
+if beta_precipitation_flooding <= -0.28608235258253645 then 0.002417569892530909
+
+else
+
+if beta_precipitation_flooding <= -0.22264375522968827 then 0.0033394052528517774
+
+else
+
+if beta_precipitation_flooding <= -0.1592051578768401 then 0.004493466685967871
+
+else
+
+if beta_precipitation_flooding <= -0.09576656052399235 then 0.005854694431679305
+
+else
+
+if beta_precipitation_flooding <= -0.03232796317114417 then 0.007366485403131284
+
+else
+
+if beta_precipitation_flooding <= 0.03111063418170401 then 0.008950825099613055
+
+else
+
+if beta_precipitation_flooding <= 0.09454923153455219 then 0.010526523956279404
+
+else
+
+if beta_precipitation_flooding <= 0.15798782888740037 then 0.012028797915314934
+
+else
+
+if beta_precipitation_flooding <= 0.22142642624024855 then 0.013422176193422003
+
+else
+
+if beta_precipitation_flooding <= 0.28486502359309673 then 0.014701679379203133
+
+else
+
+if beta_precipitation_flooding <= 0.34830362094594447 then 0.015882806498171805
+
+else
+
+if beta_precipitation_flooding <= 0.41174221829879265 then 0.016985807068160056
+
+else
+
+if beta_precipitation_flooding <= 0.47518081565164083 then 0.018021311384412386
+
+else
+
+if beta_precipitation_flooding <= 0.538619413004489 then 0.01898235084784696
+
+else
+
+if beta_precipitation_flooding <= 0.6020580103573372 then 0.019844044168831634
+
+else
+
+if beta_precipitation_flooding <= 0.6654966077101854 then 0.020569161897953974
+
+else
+
+if beta_precipitation_flooding <= 0.7289352050630331 then 0.02111660618431001
+
+else
+
+if beta_precipitation_flooding <= 0.7923738024158813 then 0.02145018719353084
+
+else
+
+if beta_precipitation_flooding <= 0.8558123997687295 then 0.021545908902546235
+
+else
+
+if beta_precipitation_flooding <= 0.9192509971215777 then 0.021396632007354456
+
+else
+
+if beta_precipitation_flooding <= 0.9826895944744254 then 0.021013441790420122
+
+else
+
+if beta_precipitation_flooding <= 1.046128191827274 then 0.020423520764062657
+
+else
+
+if beta_precipitation_flooding <= 1.1095667891801217 then 0.01966483621540399
+
+else
+
+if beta_precipitation_flooding <= 1.1730053865329704 then 0.018778411107146942
+
+else
+
+if beta_precipitation_flooding <= 1.236443983885818 then 0.017799431083147813
+
+else
+
+if beta_precipitation_flooding <= 1.2998825812386667 then 0.016749154543270438
+
+else
+
+if beta_precipitation_flooding <= 1.3633211785915145 then 0.015630397606015638
+
+else
+
+if beta_precipitation_flooding <= 1.4267597759443622 then 0.014429460610978277
+
+else
+
+if beta_precipitation_flooding <= 1.4901983732972108 then 0.013125757283456978
+
+else
+
+if beta_precipitation_flooding <= 1.5536369706500586 then 0.011707030514559534
+
+else
+
+if beta_precipitation_flooding <= 1.6170755680029072 then 0.010184437748636189
+
+else
+
+if beta_precipitation_flooding <= 1.680514165355755 then 0.00860043980615894
+
+else
+
+if beta_precipitation_flooding <= 1.7439527627086027 then 0.00702488001279144
+
+else
+
+if beta_precipitation_flooding <= 1.8073913600614513 then 0.0055400117810323
+
+else
+
+if beta_precipitation_flooding <= 1.870829957414299 then 0.004220503622506197
+
+else
+
+if beta_precipitation_flooding <= 1.9342685547671477 then 0.0031165256608581284
+
+else
+
+if beta_precipitation_flooding <= 1.9977071521199954 then 0.002245900646807371
+
+else
+
+if beta_precipitation_flooding <= 2.061145749472844 then 0.0015966145998150697
+
+else
+
+if beta_precipitation_flooding <= 2.1245843468256917 then 0.0011366021985438884
+
+else
+
+if beta_precipitation_flooding <= 2.1880229441785395 then 0.0008257614054287093
+
+else
+
+if beta_precipitation_flooding <= 2.251461541531388 then 0.000625884748898335
+
+else
+
+if beta_precipitation_flooding <= 2.314900138884236 then 0.0005064273405419404
+
+else
+
+if beta_precipitation_flooding <= 2.3783387362370845 then 0.00044623981027003365
+
+else
+
+if beta_precipitation_flooding <= 2.441777333589932 then 0.0004326384878841562
+
+else
+
+if beta_precipitation_flooding <= 2.505215930942781 then 0.0004593346464966784
+
+else
+
+if beta_precipitation_flooding <= 2.5686545282956286 then 0.0005241900768618411
+
+else
+
+if beta_precipitation_flooding <= 2.6320931256484763 then 0.00062703543591416
+
+else
+
+if beta_precipitation_flooding <= 2.695531723001325 then 0.0007673103022743978
+
+else
+
+if beta_precipitation_flooding <= 2.7589703203541727 then 0.0009412991103773736
+
+else
+
+if beta_precipitation_flooding <= 2.8224089177070213 then 0.0011392441183881732
+
+else
+
+if beta_precipitation_flooding <= 2.885847515059869 then 0.0013433347796874475
+
+else
+
+if beta_precipitation_flooding <= 2.9492861124127168 then 0.0015279941212506484
+
+else
+
+if beta_precipitation_flooding <= 3.0127247097655654 then 0.0016635057772416107
+
+else
+
+if beta_precipitation_flooding <= 3.076163307118413 then 0.0017227265601812143
+
+else
+
+if beta_precipitation_flooding <= 3.139601904471262 then 0.0016889219701487906
+
+else 0;
