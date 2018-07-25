@@ -15,7 +15,9 @@ Compile
 Usage
 =====
 
-SMC_wm <testfile> <modelfile> <propertyfile>
+The commend line:
+
+" SMC_wm <testfile> <modelfile> <propertyfile>", where
     
     "      <testfile> is a text file containing a sequence of test specifications, give the path to it;"
     
