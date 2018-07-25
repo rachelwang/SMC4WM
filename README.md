@@ -17,7 +17,7 @@ Usage
 
 The command line:
 
-" SMC_wm <testfile> <modelfile> <propertyfile>", where
+"      SMC_wm <testfile> <modelfile> <propertyfile>", where
     
     "      <testfile> is a text file containing a sequence of test specifications, give the path to it;"
     
