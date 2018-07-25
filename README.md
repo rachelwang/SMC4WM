@@ -17,7 +17,7 @@ Usage
 
 The command line is as follows:
 
-        KaStat_sq <testfile> <modelfile> <ruleAname> <ruleBname> <influType> <KaSim> <simulationTime> <KaFlow>
+        SMC_wm <testfile> <modelfile> <propertyfile> 
         
 where:
 
