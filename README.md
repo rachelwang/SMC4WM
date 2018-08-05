@@ -17,7 +17,7 @@ Usage
 
 The command line is as follows:
 
-        SMC_wm <testfile> <modelfile> <propertyfile> 
+        SMC_wm <testfile> <modelfile> <propertyfile> <interventionfile>
         
 where:
 
@@ -27,6 +27,8 @@ where:
     "      <modelfile> is the file name and path of the WM model under analysis;"
     
     "      <propertyfile> is the file name and path of properties to be checked."
+
+    "      <propertyfile> is the file name and path of Intervention to be implemented. This parameter is optional！"
     
 Available test specifications:
 

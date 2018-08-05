@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include<fstream>
-class interface
+class interface :private Tools
 {
 public:
     interface();
@@ -22,11 +22,12 @@ public:
     vector<string> state_vars;
     vector<pair<string, double> > state;
     int length_explored;
+    int trace_num;
     Checker *c;
     void read_property(char *);
     void init_signals(vector<string>);
     valType advance(vector<double>);
-    int checkmodel(string,char*);
+    int checkmodel(string,char*,string, int,string);
     bool check_trace(Sampler,char*,string);
     void sample(int,string,string);
 };

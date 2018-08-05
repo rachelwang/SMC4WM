@@ -25,6 +25,7 @@ extern int yyparse ();
 extern FILE *yyin;
 interface::interface()
 {
+    trace_num = 0;
 }
 /**
  * assuming the external software is a C code
@@ -80,17 +81,17 @@ void interface::init_signals(vector<string>list) {
   delete c;
   c = new Checker();
 }
-void getFiles(vector<string>& files )
+void getFiles(vector<string>& files, string folder_name, string file_name)
 {
     DIR *dp;
     struct dirent *dirp;
-    if(!(dp = opendir("../trace")))
+    if(!(dp = opendir(folder_name.c_str())))
         printf("can't open");
     string::size_type idx;
     while (((dirp=readdir(dp))!=NULL))
     {
         string a = dirp->d_name;
-        idx=a.find("trace");
+        idx=a.find(file_name);
         if(idx == string::npos )
         {
         }
@@ -99,12 +100,13 @@ void getFiles(vector<string>& files )
     }
     closedir(dp);
 }
-string gettracefilename()
+string gettracefilename(string folder_name, string file_name)
 {
     vector<string>files;
-    getFiles(files);
+    getFiles(files, folder_name, file_name);
     int size1 = files.size();
-    string newfile = "../trace/trace_";
+    string newfile = folder_name + "/" + file_name + "_";
+
     newfile += to_string(size1);
     return newfile;
 }
@@ -147,7 +149,7 @@ valType interface::advance(vector<double>new_state) {
 }
 bool interface::check_trace(Sampler sample1,char *prop_file1,string modelfile)
 {
-    ofstream file1(tracefile);
+    //ofstream file1(tracefile);
     vector<string> state_vars;
     valType t;
     double ts;
@@ -170,34 +172,37 @@ bool interface::check_trace(Sampler sample1,char *prop_file1,string modelfile)
 
         if(sample1.sample_size==1)
         {
-            file1<<"time";
+            //file1<<"time";
             for(int i=0;i<sample1.variable_num;i++) {//
                 state_vars.push_back(string(sample1.cpd_order[i]));
-                file1<<" "<<sample1.cpd_order[i];
+                //file1<<" "<<sample1.cpd_order[i];
                 //cout<<string(sample1.cpd_order[i])<<endl;
             }
-            file1<<endl;
+            //file1<<endl;
         }
-        file1<<ts<<" ";
+        //file1<<ts<<" ";
         for (int j = 0; j <state_vars.size() ; j++) {//
             state.push_back(make_pair(state_vars.at(j), sample1.value[sample1.NOW][j]));
-            file1<<sample1.value[sample1.NOW][j]<<" ";
+            //file1<<sample1.value[sample1.NOW][j]<<" ";
             //cout<<state_vars.at(j)<<" "<<sample1.old_sample[j]<<endl;
         }
-        file1<<endl;
+        //file1<<endl;
             //cout<<i<<endl;
         if ((t = (*c).advance(state, ts)) == SAT) {
-
-            file1<<"#"<<modelfile<<endl;
-            file1<<"#"<<prop_file1<<endl;
-            file1<<"1"<<endl;
-            file1.close();
+            tracefile += "/SAT/trace_"+to_string(trace_num);
+            sample1.saveSampleResult(tracefile);
+            //file1<<"#"<<modelfile<<endl;
+            //file1<<"#"<<prop_file1<<endl;
+            //file1<<"1"<<endl;
+            //file1.close();
             return 1;
         } else if (t == UNSAT) {
-            file1<<"#"<<modelfile<<endl;
-            file1<<"#"<<prop_file1<<endl;
-            file1<<"0"<<endl;
-            file1.close();
+            tracefile += "/UNSAT/trace_"+to_string(trace_num);
+            sample1.saveSampleResult(tracefile);
+            //file1<<"#"<<modelfile<<endl;
+            //file1<<"#"<<prop_file1<<endl;
+            //file1<<"0"<<endl;
+            //file1.close();
             return 0;
         }
         state.clear();
@@ -206,11 +211,15 @@ bool interface::check_trace(Sampler sample1,char *prop_file1,string modelfile)
     }
     return 1;
 }
-int interface::checkmodel(string modelfile,char*propfile)
+int interface::checkmodel(string modelfile,char*propfile,string folder_name, int numTrace, string interfile)
 {
-    tracefile = gettracefilename();
+    tracefile = "";
+    tracefile += folder_name;
+    trace_num = numTrace;
+	Sampler sample1(modelfile,interfile);
+    
+    //sample1.net_DBN.get_network_info();
 
-	Sampler sample1(modelfile);
     //cout<<modelfile<<endl;
 	//gm.bayesnet.get_cpd_info();
     int result = 0;
@@ -229,7 +238,7 @@ int interface::checkmodel(string modelfile,char*propfile)
 }
 void interface::sample(int num,string modelfile ,string file)
 {
-    Sampler sample1(modelfile);
+    Sampler sample1(modelfile, "");
     ofstream file1(file);
     for(int i=0;i<num;i++)
     {

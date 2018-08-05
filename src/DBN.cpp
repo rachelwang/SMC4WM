@@ -13,9 +13,179 @@ DBN::DBN(string filename)
 {
 	load_network(filename);
 }
+void DBN::add_intervention(int b_t, int e_t, string inter_str, int func_type)
+{
+
+	vector<string> s_temp_v = split(inter_str, "=");
+	int nPos1 = 0;
+	nPos1 = s_temp_v[0].find("(t)", nPos1);
+	if (nPos1 != string::npos)
+	{
+		string_replace(s_temp_v[0], "(t)", "(t+1)");
+		string_replace(s_temp_v[1], "(t)", "(t+1)");
+	}
+	string_replace(s_temp_v[0], "(t+1)", "");
+	string_replace(s_temp_v[1], "(t+1)", "_next");
+	string_replace(s_temp_v[1], "(t)", "");
+
+	int cpd_ind = cpd_map[s_temp_v[0]];
+	s_temp_v[1] = s_temp_v[0]+"_next="+s_temp_v[1];
+	//cout << b_t << " " << e_t << " " << s_temp_v[1] << " " << func_type << endl;
+	
+	cpd_list[cpd_ind].set_cpd_info(b_t, e_t, s_temp_v[1], func_type);
+}
+void DBN::getIntervention(string filename)
+{
+	ifstream fin(filename);
+	if(!fin)return;
+	string s;
+	int t_last = 0;
+	string::size_type nPos1 = 0;
+	string::size_type nPos2 = 0;
+	int begin_time;
+	int end_time;
+	while (fin >> s)
+	{
+
+		int function_type = 0;
+		string function_str = "";
+		if (s == "From")
+		{
+			string s2;
+
+			int num_d = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				fin >> s;
+				string s_temp = s;
+				string_replace(s_temp, ":", "");
+				string_replace(s_temp, "=", "");
+				string_replace(s_temp, "t", "");
+				if (isVariable(s_temp) == false && s_temp != "")
+				{
+					num_d += 1;
+					if (num_d == 1)
+						begin_time = atoi(s_temp.c_str());
+					else
+						end_time = atoi(s_temp.c_str());
+				}
+				nPos1 = 0;
+				nPos1 = s.find(":", nPos1);
+				if (nPos1 != string::npos)
+				{
+					break;
+				}
+			}
+			while (fin >> s2)
+			{
+				nPos1 = 0;
+				nPos1 = s2.find(";", nPos1);
+				nPos2 = 0;
+				nPos2 = s2.find("Normal", nPos2);
+				if (nPos2 != string::npos)
+				{
+					string temp = "Normal(";
+					string_replace(s2, temp, " ");
+					function_type = 1;
+					function_str += s2;
+				}
+				else if (nPos1 != string::npos)
+				{
+					if (function_type == 1)
+						string_replace(s2, ");", "");
+					else
+						string_replace(s2, ";", "");
+					function_str += s2;
+					break;
+				}
+				else
+				{
+					function_str += s2;
+					string_replace(s2, ",", "");
+				}
+			}
+		}
+		else
+		{
+			string s_temp = s;
+			t_last = 0;
+			vector<string> s_temp_v1;
+			vector<string> s_temp_v2;
+			function_str = "";
+			function_str += s;
+			string s2;
+			while (fin >> s2)
+			{
+				nPos1 = 0;
+				nPos1 = s2.find(";", nPos1);
+				function_str += s2;
+				if (nPos1 != string::npos)
+					break;
+			}
+			string_replace(function_str, ";", "");
+			if (function_str[0] == 'G')
+			{
+				if (function_str[1] != '[')
+				{
+					t_last = -1;
+					string_replace(function_str, "G", "");
+					string_replace(function_str, " ", "");
+					s_temp = function_str;
+				}
+				else
+				{
+					s_temp_v1 = split(function_str, "]");
+					s_temp_v2 = split(s_temp_v1[0], "[");
+					t_last = atoi(s_temp_v2[1].c_str());
+					s_temp = s_temp_v1[1];
+				}
+
+				function_str = "";
+				s_temp_v2.clear();
+				s_temp_v2 = split(s_temp, "(");
+				//cout<<s_temp_v2.size()<<endl;
+				function_str += s_temp_v2[0];
+				s_temp = "";
+				for (int k = 1; k < s_temp_v2.size(); k++)
+					s_temp += s_temp_v2[k];
+				s_temp_v2.clear(); //cout<<s_temp<<endl;
+				s_temp_v2 = split(s_temp, ")");
+				begin_time = atoi(s_temp_v2[0].c_str());
+				function_str += "(t+1)" + s_temp_v2[1];
+				//begin_time = 0;
+			}
+			else
+			{
+				s_temp_v1.clear();
+				s_temp_v1 = split(function_str, "(");
+				function_str = s_temp_v1[0];
+				s_temp_v2.clear();
+				s_temp_v2 = split(s_temp_v1[1], ")");
+				begin_time = atoi(s_temp_v2[0].c_str());
+				function_str += "(t+1)" + s_temp_v2[1];
+				t_last = 1;
+			}
+			if (t_last == -1)
+				end_time = -1;
+			else
+				end_time = begin_time + t_last;
+		}
+
+		//cout << t_last << endl;
+		//cout << function_str << endl;
+		//cout << begin_time << " " << end_time << " " << function_type << " " << function_str << endl;
+		
+		add_intervention(begin_time,end_time,function_str,function_type);
+		for(int i=0;i<cpd_list.size();i++)
+		{
+			cpd_list[i].sort_intervention();
+		}
+
+	}
+}
 void DBN::load_network(string filename)
 {
-	Tools strT;
+
 	ifstream fin(filename);
 	string s;
 	string::size_type nPos1 = 0;
@@ -31,7 +201,8 @@ void DBN::load_network(string filename)
 			nPos1 = s.find("beta", nPos1);
 			if (nPos1 == string::npos)
 				cpd_temp.cpd_type = 0;
-			else cpd_temp.cpd_type = 2;
+			else
+				cpd_temp.cpd_type = 2;
 			cpd_list.push_back(cpd_temp);
 			cpd_map.insert(pair<string, int>(s, cpd_list.size() - 1));
 		}
@@ -51,21 +222,23 @@ void DBN::load_network(string filename)
 				if (nPos2 != string::npos)
 				{
 					string temp = "Normal(";
-					strT.string_replace(s2, temp, " ");
+					string_replace(s2, temp, " ");
 					function_type = 1;
 					function_str += s2;
 				}
-				else if (nPos1 != string::npos) 
+				else if (nPos1 != string::npos)
 				{
-					if(function_type == 1)strT.string_replace(s2, ");", "");
-					else strT.string_replace(s2, ";", "");
+					if (function_type == 1)
+						string_replace(s2, ");", "");
+					else
+						string_replace(s2, ";", "");
 					function_str += s2;
 					break;
 				}
-				else  
+				else
 				{
 					function_str += s2;
-					strT.string_replace(s2, ",", "");
+					string_replace(s2, ",", "");
 				}
 			}
 			nPos1 = 0;
@@ -73,23 +246,22 @@ void DBN::load_network(string filename)
 			nPos2 = 0;
 			nPos2 = function_str.find("=", nPos2);
 			//cout << nPos1 <<" "<<nPos2<< endl;
-			if (nPos1 != string::npos&&nPos2 != string::npos&&nPos1 < nPos2)
+			if (nPos1 != string::npos && nPos2 != string::npos && nPos1 < nPos2)
 			{
-				strT.string_replace(function_str, "(t)", "_next");
+				string_replace(function_str, "(t)", "_next");
 			}
 			else
 			{
-				strT.string_replace(function_str, "(t+1)", "_next");
-				strT.string_replace(function_str, "(t)", "");
+				string_replace(function_str, "(t+1)", "_next");
+				string_replace(function_str, "(t)", "");
 			}
-			strT.string_replace(function_str, " ", "");
+			string_replace(function_str, " ", "");
 
-
-			vector<string> str_temp = strT.split(function_str, "=");
-			strT.string_replace(str_temp[0], "_next", "");
+			vector<string> str_temp = split(function_str, "=");
+			string_replace(str_temp[0], "_next", "");
 			int cpd_index = cpd_map[str_temp[0]];
 			cpd_list[cpd_index].cpd_type = function_type;
-			cpd_list[cpd_index].set_cpd_info(function_str);
+			cpd_list[cpd_index].set_cpd_info(0, -1, function_str, function_type);
 		}
 		else if (s == "if")
 		{

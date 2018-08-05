@@ -2062,6 +2062,7 @@ LogicalRelationalNode *push_neg(LogicalRelationalNode *n) {
       case GT_R :
         (n->lr).op = LTE_R;
         return n;
+      default:return NULL;
     }
   } else {
     printf("push_neg : arithmetic?\n");
@@ -2136,4 +2137,5 @@ LogicalRelationalNode *push_neg(LogicalRelationalNode *n) {
  */
 int yyerror(const char *s) {
   printf("%s\n", s);
+  return 0;
 }

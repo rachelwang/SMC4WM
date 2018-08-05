@@ -5,7 +5,42 @@
 Tools::Tools()
 {
 }
+void Tools::creatFolder(char *pDir)
+{
+	int i = 0;
+	int iRet;
+	int iLen;
+	char* pszDir;
 
+	if(NULL == pDir)
+	{
+		return;
+	}
+
+	pszDir = strdup(pDir);
+	iLen = strlen(pszDir);
+
+	// 创建中间目录
+	for (i = 0;i < iLen;i ++)
+	{
+		if (pszDir[i] == '\\' || pszDir[i] == '/')
+		{
+			pszDir[i] = '\0';
+
+			//如果不存在,创建
+			iRet = access(pszDir,0);
+			if (iRet != 0)
+			{
+				iRet = mkdir(pszDir,0755);
+			}
+			//支持linux,将所有\换成/
+			pszDir[i] = '/';
+		}
+	}
+
+	iRet = mkdir(pszDir,0755);
+	free(pszDir);
+}
 vector<string> Tools::split(string str, string pattern)
 {
 	vector<string> ret;
@@ -57,10 +92,10 @@ bool Tools::isOperator(char ch)
 	return false;
 }
 
-bool Tools::Compare(char ch1, char ch2)   
+bool Tools::Compare(char ch1, char ch2)
 {
-	int m, n;             
-	for (int i = 0; i<4; i++)             
+	int m, n;
+	for (int i = 0; i<4; i++)
 	{
 		if (ch1 == ops[i])
 			m = i;
@@ -71,7 +106,7 @@ bool Tools::Compare(char ch1, char ch2)
 	else return false;
 }
 
-double Tools::Execute(double a, char op, double b)  
+double Tools::Execute(double a, char op, double b)
 {
 	double result;
 	switch (op)
@@ -141,3 +176,4 @@ int Tools::RandomChosse(vector<double> possiblelist)
 	}
 	return possiblelist.size() - 1;
 }
+

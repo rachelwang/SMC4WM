@@ -1,0 +1,9 @@
+From t= 10 to t =20:
+    conflict(t+1)= conflict(t);
+From t= 15 to t =200:
+    conflict(t+1)= Normal( 15 * conflict(t), 15);
+conflict(16)= 30;
+G[5](conflict( 20 ) )= 123;
+G(conflict( 50)) = 160;
+conflict'(30)= 0.3;
+G(NonCereals_Food_aid_shipments(10)) = 0;

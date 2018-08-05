@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+set(CMAKE_CXX_COMPILER "g++-8")
 project (SC CXX)
 
 add_definitions(-std=c++11)
@@ -24,7 +25,9 @@ endif()
 set(CMAKE_EXE_LINKER_FLAGS "-fopenmp")
 
 include_directories(${SC_SOURCE_DIR})
-
+add_library(Tools ${CMAKE_SOURCE_DIR}/Tools.cpp)
+set(SC_LIBS ${SC_LIBS} Tools)
+set(EXTRA_LIBS ${EXTRA_LIBS} Tools)
 add_executable(SMC_wm ${CMAKE_SOURCE_DIR}/SMC_wm.cpp)
 target_link_libraries(SMC_wm ${EXTRA_LIBS})
 
@@ -36,8 +39,7 @@ add_library(CPD ${CMAKE_SOURCE_DIR}/CPD.cpp)
 set(SC_LIBS ${SC_LIBS} CPD)
 add_library(Sampler ${CMAKE_SOURCE_DIR}/Sampler.cpp)
 set(SC_LIBS ${SC_LIBS} Sampler)
-add_library(Tools ${CMAKE_SOURCE_DIR}/Tools.cpp)
-set(SC_LIBS ${SC_LIBS} Tools)
+
 add_library(checker ${CMAKE_SOURCE_DIR}/checker.cpp)
 set(SC_LIBS ${SC_LIBS} checker)
 add_library(interface ${CMAKE_SOURCE_DIR}/interface.cpp)

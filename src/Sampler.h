@@ -2,11 +2,12 @@
 #include"DBN.h"
 #include"BN.h"
 #include"CPD.h"
+#include<fstream>
 class Sampler :private Tools
 {
 public:
 	Sampler();
-	Sampler(string);
+	Sampler(string filename, string interfile);
 	int NOW;
 	int NEXT;
 
@@ -18,6 +19,7 @@ public:
 	void get_one_sample();
 	int sample_size;
 	vector<string>cpd_order;
+	void saveSampleResult(string);
 private:
 	int flag[1000];
 	double Calculate(int cpd_index);
@@ -25,5 +27,7 @@ private:
 	int judge_file_type(string);
 	map<string, double>evidence;
 	void checkSampleResult(string);
+    vector<vector<double> >all_results;
+
 };
 
