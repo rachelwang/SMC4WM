@@ -1082,6 +1082,7 @@ char str_temp[20] = "../trace";
             //cout<<callTC<<endl;
             numTrace += 1;
             // call TC
+            /**/
             FILE *fp;
             fp = popen(callTC_temp.c_str(), "r");
             char result_buf[MAXLINE], command[MAXLINE];
@@ -1093,13 +1094,6 @@ char str_temp[20] = "../trace";
             }
             while (fgets(result_buf, sizeof(result_buf), fp) != NULL)
             {
-                /*
-                if('\n' == result_buf[strlen(result_buf)-1])
-	            {
-	                result_buf[strlen(result_buf)-1] = '\0';
-	            }
-                printf("命令【%s】 输出【%s】\r\n", callTC.c_str(), result_buf);
-             */
             }
             ret = pclose(fp);
             if (-1 == ret)
@@ -1107,16 +1101,6 @@ char str_temp[20] = "../trace";
                 cerr << "Error: system() call to the trace checker unsuccessful: " << callTC_temp << endl;
                 exit(EXIT_FAILURE);
             }
-            /*
-            if (!WIFEXITED(ret)) {
-                cerr << "Error: system() call to the trace checker terminated abnormally: " << callTC << endl;
-                exit (EXIT_FAILURE);
-            }
-
-            if (WEXITSTATUS(ret) == EXIT_FAILURE) {
-                cerr << "Error: system() call to the trace checker unsuccessful: " << callTC << endl;
-                exit (EXIT_FAILURE);
-            }*/
             ret = WEXITSTATUS(ret);
             if (ret == 1)
             {
@@ -1157,6 +1141,11 @@ char str_temp[20] = "../trace";
         } //loop
 
     } // pragma parallel declaration
+    string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm cfci -graphtxt ../tetrad/graph.txt -knowledge";
+    callTC1 += " "+folderName+"/STRUCTINFO/BN";
+    cout<<callTC1<<endl;
+    FILE *fp1;
+    fp1 = popen(callTC1.c_str(), "r");
     cout << "Number of processors: " << omp_get_num_procs() << endl;
     cout << "Number of threads: " << maxthreads << endl;
     cout << "Elapsed cpu time: " << (clock() - tic) / (double)(maxthreads * CLOCKS_PER_SEC) << endl;

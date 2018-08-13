@@ -30,5 +30,8 @@ public:
     int checkmodel(string,char*,string, int,string);
     bool check_trace(Sampler,char*,string);
     void sample(int,string,string);
+private:
+    void outputStruct(string, Sampler);
+    void getGraph(Sampler);
 };
 #endif

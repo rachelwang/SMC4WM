@@ -1,50 +1,44 @@
 #include "Tools.h"
 
-
-
 Tools::Tools()
 {
 }
-void Tools::creatFolder(char *pDir)
+void Tools::creatFolder(string pDir)
 {
 	int i = 0;
 	int iRet;
 	int iLen;
-	char* pszDir;
+	char *pszDir;
 
-	if(NULL == pDir)
-	{
-		return;
-	}
-
-	pszDir = strdup(pDir);
+	pszDir = strdup(pDir.c_str());
 	iLen = strlen(pszDir);
 
 	// 创建中间目录
-	for (i = 0;i < iLen;i ++)
+	for (i = 0; i < iLen; i++)
 	{
 		if (pszDir[i] == '\\' || pszDir[i] == '/')
 		{
 			pszDir[i] = '\0';
 
 			//如果不存在,创建
-			iRet = access(pszDir,0);
+			iRet = access(pszDir, 0);
 			if (iRet != 0)
 			{
-				iRet = mkdir(pszDir,0755);
+				iRet = mkdir(pszDir, 0755);
 			}
 			//支持linux,将所有\换成/
 			pszDir[i] = '/';
 		}
 	}
 
-	iRet = mkdir(pszDir,0755);
+	iRet = mkdir(pszDir, 0755);
 	free(pszDir);
 }
 vector<string> Tools::split(string str, string pattern)
 {
 	vector<string> ret;
-	if (pattern.empty()) return ret;
+	if (pattern.empty())
+		return ret;
 	size_t start = 0, index = str.find_first_of(pattern, 0);
 	while (index != str.npos)
 	{
@@ -84,7 +78,7 @@ bool Tools::isVariable(string ss)
 bool Tools::isOperator(char ch)
 {
 	int i;
-	for (i = 0; i<7; i++)
+	for (i = 0; i < 7; i++)
 	{
 		if (ch == ops[i])
 			return true;
@@ -95,15 +89,17 @@ bool Tools::isOperator(char ch)
 bool Tools::Compare(char ch1, char ch2)
 {
 	int m, n;
-	for (int i = 0; i<4; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		if (ch1 == ops[i])
 			m = i;
 		if (ch2 == ops[i])
 			n = i;
 	}
-	if (cmp[m][n] == 2)return true;
-	else return false;
+	if (cmp[m][n] == 2)
+		return true;
+	else
+		return false;
 }
 
 double Tools::Execute(double a, char op, double b)
@@ -137,17 +133,19 @@ double Tools::randomfloat(double min, double max)
 	std::uniform_real_distribution<double> dist(0, 1.0);
 	std::mt19937 rng;
 	rng.seed(std::random_device{}());
-	return (max - min)*dist(rng) + min;
+	return (max - min) * dist(rng) + min;
 }
 double Tools::gaussrand()
 {
 	static double V1, V2, S;
 	static int phase = 0;
 	double X;
-	if (phase == 0) {
-		do {
-			double U1 = randomfloat(0,1);
-			double U2 = randomfloat(0,1);
+	if (phase == 0)
+	{
+		do
+		{
+			double U1 = randomfloat(0, 1);
+			double U2 = randomfloat(0, 1);
 			V1 = 2 * U1 - 1;
 			V2 = 2 * U2 - 1;
 			S = V1 * V1 + V2 * V2;
@@ -162,7 +160,7 @@ double Tools::gaussrand()
 int Tools::RandomChosse(vector<double> possiblelist)
 {
 	double sumpossible = 0.0;
-	double randomfloatnum = randomfloat(0.0,1.0);
+	double randomfloatnum = randomfloat(0.0, 1.0);
 	for (int i = 0; i < possiblelist.size(); i++)
 	{
 		sumpossible += possiblelist[i];
@@ -176,4 +174,35 @@ int Tools::RandomChosse(vector<double> possiblelist)
 	}
 	return possiblelist.size() - 1;
 }
-
+vector<string> Tools::merge_v(vector<string> v1, vector<string> v2)
+{
+	for (int i = 0; i < v1.size(); i++)
+	{
+		int flag = 0;
+		for (int j = 0; j < v2.size(); j++)
+		{
+			if (v1[i] == v2[j])
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag == 0)
+			v2.push_back(v1[i]);
+	}
+	return v2;
+}
+void Tools::insert_v(vector<string>& v1, string t)
+{
+	int flag = 0;
+	for (int j = 0; j < v1.size(); j++)
+	{
+		if (v1[j] == t)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	if (flag == 0)
+		v1.push_back(t);
+}

@@ -1,0 +1,2 @@
+conflict 0.5
+conflict' 0.5

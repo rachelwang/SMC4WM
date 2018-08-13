@@ -28,9 +28,10 @@ public:
 	double Execute(double, char, double);
 	int RandomChosse(vector<double> );
 	int randomint(int min, int max);
-
+	vector<string> merge_v(vector<string> v1, vector<string> v2);
+	void insert_v(vector<string>& v1, string t);
 	double gaussrand();
-        void creatFolder(char *);
+    void creatFolder(string);
 	double randomfloat(double min, double max);
 	char ops[7] = { '+','-','*','/' ,'#','(',')'};
 	int  cmp[4][4] = { { 2,2,1,1 },

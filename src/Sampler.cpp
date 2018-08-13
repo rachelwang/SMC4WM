@@ -24,16 +24,17 @@ Sampler::Sampler(string filename, string interfile)
 				nPos2 = this->net_DBN.cpd_list[i].cpd_name.find("'", nPos2);
 				if (nPos2 != string::npos)
 				{
-					this->value[NOW][i] = 1;
+					this->value[NOW][i] = 0.5;
 				}
 				else
-					this->value[NOW][i] = 100;
+					this->value[NOW][i] = 100.0;
 			}
 			else
 			{
 				this->value[NOW][i] = get_beta_value(net_DBN.cpd_list[i].beta_v, net_DBN.cpd_list[i].beta_p);
 			}
 		}
+		getInital();
 	}
 	else if (sampler_type == 0)
 	{
@@ -242,7 +243,7 @@ void Sampler::saveSampleResult(string filename)
 	{
 		file_out << cpd_order[i];
 		if (i < cpd_order.size() - 1)
-			file_out << ",";
+			file_out << "\t";
 	}
 	file_out << endl;
 	for (int i = 0; i < sample_size; i++)
@@ -251,7 +252,7 @@ void Sampler::saveSampleResult(string filename)
 		{
 			file_out << all_results[i][j];
 			if (j < cpd_order.size() - 1)
-				file_out << ",";
+				file_out << "\t";
 		}
 		file_out << endl;
 	}
@@ -260,4 +261,24 @@ void Sampler::saveSampleResult(string filename)
 }
 void Sampler::checkSampleResult(string filename)
 {
+}
+void Sampler::getInital()
+{
+	ifstream fin("../testcase/initialConfig.txt");
+	if(!fin)return;
+	string temp_s;
+	int cpd_index;
+	int i = 0;
+	while(fin >> temp_s)
+	{
+		if(i%2==0)
+		{
+			cpd_index = net_DBN.cpd_map[temp_s];
+		}
+		else
+		{
+			value[NOW][cpd_index] = atof(temp_s.c_str());
+		}
+		i++;
+	}
 }
