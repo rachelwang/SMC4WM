@@ -28,11 +28,8 @@ where:
     
     "      <propertyfile> is the file name and path of properties to be checked."
 
-<<<<<<< HEAD
-    "      <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional！"
-=======
     "      [interventionfile] is the file name and path of Intervention to be implemented. This parameter is optional"
->>>>>>> 5dedeb548da2f374b2e7c881e5e8baec59418c8e
+
     
 Available test specifications:
 
