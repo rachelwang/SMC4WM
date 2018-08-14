@@ -110,7 +110,7 @@ class HTest : public Test
 {
   protected:
     double theta; // threshold
-    // Null hypothesis is (theta, 1)
+                  // Null hypothesis is (theta, 1)
 
   public:
     static const unsigned int NULLHYP = 2;
@@ -1036,13 +1036,13 @@ int main(int argc, char **argv)
 
     // record trace checking result for each thread
     vector<int> result(maxthreads, 0);
-char str_temp[20] = "../trace";
-        creatFolder("../trace");
-        string folderName = gettracefilename("../trace", "SMC_wm");
-        creatFolder(folderName);
-        creatFolder(folderName + "/SAT");
-        creatFolder(folderName + "/UNSAT");
-        int numTrace = 0;
+    char str_temp[20] = "../trace";
+    creatFolder("../trace");
+    string folderName = gettracefilename("../trace", "SMC_wm");
+    creatFolder(folderName);
+    creatFolder(folderName + "/SAT");
+    creatFolder(folderName + "/UNSAT");
+    int numTrace = 0;
 #pragma omp parallel num_threads(maxthreads) shared(result, alldone, numTrace)
     {
         // @Ziqiang, make sure that TC will return 1 if the trace checkers says unsat, and 0 otherwise
@@ -1059,7 +1059,7 @@ char str_temp[20] = "../trace";
                 exit(EXIT_FAILURE);
             }
         }
-        
+
         // @Ziqiang, this is the first place to fill after you modify the ``bound'' input parameter
         // My suggestion is that you may want to add a function in the trace checker that, once it takes
         // in a BLTL, parse the formula and compute the bound in the way that I mention in the wechat.
@@ -1069,7 +1069,7 @@ char str_temp[20] = "../trace";
         std::string callTC = TCpath + string(argv[2]) + " " + string(argv[3]) + " " + folderName; // only model and property are inputs for TC
         if (argc == 5)
             callTC += " " + string(argv[4]);
-        
+
         ofstream infofile(folderName + "/INFO");
         infofile << "testfile: " << string(argv[1]) << endl;
         infofile << "modelfile: " << string(argv[2]) << endl;
@@ -1141,9 +1141,10 @@ char str_temp[20] = "../trace";
         } //loop
 
     } // pragma parallel declaration
-    string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm cfci -graphtxt ../tetrad/graph.txt -knowledge";
-    callTC1 += " "+folderName+"/STRUCTINFO/BN";
-    cout<<callTC1<<endl;
+    string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm cfci";
+    callTC1 += " -graphtxt " + folderName + "/STRUCTINFO/graph.txt";
+    callTC1 += " -knowledge " + folderName + "/STRUCTINFO/BN";
+    cout << callTC1 << endl;
     FILE *fp1;
     fp1 = popen(callTC1.c_str(), "r");
     cout << "Number of processors: " << omp_get_num_procs() << endl;
