@@ -13,40 +13,17 @@ DBN::DBN(string filename)
 {
 	load_network(filename);
 }
-void DBN::add_intervention(int b_t, int e_t, string inter_str, int func_type)
-{
-
-	vector<string> s_temp_v = split(inter_str, "=");
-	int nPos1 = 0;
-	nPos1 = s_temp_v[0].find("(t)", nPos1);
-	if (nPos1 != string::npos)
-	{
-		string_replace(s_temp_v[0], "(t)", "(t+1)");
-		string_replace(s_temp_v[1], "(t)", "(t+1)");
-	}
-	string_replace(s_temp_v[0], "(t+1)", "");
-	string_replace(s_temp_v[1], "(t+1)", "_next");
-	string_replace(s_temp_v[1], "(t)", "");
-
-	int cpd_ind = cpd_map[s_temp_v[0]];
-	s_temp_v[1] = s_temp_v[0]+"_next="+s_temp_v[1];
-	//cout << b_t << " " << e_t << " " << s_temp_v[1] << " " << func_type << endl;
-	
-	cpd_list[cpd_ind].set_cpd_info(b_t, e_t, s_temp_v[1], func_type);
-}
 void DBN::getIntervention(string filename)
 {
 	ifstream fin(filename);
-	if(!fin)return;
 	string s;
-	int t_last = 0;
 	string::size_type nPos1 = 0;
 	string::size_type nPos2 = 0;
 	int begin_time;
 	int end_time;
 	while (fin >> s)
 	{
-
+		cout<<s<<endl;
 		int function_type = 0;
 		string function_str = "";
 		if (s == "From")
@@ -108,79 +85,28 @@ void DBN::getIntervention(string filename)
 		else
 		{
 			string s_temp = s;
-			t_last = 0;
-			vector<string> s_temp_v1;
-			vector<string> s_temp_v2;
-			function_str = "";
-			function_str += s;
+			function_str+=s;
 			string s2;
 			while (fin >> s2)
 			{
 				nPos1 = 0;
 				nPos1 = s2.find(";", nPos1);
-				function_str += s2;
+				function_str+=s2;
 				if (nPos1 != string::npos)
-					break;
+				    break;
 			}
-			string_replace(function_str, ";", "");
-			if (function_str[0] == 'G')
+			cout<<function_str<<endl;
+			if(function_str[0]=='G')
 			{
-				if (function_str[1] != '[')
-				{
-					t_last = -1;
-					string_replace(function_str, "G", "");
-					string_replace(function_str, " ", "");
-					s_temp = function_str;
-				}
-				else
-				{
-					s_temp_v1 = split(function_str, "]");
-					s_temp_v2 = split(s_temp_v1[0], "[");
-					t_last = atoi(s_temp_v2[1].c_str());
-					s_temp = s_temp_v1[1];
-				}
 
-				function_str = "";
-				s_temp_v2.clear();
-				s_temp_v2 = split(s_temp, "(");
-				//cout<<s_temp_v2.size()<<endl;
-				function_str += s_temp_v2[0];
-				s_temp = "";
-				for (int k = 1; k < s_temp_v2.size(); k++)
-					s_temp += s_temp_v2[k];
-				s_temp_v2.clear(); //cout<<s_temp<<endl;
-				s_temp_v2 = split(s_temp, ")");
-				begin_time = atoi(s_temp_v2[0].c_str());
-				function_str += "(t+1)" + s_temp_v2[1];
-				//begin_time = 0;
 			}
 			else
 			{
-				s_temp_v1.clear();
-				s_temp_v1 = split(function_str, "(");
-				function_str = s_temp_v1[0];
-				s_temp_v2.clear();
-				s_temp_v2 = split(s_temp_v1[1], ")");
-				begin_time = atoi(s_temp_v2[0].c_str());
-				function_str += "(t+1)" + s_temp_v2[1];
-				t_last = 1;
+
 			}
-			if (t_last == -1)
-				end_time = -1;
-			else
-				end_time = begin_time + t_last;
+			function_str +=s;
 		}
-
-		//cout << t_last << endl;
-		//cout << function_str << endl;
-		//cout << begin_time << " " << end_time << " " << function_type << " " << function_str << endl;
-		
-		add_intervention(begin_time,end_time,function_str,function_type);
-		for(int i=0;i<cpd_list.size();i++)
-		{
-			cpd_list[i].sort_intervention();
-		}
-
+		cout << begin_time << " " << end_time << " " <<function_str << endl;
 	}
 }
 void DBN::load_network(string filename)
@@ -261,7 +187,7 @@ void DBN::load_network(string filename)
 			string_replace(str_temp[0], "_next", "");
 			int cpd_index = cpd_map[str_temp[0]];
 			cpd_list[cpd_index].cpd_type = function_type;
-			cpd_list[cpd_index].set_cpd_info(0, -1, function_str, function_type);
+			cpd_list[cpd_index].set_cpd_info(function_str);
 		}
 		else if (s == "if")
 		{
