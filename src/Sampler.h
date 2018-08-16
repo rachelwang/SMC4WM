@@ -28,6 +28,6 @@ private:
 	map<string, double>evidence;
 	void checkSampleResult(string);
     vector<vector<double> >all_results;
-
+    void getInital();
 };
 

@@ -27,8 +27,11 @@ public:
     void read_property(char *);
     void init_signals(vector<string>);
     valType advance(vector<double>);
-    int checkmodel(string,char*,string, int);
+    int checkmodel(string,char*,string, int,string);
     bool check_trace(Sampler,char*,string);
     void sample(int,string,string);
+private:
+    void outputStruct(string, Sampler);
+    void getGraph(Sampler);
 };
 #endif
