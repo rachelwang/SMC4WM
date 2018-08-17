@@ -17,7 +17,7 @@ Usage
 
 The command line is as follows:
 
-        SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -getstruct <getstruct>
+        SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile>
         
 where:
 
@@ -30,7 +30,7 @@ where:
 
     "      <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional！"
 
-    "      <getstruct> whether to use tetrat to get the structure of DBN. 'true' or 'false. This parameter is optional"
+  
     
 Available test specifications:
 
