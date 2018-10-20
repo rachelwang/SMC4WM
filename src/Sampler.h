@@ -20,6 +20,8 @@ public:
 	int sample_size;
 	vector<string>cpd_order;
 	void saveSampleResult(string);
+	void getInital(string initfile);
+	vector<double> getLikehood(vector<double>);
 private:
 	int flag[1000];
 	double Calculate(int cpd_index);
@@ -28,6 +30,6 @@ private:
 	map<string, double>evidence;
 	void checkSampleResult(string);
     vector<vector<double> >all_results;
-    void getInital();
+    
 };
 

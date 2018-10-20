@@ -20,6 +20,13 @@ random beta_conflict_intervention : Real;
 random beta_conflict_crop_technology : Real;
 random beta_precipitation_food_insecurity : Real;
 random beta_precipitation_flooding : Real;
+for all t in Integer : conflict'(t+1) = conflict'(t) + 1;
+for all t in Integer : food_insecurity'(t+1) = food_insecurity'(t) + 1;
+for all t in Integer : intervention'(t+1) = intervention'(t) + 1;
+for all t in Integer : conflict'(t+1) = conflict'(t) + 1;
+for all t in Integer : crop_technology'(t+1) = crop_technology'(t) + 1;
+for all t in Integer : precipitation'(t+1) = precipitation'(t) + 1;
+for all t in Integer : flooding'(t+1) = flooding'(t) + 1;
 for all t in Integer :
         conflict(t+1) = conflict(t)
                  + beta_conflict_food_insecurity * food_insecurity'(t)
@@ -1922,3 +1929,5 @@ else
 if beta_precipitation_flooding <= 3.139601904471262 then 0.0016889219701487906
 
 else 0;
+
+

@@ -25,9 +25,15 @@ endif()
 set(CMAKE_EXE_LINKER_FLAGS "-fopenmp")
 
 include_directories(${SC_SOURCE_DIR})
+
 add_library(Tools ${CMAKE_SOURCE_DIR}/Tools.cpp)
 set(SC_LIBS ${SC_LIBS} Tools)
 set(EXTRA_LIBS ${EXTRA_LIBS} Tools)
+
+add_library(ModelSearch ${CMAKE_SOURCE_DIR}/ModelSearch.cpp)
+set(SC_LIBS ${SC_LIBS} ModelSearch)
+set(EXTRA_LIBS ${EXTRA_LIBS} ModelSearch)
+
 add_executable(SMC_wm ${CMAKE_SOURCE_DIR}/SMC_wm.cpp)
 target_link_libraries(SMC_wm ${EXTRA_LIBS})
 

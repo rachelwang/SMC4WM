@@ -175,8 +175,13 @@ bool interface::check_trace(Sampler sample1, char *prop_file1, string modelfile)
     while (1)
     {
         sample1.get_one_sample();
+        //for(int i=0;i<sample1.variable_num;i++)
+        //{
+            //cout<<sample1.value[sample1.NOW][i]<<" ";
+        //}
+        //cout<<endl;
         //cout<<sample1.cpd_order.size()<<" "<<state_vars.size()<<" "<<endl;
-
+        
         if (sample1.sample_size == 1)
         {
             //file1<<"time";
@@ -223,14 +228,14 @@ bool interface::check_trace(Sampler sample1, char *prop_file1, string modelfile)
     }
     return 1;
 }
-int interface::checkmodel(string modelfile, char *propfile, string folder_name, int numTrace, string interfile)
+int interface::checkmodel(string modelfile, char *propfile, string folder_name, int numTrace, string interfile, string initfile)
 {
     tracefile = "";
     tracefile += folder_name;
     trace_num = numTrace;
     Sampler sample1(modelfile, interfile);
-
-    //sample1.net_DBN.get_network_info();
+    sample1.getInital(initfile);
+    sample1.net_DBN.get_network_info();
 
     //cout<<modelfile<<endl;
     //gm.bayesnet.get_cpd_info();
@@ -289,9 +294,9 @@ void interface::outputStruct(string folder, Sampler sample)
         vector<string> NodesatT;
         vector<string> NodesatTplus1;
         vector<string> Nodes;
-        vector<vector<string> > edge_LDBN;
-        vector<vector<string> > edge_BN_c;
-        vector<vector<string> > edge_BN;
+        vector<vector<string > > edge_LDBN;
+        vector<vector<string > > edge_BN_c;
+        vector<vector<string > > edge_BN;
 
         for (int i = 0; i < sample.net_DBN.cpd_list.size(); i++)
         {
@@ -419,6 +424,29 @@ void interface::outputStruct(string folder, Sampler sample)
               << "addtemporal" << endl;
 
         fout3.close();
+        filename = folder + "/" + "graph.txt";
+        ofstream fout4(filename);
+        fout4 << "Graph Nodes:" << endl;
+        int sumNum = 0;
+        for(int i=0;i<sample.net_DBN.cpd_list.size();i++)
+        {
+            if(sample.net_DBN.cpd_list[i].cpd_type!=2)
+            {
+                if(sumNum!=0)
+                    fout4<<",";
+                fout4<<sample.net_DBN.cpd_list[i].cpd_name;
+                sumNum++;
+            }
+        }
+        fout4<<endl;
+        fout4 << endl
+              << "Graph Edges:" << endl;
+        for (int i = 0; i < edge_BN.size(); i++)
+        {
+            fout4 << i+1 << ". " << edge_BN[i][0] << " --> " << edge_BN[i][1] << endl;
+        }
+
+        fout4.close();
         /*
         
         输出BN的tetrad

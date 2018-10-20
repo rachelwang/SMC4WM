@@ -32,12 +32,19 @@
 
 /**
  ** the command line is as follows:
- SMC_wm <testfile> <modelfile> <propertyfile>
+  ./SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -initfile <initialfile>
 
- where:
- <testfile> is a text file containing a sequence of test specifications, give the path to it;
- <modelfile> is the file name and path of the WM model under analysis;
- <propertyfile> is the file name and path of properties to be checked.
+where:
+    <testfile> is a text file containing a sequence of test specifications, give the path to it;
+    
+    <modelfile> is the file name and path of the WM model under analysis;
+    
+    <propertyfile> is the file name and path of properties to be checked;
+
+    <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;
+
+    <initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;
+
 **/
 
 #include <iostream>
@@ -64,6 +71,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include "Tools.h"
+#include "ModelSearch.h"
 #include <map>
 using std::cerr;
 using std::cout;
@@ -925,10 +933,9 @@ int main(int argc, char **argv)
     map<string, string> mapArgv;
     mapArgv = tools.getArgvMap(argc, argv);
     cout << "This is a paralleled version." << endl;
-    cout << mapArgv["-testfile"] << endl;
-    cout << mapArgv["-modelfile"] << endl;
-    cout << mapArgv["-propfile"] << endl;
-
+    //cout << mapArgv["-testfile"] << endl;
+    //cout << mapArgv["-modelfile"] << endl;
+    //cout << mapArgv["-propfile"] << endl;
 
     bool alldone = false; // all tests done
     bool done;
@@ -1054,6 +1061,9 @@ int main(int argc, char **argv)
         std::string callTC = TCpath + mapArgv["-modelfile"] + " " + mapArgv["-propfile"] + " " + folderName;
         if (mapArgv["-interfile"] != "")
             callTC += " " + mapArgv["-interfile"];
+        if (mapArgv["-initfile"] != "")
+            callTC += " " + mapArgv["-initfile"];
+        else callTC += " ../testcase/initConfig.txt";
 
         ofstream infofile(folderName + "/INFO");
         infofile << "testfile: " << mapArgv["-testfile"] << endl;
@@ -1065,6 +1075,7 @@ int main(int argc, char **argv)
         {
             string callTC_temp = callTC + " " + to_string(numTrace);
             //cout<<callTC<<endl;
+            
             numTrace += 1;
             // call TC
             /**/
@@ -1128,12 +1139,30 @@ int main(int argc, char **argv)
     } // pragma parallel declaration
     if (mapArgv["-getstruct"] == "true")
     {
-        string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm cfci";
+        vector<string> satTraceFiles;
+        string satFolder = folderName+"/SAT";
+        getFiles(satTraceFiles,satFolder, "trace");
+        ModelSearch MS(folderName);
+        MS.getStruct("../tetrad/trace.txt");
+        MS.readstruct();
+        for(int i=0;i<satTraceFiles.size();i++)
+        {
+            MS.setNewKnowladge();
+            satTraceFiles[i] = satFolder + "/" + satTraceFiles[i];
+            MS.getStruct(satTraceFiles[i]);
+            MS.readstruct();
+            cout<<satTraceFiles[i]<<endl;
+        }
+        
+        /*
+        string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm pc -verbose";
         callTC1 += " -graphtxt " + folderName + "/STRUCTINFO/graph.txt";
         callTC1 += " -knowledge " + folderName + "/STRUCTINFO/BN";
         cout << callTC1 << endl;
         FILE *fp1;
         fp1 = popen(callTC1.c_str(), "r");
+        */
+        
     }
     cout << "Number of processors: " << omp_get_num_procs() << endl;
     cout << "Number of threads: " << maxthreads << endl;

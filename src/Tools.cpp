@@ -66,12 +66,9 @@ void Tools::string_replace(std::string &strBig, const std::string &strsrc, const
 
 bool Tools::isVariable(string ss)
 {
-	for (int i = 0; i < ss.length(); i++)
-	{
-		char c = ss[i];
-		if ((c < '0' || c > '9') && c != '.')
-			return true;
-	}
+	char c = ss[0];
+	if ((c < '0' || c > '9') && c != '.'&&c != '-')
+		return true;
 	return false;
 }
 
@@ -211,7 +208,7 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 	if (argc % 2 == 0)
 	{
 		cout << "input illegal" << endl;
-		cout<<USAGE<<endl;
+		cout << USAGE << endl;
 		exit(EXIT_FAILURE);
 	}
 	map<string, string> argvMap;
@@ -222,8 +219,37 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 	}
 	if (argvMap["-testfile"] == "" || argvMap["-modelfile"] == "" || argvMap["-propfile"] == "")
 	{
-		cout<<USAGE<<endl;
+		cout << USAGE << endl;
 		exit(EXIT_FAILURE);
 	}
 	return argvMap;
+}
+vector<vector<double > > Tools::rankT(vector<vector<double > > X)
+{
+	vector<vector<double > > Y;
+	for (int i = 0; i < X[0].size(); i++)
+	{
+		vector<double>temp;
+		for (int j = 0; j < X.size(); j++)
+		{
+			temp.push_back(X[j][i]);
+		}
+		Y.push_back(temp);
+	}
+	return Y;
+}
+double Tools::getVar(vector<double> x)
+{
+	double mean = 0;
+	for(int i=0;i<x.size();i++)
+	{
+		mean = mean*(double(i)/double(i+1)) + x[i]/double(i+1);
+		//cout<<x[i]<< endl;
+	}
+	double var = 0.0;
+	for(int i=0;i<x.size();i++)
+	{
+		var += (x[i] - mean)*(x[i] - mean) / double(x.size() + 1);
+	}
+	return var;
 }

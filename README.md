@@ -15,22 +15,19 @@ Compile
 Usage
 =====
 
-The command line is as follows:
+the command line is as follows:
+  ./SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -initfile <initialfile>
 
-        SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -getstruct <getstruct>
-        
 where:
-
+    <testfile> is a text file containing a sequence of test specifications, give the path to it;
     
-    "      <testfile> is a text file containing a sequence of test specifications, give the path to it;"
+    <modelfile> is the file name and path of the WM model under analysis;
     
-    "      <modelfile> is the file name and path of the WM model under analysis;"
-    
-    "      <propertyfile> is the file name and path of properties to be checked."
+    <propertyfile> is the file name and path of properties to be checked;
 
-    "      <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional！"
+    <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;
 
-    "      <getstruct> whether to use tetrat to get the structure of DBN. 'true' or 'false. This parameter is optional"
+    <initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;
     
 Available test specifications:
 

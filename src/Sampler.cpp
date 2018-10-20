@@ -27,14 +27,16 @@ Sampler::Sampler(string filename, string interfile)
 					this->value[NOW][i] = 1.0;
 				}
 				else
+				{
 					this->value[NOW][i] = 100.0;
+				}
+				cout<<net_DBN.cpd_list[i].cpd_name<<endl;
 			}
 			else
 			{
 				this->value[NOW][i] = get_beta_value(net_DBN.cpd_list[i].beta_v, net_DBN.cpd_list[i].beta_p);
 			}
 		}
-		getInital();
 	}
 	else if (sampler_type == 0)
 	{
@@ -70,6 +72,11 @@ void Sampler::get_one_sample()
 			if (flag[i] == 1)
 				continue;
 			value[NEXT][i] = Calculate(i);
+			//cout<<value[NEXT][i]<<" ";
+		}
+		//cout<<endl;
+		for (int i = 0; i < variable_num; i++)
+		{
 			one_sample.push_back(value[NEXT][i]);
 		}
 		int t = NOW;
@@ -165,8 +172,8 @@ double Sampler::Calculate(int cpd_index)
 				result.push(t_r);
 			}
 		}
-		value[NEXT][cpd_index] =
-			flag[cpd_index] = 1;
+		flag[cpd_index] = 1;
+		//if(net_DBN.cpd_list[cpd_index].cpd_name == "intervention")cout<<result.top()<<" "<<type<<endl;
 		if (type == 0)
 		{
 			value[NEXT][cpd_index] = result.top();
@@ -252,12 +259,14 @@ void Sampler::saveSampleResult(string filename)
 		{
 			
 			file_out << all_results[i][j];
+			//cout<< all_results[i][j]<<" ";
 			if((all_results[i][j] - int(all_results[i][j])) == 0 )
 			    file_out << ".0";
 			if (j < cpd_order.size() - 1)
 				file_out << "\t";
 		}
 		file_out << endl;
+		//cout<<endl;
 	}
 	file_out.close();
 	all_results.clear();
@@ -265,9 +274,9 @@ void Sampler::saveSampleResult(string filename)
 void Sampler::checkSampleResult(string filename)
 {
 }
-void Sampler::getInital()
+void Sampler::getInital(string initfile)
 {
-	ifstream fin("../testcase/initialConfig.txt");
+	ifstream fin(initfile);
 	if(!fin)return;
 	string temp_s;
 	int cpd_index;

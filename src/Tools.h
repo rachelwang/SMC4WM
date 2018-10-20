@@ -32,7 +32,9 @@ class Tools
 	double gaussrand();
 	void creatFolder(string);
 	double randomfloat(double min, double max);
+	vector<vector<double > > rankT(vector<vector<double > >);
 	map<string, string> getArgvMap(int argc, char **argv);
+	double getVar(vector<double>);
 	char ops[7] = {'+', '-', '*', '/', '#', '(', ')'};
 	int cmp[4][4] = {
 		{2, 2, 1, 1},
@@ -42,13 +44,14 @@ class Tools
 	};
 	string USAGE =
 
-		"\nUsage: SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -getstruct <getstruct>\n\n"
-		"where:\n"
-		"      <testfile> is a text file containing a sequence of test specifications, give the path to it;\n"
-		"      <modelfile> is the file name and path of the WM model under analysis;\n"
-		"      <propertyfile> is the file name and path of properties to be checked.\n"
-		"      <interventionfile> is the file name and path of interventions. This is optional"
-		"      <getstruct> whether to use tetrat to get the structure of DBN. 'true' or 'false. This is optional"
+		"\nUsage:   ./SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -initfile <initialfile>\n"
+        "where:\n"
+        	"<testfile> is a text file containing a sequence of test specifications, give the path to it;\n"
+    		"<modelfile> is the file name and path of the WM model under analysis;\n"
+    		"<propertyfile> is the file name and path of properties to be checked;\n"
+    		"<interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;\n"
+    		"<initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;\n"
+
 		"Available test specifications: \n\n"
 		"Hypothesis test:\n"
 		" Lai's test: Lai <theta> <cost per sample>\n"

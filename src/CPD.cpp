@@ -16,6 +16,7 @@ void CPD::set_cpd_info(int b_t, int e_t, string function_str,int func_type)
 	Tools strT;
 	Operation temp_o;
 	vector<string> temp;
+	temp_o.var = 0;
 	if (func_type == 1)
 	{
 		temp = strT.split(function_str, ",");
@@ -114,7 +115,7 @@ void CPD::getPostfix(string InfixExp, vector<Operator> &post_temp)
 	{
 		ch = InfixExp[i];
 		i++;
-		if (!strT.isOperator(ch))
+		if (!strT.isOperator(ch)||(ch=='-'&&(i==0||strT.isOperator(InfixExp[i]))))
 		{
 			var_temp += ch;
 		}
