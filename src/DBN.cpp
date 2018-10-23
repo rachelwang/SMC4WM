@@ -49,7 +49,7 @@ void DBN::getIntervention(string filename)
 
 		int function_type = 0;
 		string function_str = "";
-		if (s == "From")
+		if (s == "for")
 		{
 			string s2;
 
@@ -59,15 +59,16 @@ void DBN::getIntervention(string filename)
 				fin >> s;
 				string s_temp = s;
 				string_replace(s_temp, ":", "");
-				string_replace(s_temp, "=", "");
-				string_replace(s_temp, "t", "");
-				if (isVariable(s_temp) == false && s_temp != "")
+				
+				nPos1 = 0;
+				nPos1 = s.find("..", nPos1);
+				if (nPos1 != string::npos)
 				{
-					num_d += 1;
-					if (num_d == 1)
-						begin_time = atoi(s_temp.c_str());
-					else
-						end_time = atoi(s_temp.c_str());
+					vector<string> vsTemp;
+					vsTemp = split(s_temp,"..");
+					begin_time = atoi(vsTemp[0].c_str());
+					if(vsTemp[1]=="max")end_time = -1;
+					else end_time = atoi(vsTemp[1].c_str());
 				}
 				nPos1 = 0;
 				nPos1 = s.find(":", nPos1);

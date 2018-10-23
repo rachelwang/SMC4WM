@@ -1,6 +1,6 @@
-From all t in 10 20:
+for all t in 10..20:
     conflict(t+1)= conflict(t);
-From all t in 15 200:
+for all t in 15..max:
     conflict(t+1)= Normal( 15 * conflict(t), 15);
 conflict(16)= 30;
 G[5](conflict( 20 ) )= 123;
