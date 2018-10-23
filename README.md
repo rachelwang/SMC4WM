@@ -17,10 +17,13 @@ Usage
 
 the command line is as follows:
 
-=======
     SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile>
 
+=======
+    
+
 where:
+
     <testfile> is a text file containing a sequence of test specifications, give the path to it;
     
     <modelfile> is the file name and path of the WM model under analysis;
@@ -31,8 +34,6 @@ where:
 
     <initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;
 =======
-  
->>>>>>> 20b12266db625558850872cf3452e41d38f4aa87
     
 Available test specifications:
 
