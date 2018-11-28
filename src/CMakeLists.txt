@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_CXX_COMPILER "g++-8")
+set(CMAKE_CXX_COMPILER "g++")
 project (SC CXX)
 
 add_definitions(-std=c++11)
