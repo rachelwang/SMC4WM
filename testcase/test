@@ -1,7 +1,7 @@
 #BFTI 0.9 1000 1 1 0.01 
 #whether the prob for the given property being sat is no less than 0.9
 # More tests
-#BEST 0.05 0.99 1 1
+BEST 0.05 0.99 1 1
 #LAI 0.5 0.01 300 100
-BFT 0.5 1000 300 100 0.2 0.4 0.6
+#BFT 0.5 1000 300 100 0.2 0.4 0.6
 

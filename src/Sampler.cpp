@@ -30,7 +30,7 @@ Sampler::Sampler(string filename, string interfile)
 				{
 					this->value[NOW][i] = 100.0;
 				}
-				cout<<net_DBN.cpd_list[i].cpd_name<<endl;
+				cout << net_DBN.cpd_list[i].cpd_name << endl;
 			}
 			else
 			{
@@ -62,38 +62,50 @@ Sampler::Sampler(string filename, string interfile)
 void Sampler::get_one_sample()
 {
 	vector<double> one_sample;
-	if (sampler_type == 1)
-	{
-		for (int i = 0; i < variable_num; i++)
-			flag[i] = 0;
-
-		for (int i = 0; i < variable_num; i++)
-		{
-			if (flag[i] == 1)
-				continue;
-			value[NEXT][i] = Calculate(i);
-			//cout<<value[NEXT][i]<<" ";
-		}
-		//cout<<endl;
-		for (int i = 0; i < variable_num; i++)
-		{
-			one_sample.push_back(value[NEXT][i]);
-		}
-		int t = NOW;
-		NOW = NEXT;
-		NEXT = t;
-	}
-	else if (sampler_type == 0)
+	if (sample_size == 0)
 	{
 		for (int i = 0; i < variable_num; i++)
 		{
-			value[NOW][i] = Calculate(i);
 			one_sample.push_back(value[NOW][i]);
 		}
+		all_results.push_back(one_sample);
+		sample_size++;
 	}
-	all_results.push_back(one_sample);
-	one_sample.clear();
-	sample_size++;
+	else
+	{
+		if (sampler_type == 1)
+		{
+			for (int i = 0; i < variable_num; i++)
+				flag[i] = 0;
+
+			for (int i = 0; i < variable_num; i++)
+			{
+				if (flag[i] == 1)
+					continue;
+				value[NEXT][i] = Calculate(i);
+				//cout<<value[NEXT][i]<<" ";
+			}
+			//cout<<endl;
+			for (int i = 0; i < variable_num; i++)
+			{
+				one_sample.push_back(value[NEXT][i]);
+			}
+			int t = NOW;
+			NOW = NEXT;
+			NEXT = t;
+		}
+		else if (sampler_type == 0)
+		{
+			for (int i = 0; i < variable_num; i++)
+			{
+				value[NOW][i] = Calculate(i);
+				one_sample.push_back(value[NOW][i]);
+			}
+		}
+		all_results.push_back(one_sample);
+		one_sample.clear();
+		sample_size++;
+	}
 }
 
 double Sampler::Calculate(int cpd_index)
@@ -111,10 +123,10 @@ double Sampler::Calculate(int cpd_index)
 			return value[NOW][cpd_index];
 		}
 		stack<double> result;
-        int inter_index = -1;
+		int inter_index = -1;
 		for (int i = net_DBN.cpd_list[cpd_index].intervention.size() - 1; i >= 0; i--)
 		{
-			if (net_DBN.cpd_list[cpd_index].intervention[i].begin_t <= sample_size && (net_DBN.cpd_list[cpd_index].intervention[i].end_t > sample_size||net_DBN.cpd_list[cpd_index].intervention[i].end_t<0))
+			if (net_DBN.cpd_list[cpd_index].intervention[i].begin_t <= sample_size && (net_DBN.cpd_list[cpd_index].intervention[i].end_t > sample_size || net_DBN.cpd_list[cpd_index].intervention[i].end_t < 0))
 			{
 				inter_index = i;
 				net_DBN.cpd_list[cpd_index].cpd_type = net_DBN.cpd_list[cpd_index].intervention[i].func_type;
@@ -122,13 +134,12 @@ double Sampler::Calculate(int cpd_index)
 				break;
 			}
 		}
-        //cout<<"inter:"<<inter_index<<endl;
+		//cout<<"inter:"<<inter_index<<endl;
 		//net_DBN.cpd_list[cpd_index].get_cpd_info();
 		if (inter_index == -1)
 		{
 			return value[NOW][cpd_index];
 		}
-		
 
 		for (int i = 0; i < net_DBN.cpd_list[cpd_index].intervention[inter_index].Postfix.size(); i++)
 		{
@@ -257,11 +268,11 @@ void Sampler::saveSampleResult(string filename)
 	{
 		for (int j = 0; j < cpd_order.size(); j++)
 		{
-			
+
 			file_out << all_results[i][j];
 			//cout<< all_results[i][j]<<" ";
-			if((all_results[i][j] - int(all_results[i][j])) == 0 )
-			    file_out << ".0";
+			if ((all_results[i][j] - int(all_results[i][j])) == 0)
+				file_out << ".0";
 			if (j < cpd_order.size() - 1)
 				file_out << "\t";
 		}
@@ -277,13 +288,14 @@ void Sampler::checkSampleResult(string filename)
 void Sampler::getInital(string initfile)
 {
 	ifstream fin(initfile);
-	if(!fin)return;
+	if (!fin)
+		return;
 	string temp_s;
 	int cpd_index;
 	int i = 0;
-	while(fin >> temp_s)
+	while (fin >> temp_s)
 	{
-		if(i%2==0)
+		if (i % 2 == 0)
 		{
 			cpd_index = net_DBN.cpd_map[temp_s];
 		}
