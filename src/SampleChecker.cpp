@@ -4,7 +4,7 @@ int main(int argc, char *argv[])
     interface in;
 
     char prop_file[] = "../testcase/prop";
-    char model_file[] = "../testcase/cra_cag_to_praise_code.dat";
+    char model_file[] = "../testcase/cra_cag_praise_2018-11-28_22-22-20.json";
     char folder[] = "../trace/test";
     string interfile = "../testcase/intervention";
     int result;

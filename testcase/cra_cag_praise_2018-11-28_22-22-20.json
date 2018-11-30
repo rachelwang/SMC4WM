@@ -74,6 +74,8 @@ for all t in Integer :
 for all t in Integer : 
     conflict(t+1) = conflict(t) 
          + conflict'(t);
+for all t in Integer : Rainfall(t) = Normal(59.5 * precipitation(t), 5.95);
+for all t in Integer : Urbanpovertygapatnationalpovertylines(t) = Normal(59.5 * poverty(t), 5.95);
 if beta_market_food_security <= -3.13891671817 then 0
 else
 if beta_market_food_security <= -3.0754856269 then 0.0200686609433

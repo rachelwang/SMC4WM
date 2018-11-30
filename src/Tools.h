@@ -35,12 +35,13 @@ class Tools
 	vector<vector<double > > rankT(vector<vector<double > >);
 	map<string, string> getArgvMap(int argc, char **argv);
 	double getVar(vector<double>);
-	char ops[7] = {'+', '-', '*', '/', '#', '(', ')'};
-	int cmp[4][4] = {
-		{2, 2, 1, 1},
-		{2, 2, 1, 1},
-		{2, 2, 2, 2},
-		{2, 2, 2, 2},
+	char ops[8] = {'+', '-', '*','/','^', '#', '(', ')'};
+	int cmp[5][5] = {
+		{2, 2, 1, 1, 1},
+		{2, 2, 1, 1, 1},
+		{2, 2, 2, 2, 1},
+		{2, 2, 2, 2, 1},
+		{2, 2, 2, 2, 2}
 	};
 	string USAGE =
 

@@ -75,7 +75,7 @@ bool Tools::isVariable(string ss)
 bool Tools::isOperator(char ch)
 {
 	int i;
-	for (i = 0; i < 7; i++)
+	for (i = 0; i < 8; i++)
 	{
 		if (ch == ops[i])
 			return true;
@@ -86,7 +86,7 @@ bool Tools::isOperator(char ch)
 bool Tools::Compare(char ch1, char ch2)
 {
 	int m, n;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (ch1 == ops[i])
 			m = i;
@@ -99,7 +99,7 @@ bool Tools::Compare(char ch1, char ch2)
 		return false;
 }
 
-double Tools::Execute(double a, char op, double b)
+double Tools::Execute(double b, char op, double a)
 {
 	double result;
 	switch (op)
@@ -115,6 +115,10 @@ double Tools::Execute(double a, char op, double b)
 		break;
 	case '/':
 		result = a / b;
+		break;
+	case '^':
+	    result = pow(a,b);
+		
 		break;
 	}
 	return result;
@@ -217,10 +221,17 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 		//cout << string(argv[i]) << string(argv[i + 1]) << endl;
 		argvMap.insert(pair<string, string>(string(argv[i]), string(argv[i + 1])));
 	}
-	if (argvMap["-testfile"] == "" || argvMap["-modelfile"] == "" || argvMap["-propfile"] == "")
+	if (argvMap.count("-testfile") == 0) 
 	{
-		cout << USAGE << endl;
-		exit(EXIT_FAILURE);
+		argvMap.insert(pair<string, string>("-testfile", "../testcase/test"));
+	}
+	if(argvMap.count("-modelfile") == 0) 
+	{
+        argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2018-11-28_22-22-20.json"));
+	}
+	if(argvMap.count("-propfile") == 0)
+	{
+        argvMap.insert(pair<string, string>("-propfile", "../testcase/prop"));
 	}
 	return argvMap;
 }
