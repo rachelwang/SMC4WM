@@ -48,7 +48,8 @@ Available test specifications:
     
     " Sequential Probability Ratio Test: SPRT <theta> <threshold T> <indifference region delta>"
     
-    " Bayes Factor test with indifference region: BFTI <theta> <threshold T> <alpha> <beta> <indifference  region delta>"
+    " Bayes Factor test with indifference region: BFTI <theta> <threshold T> <alpha> <beta> <indifference 
+    region delta>"
     
     Estimation methods:
     
