@@ -24,15 +24,15 @@ the command line is as follows:
 
 where:
 
-    <testfile> is a text file containing a sequence of test specifications, give the path to it. This parameter is optional. The default input is ../testcase/test;
+    <testfile> is a text file containing a sequence of test specifications, give the path to it. This parameter   is optional. The default input is ../testcase/test;
     
     <modelfile> is the file name and path of the WM model under analysis;
     
     <propertyfile> is the file name and path of properties to be checked;
 
-    <interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;
+    <interventionfile> is the file name and path of Intervention to be implemented. This parameter is   optional;
 
-    <initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;
+    <initialfile> is the file name and path of the initial value of variables in simulation. This parameter is   optional;
 =======
     
 Available test specifications:
@@ -45,7 +45,7 @@ Available test specifications:
     
     " Sequential Probability Ratio Test: SPRT <theta> <threshold T> <indifference region delta>"
     
-    " Bayes Factor test with indifference region: BFTI <theta> <threshold T> <alpha> <beta> <indifference region delta>"
+    " Bayes Factor test with indifference region: BFTI <theta> <threshold T> <alpha> <beta> <indifference   region delta>"
     
     Estimation methods:
     
