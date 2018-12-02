@@ -24,7 +24,7 @@ the command line is as follows:
 
 where:
 
-    <testfile> is a text file containing a sequence of test specifications, give the path to it;
+    <testfile> is a text file containing a sequence of test specifications, give the path to it. This parameter is optional. The default input is ../testcase/test;
     
     <modelfile> is the file name and path of the WM model under analysis;
     
