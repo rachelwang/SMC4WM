@@ -67,7 +67,7 @@ void Tools::string_replace(std::string &strBig, const std::string &strsrc, const
 bool Tools::isVariable(string ss)
 {
 	char c = ss[0];
-	if ((c < '0' || c > '9') && c != '.'&&c != '-')
+	if ((c < '0' || c > '9') && c != '.' && c != '-')
 		return true;
 	return false;
 }
@@ -117,8 +117,8 @@ double Tools::Execute(double b, char op, double a)
 		result = a / b;
 		break;
 	case '^':
-	    result = pow(a,b);
-		
+		result = pow(a, b);
+
 		break;
 	}
 	return result;
@@ -221,17 +221,17 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 		//cout << string(argv[i]) << string(argv[i + 1]) << endl;
 		argvMap.insert(pair<string, string>(string(argv[i]), string(argv[i + 1])));
 	}
-	if (argvMap.count("-testfile") == 0) 
+	if (argvMap.count("-testfile") == 0)
 	{
 		argvMap.insert(pair<string, string>("-testfile", "../testcase/test"));
 	}
-	if(argvMap.count("-modelfile") == 0) 
+	if (argvMap.count("-modelfile") == 0)
 	{
-        argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2018-11-28_22-22-20.json"));
+		argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2018-11-28_22-22-20.json"));
 	}
-	if(argvMap.count("-propfile") == 0)
+	if (argvMap.count("-propfile") == 0 && argvMap.count("-getDistribution") == 0)
 	{
-        argvMap.insert(pair<string, string>("-propfile", "../testcase/prop"));
+		argvMap.insert(pair<string, string>("-propfile", "../testcase/prop"));
 	}
 	return argvMap;
 }
@@ -240,7 +240,7 @@ vector<vector<double > > Tools::rankT(vector<vector<double > > X)
 	vector<vector<double > > Y;
 	for (int i = 0; i < X[0].size(); i++)
 	{
-		vector<double>temp;
+		vector<double> temp;
 		for (int j = 0; j < X.size(); j++)
 		{
 			temp.push_back(X[j][i]);
@@ -252,15 +252,57 @@ vector<vector<double > > Tools::rankT(vector<vector<double > > X)
 double Tools::getVar(vector<double> x)
 {
 	double mean = 0;
-	for(int i=0;i<x.size();i++)
+	for (int i = 0; i < x.size(); i++)
 	{
-		mean = mean*(double(i)/double(i+1)) + x[i]/double(i+1);
+		mean = mean * (double(i) / double(i + 1)) + x[i] / double(i + 1);
 		//cout<<x[i]<< endl;
 	}
 	double var = 0.0;
-	for(int i=0;i<x.size();i++)
+	for (int i = 0; i < x.size(); i++)
 	{
-		var += (x[i] - mean)*(x[i] - mean) / double(x.size() + 1);
+		var += (x[i] - mean) * (x[i] - mean) / double(x.size() + 1);
 	}
 	return var;
+}
+int Tools::str2int(string a)
+{
+	if (isInt(a))
+		return atoi(a.c_str());
+	else
+	{
+		cout << "Error:: Not a int number" << endl;
+		exit(EXIT_FAILURE);
+		return 0;
+	}
+}
+string Tools::int2str(int a)
+{
+	return to_string(a);
+}
+bool Tools::isInt(string s)
+{
+	for (int i = 0; i < s.length(); i++)
+	{
+		if (s[i] < '0' || s[i] > '9')
+			return false;
+	}
+	return true;
+}
+
+bool Tools::isDouble(string s)
+{
+	istringstream sin(s);
+	double t;
+	char p;
+	if (!(sin >> t))
+		/*解释：
+            sin>>t表示把sin转换成double的变量（其实对于int和float型的都会接收），如果转换成功，则值为非0，如果转换不成功就返回为0
+        */
+		return false;
+	if (sin >> p)
+		/*解释：此部分用于检测错误输入中，数字加字符串的输入形式（例如：34.f），在上面的的部分（sin>>t）已经接收并转换了输入的数字部分，在stringstream中相应也会把那一部分给清除，如果此时传入字符串是数字加字符串的输入形式，则此部分可以识别并接收字符部分，例如上面所说的，接收的是.f这部分，所以条件成立，返回false;如果剩下的部分不是字符，那么则sin>>p就为0,则进行到下一步else里面
+          */
+		return false;
+	else
+		return true;
 }

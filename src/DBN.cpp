@@ -29,15 +29,16 @@ void DBN::add_intervention(int b_t, int e_t, string inter_str, int func_type)
 	string_replace(s_temp_v[1], "(t)", "");
 
 	int cpd_ind = cpd_map[s_temp_v[0]];
-	s_temp_v[1] = s_temp_v[0]+"_next="+s_temp_v[1];
+	s_temp_v[1] = s_temp_v[0] + "_next=" + s_temp_v[1];
 	//cout << b_t << " " << e_t << " " << s_temp_v[1] << " " << func_type << endl;
-	
+
 	cpd_list[cpd_ind].set_cpd_info(b_t, e_t, s_temp_v[1], func_type);
 }
 void DBN::getIntervention(string filename)
 {
 	ifstream fin(filename);
-	if(!fin)return;
+	if (!fin)
+		return;
 	string s;
 	int t_last = 0;
 	string::size_type nPos1 = 0;
@@ -59,16 +60,18 @@ void DBN::getIntervention(string filename)
 				fin >> s;
 				string s_temp = s;
 				string_replace(s_temp, ":", "");
-				
+
 				nPos1 = 0;
 				nPos1 = s.find("..", nPos1);
 				if (nPos1 != string::npos)
 				{
 					vector<string> vsTemp;
-					vsTemp = split(s_temp,"..");
+					vsTemp = split(s_temp, "..");
 					begin_time = atoi(vsTemp[0].c_str());
-					if(vsTemp[1]=="max")end_time = -1;
-					else end_time = atoi(vsTemp[1].c_str());
+					if (vsTemp[1] == "max")
+						end_time = -1;
+					else
+						end_time = atoi(vsTemp[1].c_str());
 				}
 				nPos1 = 0;
 				nPos1 = s.find(":", nPos1);
@@ -175,18 +178,16 @@ void DBN::getIntervention(string filename)
 		//cout << t_last << endl;
 		//cout << function_str << endl;
 		//cout << begin_time << " " << end_time << " " << function_type << " " << function_str << endl;
-		
-		add_intervention(begin_time,end_time,function_str,function_type);
-		for(int i=0;i<cpd_list.size();i++)
+
+		add_intervention(begin_time, end_time, function_str, function_type);
+		for (int i = 0; i < cpd_list.size(); i++)
 		{
 			cpd_list[i].sort_intervention();
 		}
-
 	}
 }
 void DBN::load_network(string filename)
 {
-
 	ifstream fin(filename);
 	string s;
 	string::size_type nPos1 = 0;
@@ -196,8 +197,26 @@ void DBN::load_network(string filename)
 		if (s == "random")
 		{
 			fin >> s;
+			string R = "";
+			string s2;
+			while (fin >> s2)
+			{
+				int state = 0;
+				nPos1 = 0;
+				nPos1 = s2.find(";", nPos1);
+				if (nPos1 != string::npos)
+				{
+					R += s2;
+					break;
+				}
+				else
+				{
+					R += s2;
+				}
+			}
 			CPD cpd_temp;
 			cpd_temp.cpd_name = s;
+			cpd_temp.setRange(R);
 			nPos1 = 0;
 			nPos1 = s.find("beta", nPos1);
 			if (nPos1 == string::npos)
@@ -266,20 +285,37 @@ void DBN::load_network(string filename)
 		}
 		else if (s == "if")
 		{
-			string str_beta[5];
+			vector<string>str_beta;
+			string tempS;
 			for (int i = 0; i < 5; i++)
 			{
-				fin >> str_beta[i];
+				fin >> tempS;
+				str_beta.push_back(tempS);
 			}
 			for (int i = 0; i < cpd_list.size(); i++)
 			{
 				if (str_beta[0] == cpd_list[i].cpd_name)
 				{
-					cpd_list[i].beta_p.push_back(atof(str_beta[4].c_str()));
-					cpd_list[i].beta_v.push_back(atof(str_beta[2].c_str()));
-					break;
+					if (isDouble(str_beta[2]) && isDouble(str_beta[4]))
+					{
+						cpd_list[i].beta_p.push_back(atof(str_beta[4].c_str()));
+						cpd_list[i].beta_v.push_back(atof(str_beta[2].c_str()));
+						break;
+					}
+					else
+					{
+						cout << "Error: Wrong beta distribution input." << endl;
+						exit(EXIT_FAILURE);
+					}
 				}
 			}
+		}
+	}
+	for (int i = 0; i < cpd_list.size(); i++)
+	{
+		if (cpd_list[i].cpd_type == 2)
+		{
+			cpd_list[i].getExpectedBeta();
 		}
 	}
 }

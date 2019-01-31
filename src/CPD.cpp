@@ -1,6 +1,7 @@
 #include "CPD.h"
-bool comp(const CPD::Operation &a, const CPD::Operation &b){
-     return a.begin_t < b.begin_t;
+bool comp(const CPD::Operation &a, const CPD::Operation &b)
+{
+	return a.begin_t < b.begin_t;
 }
 void CPD::sort_intervention()
 {
@@ -11,7 +12,7 @@ CPD::CPD()
 	this->variable_card = 0;
 	this->evidence_num = 0;
 }
-void CPD::set_cpd_info(int b_t, int e_t, string function_str,int func_type)
+void CPD::set_cpd_info(int b_t, int e_t, string function_str, int func_type)
 {
 	Tools strT;
 	Operation temp_o;
@@ -26,7 +27,7 @@ void CPD::set_cpd_info(int b_t, int e_t, string function_str,int func_type)
 	}
 	temp = strT.split(function_str, "=");
 	function_str = temp[1] + "#";
-	
+
 	temp_o.begin_t = b_t;
 	temp_o.end_t = e_t;
 	temp_o.func_type = func_type;
@@ -37,7 +38,7 @@ void CPD::get_cpd_info()
 {
 	cout << cpd_name << endl;
 	cout << cpd_type << endl;
-	if (cpd_type <= 2)
+	if (cpd_type < 2)
 	{
 		for (int k = 0; k < intervention.size(); k++)
 		{
@@ -75,6 +76,13 @@ void CPD::get_cpd_info()
 		}
 		cout << endl;
 	}
+	else if (cpd_type == 2)
+	{
+		cout << cpd_name << endl;
+		cout << cpd_type << endl;
+		cout << beta_p.size() << " " << beta_v.size() << endl;
+		cout << betaExpexted << endl;
+	}
 	else
 	{
 		cout << "weights:";
@@ -86,6 +94,8 @@ void CPD::get_cpd_info()
 		cout << "var:" << var << endl;
 		cout << endl;
 	}
+	if (cpd_type == 1)
+		cout << var << endl;
 }
 void CPD::Pushn(string ss, vector<Operator> &post_temp)
 {
@@ -115,7 +125,7 @@ void CPD::getPostfix(string InfixExp, vector<Operator> &post_temp)
 	{
 		ch = InfixExp[i];
 		i++;
-		if (!strT.isOperator(ch)||(ch=='-'&&(i==0||strT.isOperator(InfixExp[i]))))
+		if (!strT.isOperator(ch) || (ch == '-' && (i == 0 || strT.isOperator(InfixExp[i]))))
 		{
 			var_temp += ch;
 		}
@@ -193,5 +203,84 @@ void CPD::setValues(vector<double> temp_values)
 		}
 		this->values.push_back(vec_temp);
 		vector<double>().swap(vec_temp);
+	}
+}
+void CPD::getExpectedBeta()
+{
+	if (beta_v.size() != beta_p.size() || beta_v.size() == 0)
+	{
+		cout << "Error: Wrong beta distribution input." << endl;
+		exit(EXIT_FAILURE);
+	}
+	double r = 0;
+	for (int i = 0; i < beta_v.size() - 1; i++)
+	{
+		r += (beta_v[i + 1] + beta_v[i]) / 2 * beta_p[i + 1];
+	}
+	betaExpexted = r;
+}
+void CPD::setRange(string s)
+{
+	int state = 0;
+	string R = "";
+	string L = "";
+	for (int i = 0; i < s.length(); i++)
+	{
+		if (state == 0)
+		{
+			if (s[i] == '[')
+				state += 1;
+		}
+		else if (state == 1)
+		{
+			if (s[i] == ';')
+				state++;
+			else
+				L += s[i];
+		}
+		else if (state == 2)
+		{
+			if (s[i] == ']')
+				state++;
+			else
+				R += s[i];
+		}
+	}
+	//cout << L << " " << R << endl;
+	rangeL = 0;
+	rangeR = 0;
+	if (L == "" || R == "")
+	{
+		haveRange = false;
+	}
+	else
+	{
+		double r = atof(R.c_str());
+		double l = atof(L.c_str());
+		if (r > l)
+		{
+			haveRange = true;
+			rangeL = l;
+			rangeR = r;
+		}
+		else
+		{
+			haveRange = false;
+			cout << "Error: Wrong range input." << endl;
+			exit(EXIT_FAILURE);
+		}
+	}
+	//cout<<haveRange<<" "<<rangeL<<" "<<rangeR<<endl;
+}
+bool CPD::inRange(double a)
+{
+	if (haveRange == false)
+		return true;
+	else
+	{
+		if (a >= rangeL - 0.01 && a <= rangeR + 0.01)
+			return true;
+		else
+			return false;
 	}
 }

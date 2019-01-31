@@ -24,13 +24,13 @@ Sampler::Sampler(string filename, string interfile)
 				nPos2 = this->net_DBN.cpd_list[i].cpd_name.find("'", nPos2);
 				if (nPos2 != string::npos)
 				{
-					this->value[NOW][i] = 1.0;
+					this->value[NOW][i] = 0.0;
 				}
 				else
 				{
-					this->value[NOW][i] = 100.0;
+					this->value[NOW][i] = 1.0;
 				}
-				cout << net_DBN.cpd_list[i].cpd_name << endl;
+				//cout << net_DBN.cpd_list[i].cpd_name << endl;
 			}
 			else
 			{
@@ -89,6 +89,11 @@ void Sampler::get_one_sample()
 			for (int i = 0; i < variable_num; i++)
 			{
 				one_sample.push_back(value[NEXT][i]);
+				if(!net_DBN.cpd_list[i].inRange(value[NEXT][i]))
+			    {
+					cout<<"Error: Varriable "<<net_DBN.cpd_list[i].cpd_name<<" = "<<value[NEXT][i]<<", out of range."<<endl;
+					exit(EXIT_FAILURE);
+				}
 			}
 			int t = NOW;
 			NOW = NEXT;
@@ -152,13 +157,13 @@ double Sampler::Calculate(int cpd_index)
 
 				if (nPos2 == string::npos)
 				{
-					temp_index = net_DBN.cpd_map[var_name];
+					temp_index = getVariableX(var_name);
 					result.push(value[NOW][temp_index]);
 				}
 				else
 				{
 					string_replace(var_name, "_next", "");
-					temp_index = net_DBN.cpd_map[var_name];
+					temp_index = getVariableX(var_name);
 					if (flag[temp_index] == 0)
 					{
 						result.push(Calculate(temp_index));
@@ -219,6 +224,12 @@ double Sampler::Calculate(int cpd_index)
 
 double Sampler::get_beta_value(vector<double> beta_value, vector<double> possiblelist)
 {
+	if(beta_value.size()!=possiblelist.size()||beta_value.size()==0)
+	{
+		cout<<"Error: Wrong beta distribution input."<<endl;
+		exit(EXIT_FAILURE);
+	}
+	//cout<<beta_value[0]<<" "<<possiblelist[0]<<endl;
 	double sumpossible = 0.0;
 	double randomfloatnum = randomfloat(0, 1);
 	int result;
@@ -245,6 +256,12 @@ double Sampler::get_beta_value(vector<double> beta_value, vector<double> possibl
 int Sampler::judge_file_type(string filename)
 {
 	ifstream fin(filename);
+	if(!fin)
+	{
+		cout<<"Error: Wrong modelfile input."<<endl;
+		exit(EXIT_FAILURE);
+		return 0;
+	}
 	string ss;
 	fin >> ss;
 	fin.close();
@@ -288,21 +305,102 @@ void Sampler::checkSampleResult(string filename)
 void Sampler::getInital(string initfile)
 {
 	ifstream fin(initfile);
+	if(initfile == "")
+	    return;
 	if (!fin)
-		return;
+	{
+		cout << "Error: Wrong inital file name." << endl;
+		exit(EXIT_FAILURE);
+	}
 	string temp_s;
 	int cpd_index;
-	int i = 0;
 	while (fin >> temp_s)
 	{
-		if (i % 2 == 0)
+		string_replace(temp_s," ","");
+		vector<string> VT1 = split(temp_s, ",");
+		if (VT1.size() != 2)
 		{
-			cpd_index = net_DBN.cpd_map[temp_s];
+			cout << "Error: Wrong inital input." << endl;
+			exit(EXIT_FAILURE);
+			return;
 		}
+		string nameStr = VT1[0];
+		string num = VT1[1];
+		nameStr = getNamefromInit(nameStr);
+		cpd_index = getVariableX(nameStr);
+		if(isDouble(num))
+		    value[NOW][cpd_index] = atof(num.c_str());
 		else
 		{
-			value[NOW][cpd_index] = atof(temp_s.c_str());
+			cout << "Error: Wrong inital input." << endl;
+			exit(EXIT_FAILURE);
+			return;
 		}
-		i++;
+		
+	}
+}
+string Sampler::getNamefromInit(string s)
+{
+	int flag = 0;
+	string::size_type nPos1 = 0;
+	nPos1 = s.find("∂", nPos1);
+	if (nPos1 != string::npos)
+	{
+		flag =1;
+		string t = "";
+		int st = 0;
+		for (int i = 0; i < s.length(); i++)
+		{
+			if (s[i] == '(' || s[i] == ')')
+				st++;
+			else
+			{
+				if (st == 1)
+					t += s[i];
+			}
+		}
+		//cout << s << " " << t << endl;
+		s = t;
+	}
+	vector<string> tempV = split(s, "/");
+	string r = tempV[tempV.size() - 1];
+	if (flag == 1)
+		r += "\'";
+	//cout << r << endl;
+	return r;
+}
+int Sampler::getVariableX(string v)
+{
+	for (int i = 0; i < cpd_order.size(); i++)
+	{
+		if (v == cpd_order[i])
+		{
+			return i;
+		}
+	}
+	cout << "Error Variable doesn't exist." << endl;
+	exit(EXIT_FAILURE);
+	return 0;
+}
+double Sampler::getResult(string v, int n)
+{
+	int X = getVariableX(v);
+	if(n<1||n>all_results.size())
+	{
+		cout<<"Error: Wrong input number."<<endl;
+		cout<<USAGE2<<endl;
+		exit(EXIT_FAILURE);
+		
+	}
+	return all_results[n - 1][X];
+}
+void Sampler::resetBeta()
+{
+	for (int i = 0; i < net_DBN.cpd_list.size(); i++)
+	{
+		if (net_DBN.cpd_list[i].cpd_type == 2)
+		{
+			value[NOW][i] = get_beta_value(net_DBN.cpd_list[i].beta_v, net_DBN.cpd_list[i].beta_p);
+		}
 	}
 }

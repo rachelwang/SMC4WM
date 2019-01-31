@@ -1,0 +1,2 @@
+UN/entities/food_availability,1.0
+∂(UN/entities/food_availability)/∂t,0.0

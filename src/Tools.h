@@ -5,7 +5,7 @@
 #include <random>
 #include <ctime>
 #include <cmath>
-
+#include<sstream>
 #include <stdlib.h>
 #include <string.h>
 #include <map>
@@ -35,6 +35,10 @@ class Tools
 	vector<vector<double > > rankT(vector<vector<double > >);
 	map<string, string> getArgvMap(int argc, char **argv);
 	double getVar(vector<double>);
+	int str2int(string);
+	string int2str(int);
+	bool isInt(string);
+	bool isDouble(string);
 	char ops[8] = {'+', '-', '*','/','^', '#', '(', ')'};
 	int cmp[5][5] = {
 		{2, 2, 1, 1, 1},
@@ -68,4 +72,13 @@ class Tools
 		" Naive sampling: NSAM <#samples> \n\n"
 		"Empty lines and lines beginning with '#' are ignored.\n"
 		"";
+	string USAGE2 = "\nUsage:   ./SMC_wm -modelfile <modelfile> -interfile <interventionfile> -initfile <initialfile> -getDistribution <varriableInfo> -interval <intervalNum> -outputfile <outputfile>\n"
+        "where:\n"
+    		"<modelfile> is the file name and path of the WM model under analysis;\n"
+    		"<interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;\n"
+    		"<initialfile> is the file name and path of the initial value of variables in simulation. This parameter is optional;\n"
+			"<varriableInfo> is a string. Contains the name of the variable being queried and the number of steps. The number of steps should be enclosed in \'[\' and \']\' , placed after the variable name and must be greater than or equal to 1, for example: \"market[100]\";\n"
+			"<intervalNum> is an integer representing the number of intervals used to display the distribution;\n"
+			"<outputfile> is the file name and path of the result. This parameter is optional. The default file is \"SMC4WM/Distribution.txt\"" 
+		;
 };

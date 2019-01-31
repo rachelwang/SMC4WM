@@ -21,7 +21,11 @@ public:
 	vector<string>cpd_order;
 	void saveSampleResult(string);
 	void getInital(string initfile);
+	double getResult(string v, int n);
+	int getVariableX(string v);
 	vector<double> getLikehood(vector<double>);
+	vector<vector<double> >all_results;
+	void resetBeta();
 private:
 	int flag[1000];
 	double Calculate(int cpd_index);
@@ -29,7 +33,7 @@ private:
 	int judge_file_type(string);
 	map<string, double>evidence;
 	void checkSampleResult(string);
-    vector<vector<double> >all_results;
+    string getNamefromInit(string);
     
 };
 

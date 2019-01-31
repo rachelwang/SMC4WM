@@ -12,6 +12,7 @@ class CPD : public Tools
 	int cpd_type; // 0：普通连续 1：动态、高斯、连续 2：beta 3,：静态离散 4：静态高斯连续
 	vector<double> beta_p;
 	vector<double> beta_v;
+	double betaExpexted;
 	double var; //静态/高斯 方差
 	struct Operator
 	{
@@ -41,8 +42,13 @@ class CPD : public Tools
 	vector<int> evidence_card;
 	void setValues(vector<double> temp_values);
 	vector<double> weights;
+	void getExpectedBeta();
+	void setRange(string);
+	bool inRange(double);
+	double rangeL;
+	double rangeR;
+	bool haveRange;
 
   private:
 	void Pushn(string ss, vector<Operator> &post_temp);
-	
 };

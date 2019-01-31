@@ -1,0 +1,3713 @@
+random food_availability : Integer -> [0;1];
+random food_availability' : Integer -> Real;
+random food_production : Integer -> [0;1];
+random food_production' : Integer -> Real;
+random precipitation : Integer -> [0;1];
+random precipitation' : Integer -> Real;
+random road : Integer -> [0;1];
+random road' : Integer -> Real;
+random humanitarian_assistance : Integer -> [0;1];
+random humanitarian_assistance' : Integer -> Real;
+random provision_of_goods_and_services : Integer -> [0;1];
+random provision_of_goods_and_services' : Integer -> Real;
+random poverty : Integer -> [0;1];
+random poverty' : Integer -> Real;
+random death : Integer -> [0;1];
+random death' : Integer -> Real;
+random food_security : Integer -> [0;1];
+random food_security' : Integer -> Real;
+random market : Integer -> [0;1];
+random market' : Integer -> Real;
+random institutional_support : Integer -> [0;1];
+random institutional_support' : Integer -> Real;
+random Production_Meat_indigenous_total : Integer -> Real;
+random Production_Maize : Integer -> Real;
+random Average_Total_Daily_Rainfall_Maize : Integer -> Real;
+random Mortality_caused_by_road_traffic_injury : Integer -> Real;
+random Net_official_development_assistance_and_official_aid_received : Integer -> Real;
+random Imports_of_goods_and_services : Integer -> Real;
+random Poverty_headcount_ratio_at_national_poverty_lines : Integer -> Real;
+random Battlerelated_deaths : Integer -> Real;
+random IPC_Phase_Classification : Integer -> Real;
+random Inflation_Rate : Integer -> Real;
+random CPIA_policies_for_social_inclusionequity_cluster_average : Integer -> Real;
+random beta_institutional_support_food_availability : [-3.132;3.099];
+random beta_institutional_support_poverty : [-3.138;3.126];
+random beta_humanitarian_assistance_institutional_support : [-3.132;3.099];
+random beta_provision_of_goods_and_services_market : [-3.132;3.099];
+random beta_food_production_food_availability : [-3.132;3.099];
+random beta_poverty_provision_of_goods_and_services : [-3.132;3.099];
+random beta_poverty_food_security : [-3.138;3.126];
+random beta_poverty_institutional_support : [-3.138;3.126];
+random beta_market_food_security : [-3.132;3.099];
+random beta_market_institutional_support : [-3.099;3.132];
+random beta_food_availability_market : [-3.099;3.132];
+random beta_food_security_food_availability : [-3.132;3.099];
+random beta_food_security_humanitarian_assistance : [-3.132;3.099];
+random beta_precipitation_food_production : [-3.126;3.138];
+random beta_precipitation_road : [-3.132;3.099];
+random beta_precipitation_poverty : [-3.138;3.126];
+random beta_precipitation_death : [-3.126;3.138];
+random beta_road_provision_of_goods_and_services : [-3.132;3.099];
+for all t in Integer : Production_Meat_indigenous_total(t) = Normal(9850.0 * food_availability(t), 985.0);
+for all t in Integer : Production_Maize(t) = Normal(936.062893082 * food_production(t), 93.6062893082);
+for all t in Integer : Average_Total_Daily_Rainfall_Maize(t) = Normal(15.0 * precipitation(t), 1.5);
+for all t in Integer : Mortality_caused_by_road_traffic_injury(t) = Normal(29.3 * road(t), 2.93);
+for all t in Integer : Net_official_development_assistance_and_official_aid_received(t) = Normal(1591626666.67 * humanitarian_assistance(t), 159162666.667);
+for all t in Integer : Imports_of_goods_and_services(t) = Normal(37.2683397412 * provision_of_goods_and_services(t), 3.72683397412);
+for all t in Integer : Poverty_headcount_ratio_at_national_poverty_lines(t) = Normal(63.275 * poverty(t), 6.3275);
+for all t in Integer : Battlerelated_deaths(t) = Normal(759.833333333 * death(t), 75.9833333333);
+for all t in Integer : IPC_Phase_Classification(t) = Normal(1.76244343891 * food_security(t), 0.176244343891);
+for all t in Integer : Inflation_Rate(t) = Normal(334.0 * market(t), 33.4);
+for all t in Integer : CPIA_policies_for_social_inclusionequity_cluster_average(t) = Normal(2.03333333333 * institutional_support(t), 0.203333333333);
+for all t in Integer : 
+	death(t+1) = death(t) 
+		 + beta_precipitation_death * precipitation'(t)
+		 + death'(t);
+for all t in Integer : 
+	institutional_support(t+1) = institutional_support(t) 
+		 + beta_humanitarian_assistance_institutional_support * humanitarian_assistance'(t)
+		 + beta_poverty_institutional_support * poverty'(t)
+		 + beta_market_institutional_support * market'(t)
+		 + institutional_support'(t);
+for all t in Integer : 
+	humanitarian_assistance(t+1) = humanitarian_assistance(t) 
+		 + beta_food_security_humanitarian_assistance * food_security'(t)
+		 + humanitarian_assistance'(t);
+for all t in Integer : 
+	provision_of_goods_and_services(t+1) = provision_of_goods_and_services(t) 
+		 + beta_road_provision_of_goods_and_services * road'(t)
+		 + beta_poverty_provision_of_goods_and_services * poverty'(t)
+		 + provision_of_goods_and_services'(t);
+for all t in Integer : 
+	food_production(t+1) = food_production(t) 
+		 + beta_precipitation_food_production * precipitation'(t)
+		 + food_production'(t);
+for all t in Integer : 
+	poverty(t+1) = poverty(t) 
+		 + beta_precipitation_poverty * precipitation'(t)
+		 + beta_institutional_support_poverty * institutional_support'(t)
+		 + poverty'(t);
+for all t in Integer : 
+	market(t+1) = market(t) 
+		 + beta_food_availability_market * food_availability'(t)
+		 + beta_provision_of_goods_and_services_market * provision_of_goods_and_services'(t)
+		 + market'(t);
+for all t in Integer : 
+	food_availability(t+1) = food_availability(t) 
+		 + beta_food_production_food_availability * food_production'(t)
+		 + beta_food_security_food_availability * food_security'(t)
+		 + beta_institutional_support_food_availability * institutional_support'(t)
+		 + food_availability'(t);
+for all t in Integer : 
+	food_security(t+1) = food_security(t) 
+		 + beta_poverty_food_security * poverty'(t)
+		 + beta_market_food_security * market'(t)
+		 + food_security'(t);
+for all t in Integer : 
+	precipitation(t+1) = precipitation(t) 
+		 + precipitation'(t);
+for all t in Integer : 
+	road(t+1) = road(t) 
+		 + beta_precipitation_road * precipitation'(t)
+		 + road'(t);
+if beta_market_food_security <= -3.13248524207 then 0
+else
+if beta_market_food_security <= -3.06954549686 then 0.000310675755809
+else
+if beta_market_food_security <= -3.00660575165 then 0.000411871280283
+else
+if beta_market_food_security <= -2.94366600645 then 0.000411401119401
+else
+if beta_market_food_security <= -2.88072626124 then 0.000310163462827
+else
+if beta_market_food_security <= -2.81778651603 then 0.000181545727635
+else
+if beta_market_food_security <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_market_food_security <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_market_food_security <= -2.6289672804 then 0.000129343902655
+else
+if beta_market_food_security <= -2.5660275352 then 0.000199974915825
+else
+if beta_market_food_security <= -2.50308778999 then 0.000287299390961
+else
+if beta_market_food_security <= -2.44014804478 then 0.000388937575126
+else
+if beta_market_food_security <= -2.37720829957 then 0.000489626200131
+else
+if beta_market_food_security <= -2.31426855436 then 0.00055039531682
+else
+if beta_market_food_security <= -2.25132880916 then 0.000537347907336
+else
+if beta_market_food_security <= -2.18838906395 then 0.000458345478339
+else
+if beta_market_food_security <= -2.12544931874 then 0.000353985668749
+else
+if beta_market_food_security <= -2.06250957353 then 0.000256574567968
+else
+if beta_market_food_security <= -1.99956982832 then 0.00017439563414
+else
+if beta_market_food_security <= -1.93663008312 then 0.000111206458276
+else
+if beta_market_food_security <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_market_food_security <= -1.8107505927 then 0.000119426893212
+else
+if beta_market_food_security <= -1.74781084749 then 0.000224562124795
+else
+if beta_market_food_security <= -1.68487110228 then 0.000364021880598
+else
+if beta_market_food_security <= -1.62193135707 then 0.00047034366276
+else
+if beta_market_food_security <= -1.55899161187 then 0.000509534916823
+else
+if beta_market_food_security <= -1.49605186666 then 0.000516342460922
+else
+if beta_market_food_security <= -1.43311212145 then 0.000537700839318
+else
+if beta_market_food_security <= -1.37017237624 then 0.000574406638394
+else
+if beta_market_food_security <= -1.30723263103 then 0.000608104235585
+else
+if beta_market_food_security <= -1.24429288583 then 0.000644902052855
+else
+if beta_market_food_security <= -1.18135314062 then 0.000701992007375
+else
+if beta_market_food_security <= -1.11841339541 then 0.000784304664078
+else
+if beta_market_food_security <= -1.0554736502 then 0.00089639467597
+else
+if beta_market_food_security <= -0.992533904993 then 0.00104829519864
+else
+if beta_market_food_security <= -0.929594159785 then 0.00122740405049
+else
+if beta_market_food_security <= -0.866654414577 then 0.00138983161775
+else
+if beta_market_food_security <= -0.803714669368 then 0.00150952139976
+else
+if beta_market_food_security <= -0.74077492416 then 0.00161638952513
+else
+if beta_market_food_security <= -0.677835178952 then 0.00174922777788
+else
+if beta_market_food_security <= -0.614895433744 then 0.00188653054685
+else
+if beta_market_food_security <= -0.551955688536 then 0.00197158672701
+else
+if beta_market_food_security <= -0.489015943328 then 0.00201070911938
+else
+if beta_market_food_security <= -0.426076198119 then 0.00211510327528
+else
+if beta_market_food_security <= -0.363136452911 then 0.00245776112131
+else
+if beta_market_food_security <= -0.300196707703 then 0.00324255437259
+else
+if beta_market_food_security <= -0.237256962495 then 0.00470127488144
+else
+if beta_market_food_security <= -0.174317217287 then 0.00700244077516
+else
+if beta_market_food_security <= -0.111377472079 then 0.010106219431
+else
+if beta_market_food_security <= -0.0484377268705 then 0.0138865278167
+else
+if beta_market_food_security <= 0.0145020183376 then 0.0184659502833
+else
+if beta_market_food_security <= 0.0774417635458 then 0.023919014868
+else
+if beta_market_food_security <= 0.140381508754 then 0.0293587033413
+else
+if beta_market_food_security <= 0.203321253962 then 0.0331275062983
+else
+if beta_market_food_security <= 0.26626099917 then 0.0343974591897
+else
+if beta_market_food_security <= 0.329200744378 then 0.0339216761997
+else
+if beta_market_food_security <= 0.392140489587 then 0.0330460593074
+else
+if beta_market_food_security <= 0.455080234795 then 0.0325815127915
+else
+if beta_market_food_security <= 0.518019980003 then 0.0326129526704
+else
+if beta_market_food_security <= 0.580959725211 then 0.0329087490927
+else
+if beta_market_food_security <= 0.643899470419 then 0.03335642434
+else
+if beta_market_food_security <= 0.706839215627 then 0.0340344730984
+else
+if beta_market_food_security <= 0.769778960836 then 0.0348635997536
+else
+if beta_market_food_security <= 0.832718706044 then 0.0353882791993
+else
+if beta_market_food_security <= 0.895658451252 then 0.0351971621559
+else
+if beta_market_food_security <= 0.95859819646 then 0.0344484786718
+else
+if beta_market_food_security <= 1.02153794167 then 0.0336601961981
+else
+if beta_market_food_security <= 1.08447768688 then 0.0331088032065
+else
+if beta_market_food_security <= 1.14741743208 then 0.0327398686523
+else
+if beta_market_food_security <= 1.21035717729 then 0.0325482227651
+else
+if beta_market_food_security <= 1.2732969225 then 0.0327453005034
+else
+if beta_market_food_security <= 1.33623666771 then 0.0334671327453
+else
+if beta_market_food_security <= 1.39917641292 then 0.0342923276443
+else
+if beta_market_food_security <= 1.46211615813 then 0.0340544634498
+else
+if beta_market_food_security <= 1.52505590333 then 0.0315280586065
+else
+if beta_market_food_security <= 1.58799564854 then 0.0267219764345
+else
+if beta_market_food_security <= 1.65093539375 then 0.0210882898543
+else
+if beta_market_food_security <= 1.71387513896 then 0.0160427834925
+else
+if beta_market_food_security <= 1.77681488417 then 0.0118980099776
+else
+if beta_market_food_security <= 1.83975462937 then 0.00845286622124
+else
+if beta_market_food_security <= 1.90269437458 then 0.00573495456426
+else
+if beta_market_food_security <= 1.96563411979 then 0.00386828545734
+else
+if beta_market_food_security <= 2.028573865 then 0.00277786385329
+else
+if beta_market_food_security <= 2.09151361021 then 0.00224346426422
+else
+if beta_market_food_security <= 2.15445335541 then 0.00204436277242
+else
+if beta_market_food_security <= 2.21739310062 then 0.00199198698388
+else
+if beta_market_food_security <= 2.28033284583 then 0.00193740145928
+else
+if beta_market_food_security <= 2.34327259104 then 0.00182062874954
+else
+if beta_market_food_security <= 2.40621233625 then 0.00167867565692
+else
+if beta_market_food_security <= 2.46915208146 then 0.0015609037704
+else
+if beta_market_food_security <= 2.53209182666 then 0.0014539066214
+else
+if beta_market_food_security <= 2.59503157187 then 0.0013129333768
+else
+if beta_market_food_security <= 2.65797131708 then 0.00113614148095
+else
+if beta_market_food_security <= 2.72091106229 then 0.000966672687062
+else
+if beta_market_food_security <= 2.7838508075 then 0.000835472232664
+else
+if beta_market_food_security <= 2.8467905527 then 0.00073945081803
+else
+if beta_market_food_security <= 2.90973029791 then 0.000668634972475
+else
+if beta_market_food_security <= 2.97267004312 then 0.000616995405055
+else
+if beta_market_food_security <= 3.03560978833 then 0.000561444562016
+else
+if beta_market_food_security <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_food_availability_market <= -3.09854953354 then 0
+else
+if beta_food_availability_market <= -3.03560978833 then 0.000325281135073
+else
+if beta_food_availability_market <= -2.97267004312 then 0.000465958647415
+else
+if beta_food_availability_market <= -2.90973029791 then 0.000561444562016
+else
+if beta_food_availability_market <= -2.8467905527 then 0.000616995405055
+else
+if beta_food_availability_market <= -2.7838508075 then 0.000668634972475
+else
+if beta_food_availability_market <= -2.72091106229 then 0.00073945081803
+else
+if beta_food_availability_market <= -2.65797131708 then 0.000835472232664
+else
+if beta_food_availability_market <= -2.59503157187 then 0.000966672687062
+else
+if beta_food_availability_market <= -2.53209182666 then 0.00113614148095
+else
+if beta_food_availability_market <= -2.46915208146 then 0.0013129333768
+else
+if beta_food_availability_market <= -2.40621233625 then 0.0014539066214
+else
+if beta_food_availability_market <= -2.34327259104 then 0.0015609037704
+else
+if beta_food_availability_market <= -2.28033284583 then 0.00167867565692
+else
+if beta_food_availability_market <= -2.21739310062 then 0.00182062874954
+else
+if beta_food_availability_market <= -2.15445335541 then 0.00193740145928
+else
+if beta_food_availability_market <= -2.09151361021 then 0.00199198698388
+else
+if beta_food_availability_market <= -2.028573865 then 0.00204436277242
+else
+if beta_food_availability_market <= -1.96563411979 then 0.00224346426422
+else
+if beta_food_availability_market <= -1.90269437458 then 0.00277786385329
+else
+if beta_food_availability_market <= -1.83975462937 then 0.00386828545734
+else
+if beta_food_availability_market <= -1.77681488417 then 0.00573495456426
+else
+if beta_food_availability_market <= -1.71387513896 then 0.00845286622124
+else
+if beta_food_availability_market <= -1.65093539375 then 0.0118980099776
+else
+if beta_food_availability_market <= -1.58799564854 then 0.0160427834925
+else
+if beta_food_availability_market <= -1.52505590333 then 0.0210882898543
+else
+if beta_food_availability_market <= -1.46211615813 then 0.0267219764345
+else
+if beta_food_availability_market <= -1.39917641292 then 0.0315280586065
+else
+if beta_food_availability_market <= -1.33623666771 then 0.0340544634498
+else
+if beta_food_availability_market <= -1.2732969225 then 0.0342923276443
+else
+if beta_food_availability_market <= -1.21035717729 then 0.0334671327453
+else
+if beta_food_availability_market <= -1.14741743208 then 0.0327453005034
+else
+if beta_food_availability_market <= -1.08447768688 then 0.0325482227651
+else
+if beta_food_availability_market <= -1.02153794167 then 0.0327398686523
+else
+if beta_food_availability_market <= -0.95859819646 then 0.0331088032065
+else
+if beta_food_availability_market <= -0.895658451252 then 0.0336601961981
+else
+if beta_food_availability_market <= -0.832718706044 then 0.0344484786718
+else
+if beta_food_availability_market <= -0.769778960836 then 0.0351971621559
+else
+if beta_food_availability_market <= -0.706839215627 then 0.0353882791993
+else
+if beta_food_availability_market <= -0.643899470419 then 0.0348635997536
+else
+if beta_food_availability_market <= -0.580959725211 then 0.0340344730984
+else
+if beta_food_availability_market <= -0.518019980003 then 0.03335642434
+else
+if beta_food_availability_market <= -0.455080234795 then 0.0329087490927
+else
+if beta_food_availability_market <= -0.392140489587 then 0.0326129526704
+else
+if beta_food_availability_market <= -0.329200744378 then 0.0325815127915
+else
+if beta_food_availability_market <= -0.26626099917 then 0.0330460593074
+else
+if beta_food_availability_market <= -0.203321253962 then 0.0339216761997
+else
+if beta_food_availability_market <= -0.140381508754 then 0.0343974591897
+else
+if beta_food_availability_market <= -0.0774417635458 then 0.0331275062983
+else
+if beta_food_availability_market <= -0.0145020183376 then 0.0293587033413
+else
+if beta_food_availability_market <= 0.0484377268705 then 0.023919014868
+else
+if beta_food_availability_market <= 0.111377472079 then 0.0184659502833
+else
+if beta_food_availability_market <= 0.174317217287 then 0.0138865278167
+else
+if beta_food_availability_market <= 0.237256962495 then 0.010106219431
+else
+if beta_food_availability_market <= 0.300196707703 then 0.00700244077516
+else
+if beta_food_availability_market <= 0.363136452911 then 0.00470127488144
+else
+if beta_food_availability_market <= 0.426076198119 then 0.00324255437259
+else
+if beta_food_availability_market <= 0.489015943328 then 0.00245776112131
+else
+if beta_food_availability_market <= 0.551955688536 then 0.00211510327528
+else
+if beta_food_availability_market <= 0.614895433744 then 0.00201070911938
+else
+if beta_food_availability_market <= 0.677835178952 then 0.00197158672701
+else
+if beta_food_availability_market <= 0.74077492416 then 0.00188653054685
+else
+if beta_food_availability_market <= 0.803714669368 then 0.00174922777788
+else
+if beta_food_availability_market <= 0.866654414577 then 0.00161638952513
+else
+if beta_food_availability_market <= 0.929594159785 then 0.00150952139976
+else
+if beta_food_availability_market <= 0.992533904993 then 0.00138983161775
+else
+if beta_food_availability_market <= 1.0554736502 then 0.00122740405049
+else
+if beta_food_availability_market <= 1.11841339541 then 0.00104829519864
+else
+if beta_food_availability_market <= 1.18135314062 then 0.00089639467597
+else
+if beta_food_availability_market <= 1.24429288583 then 0.000784304664078
+else
+if beta_food_availability_market <= 1.30723263103 then 0.000701992007375
+else
+if beta_food_availability_market <= 1.37017237624 then 0.000644902052855
+else
+if beta_food_availability_market <= 1.43311212145 then 0.000608104235585
+else
+if beta_food_availability_market <= 1.49605186666 then 0.000574406638394
+else
+if beta_food_availability_market <= 1.55899161187 then 0.000537700839318
+else
+if beta_food_availability_market <= 1.62193135707 then 0.000516342460922
+else
+if beta_food_availability_market <= 1.68487110228 then 0.000509534916823
+else
+if beta_food_availability_market <= 1.74781084749 then 0.00047034366276
+else
+if beta_food_availability_market <= 1.8107505927 then 0.000364021880598
+else
+if beta_food_availability_market <= 1.87369033791 then 0.000224562124795
+else
+if beta_food_availability_market <= 1.93663008312 then 0.000119426893212
+else
+if beta_food_availability_market <= 1.99956982832 then 8.44035639744e-05
+else
+if beta_food_availability_market <= 2.06250957353 then 0.000111206458276
+else
+if beta_food_availability_market <= 2.12544931874 then 0.00017439563414
+else
+if beta_food_availability_market <= 2.18838906395 then 0.000256574567968
+else
+if beta_food_availability_market <= 2.25132880916 then 0.000353985668749
+else
+if beta_food_availability_market <= 2.31426855436 then 0.000458345478339
+else
+if beta_food_availability_market <= 2.37720829957 then 0.000537347907336
+else
+if beta_food_availability_market <= 2.44014804478 then 0.00055039531682
+else
+if beta_food_availability_market <= 2.50308778999 then 0.000489626200131
+else
+if beta_food_availability_market <= 2.5660275352 then 0.000388937575126
+else
+if beta_food_availability_market <= 2.6289672804 then 0.000287299390961
+else
+if beta_food_availability_market <= 2.69190702561 then 0.000199974915825
+else
+if beta_food_availability_market <= 2.75484677082 then 0.000129343902655
+else
+if beta_food_availability_market <= 2.81778651603 then 8.7632716244e-05
+else
+if beta_food_availability_market <= 2.88072626124 then 9.9508927148e-05
+else
+if beta_food_availability_market <= 2.94366600645 then 0.000181545727635
+else
+if beta_food_availability_market <= 3.00660575165 then 0.000310163462827
+else
+if beta_food_availability_market <= 3.06954549686 then 0.000411401119401
+else
+if beta_food_availability_market <= 3.13248524207 then 0.000411871280283
+else 0;
+if beta_institutional_support_poverty <= -3.13819611184 then 0
+else
+if beta_institutional_support_poverty <= -3.07492613209 then 0.0053553578009
+else
+if beta_institutional_support_poverty <= -3.01165615235 then 0.00584308922137
+else
+if beta_institutional_support_poverty <= -2.94838617261 then 0.00602715131118
+else
+if beta_institutional_support_poverty <= -2.88511619286 then 0.00589896762862
+else
+if beta_institutional_support_poverty <= -2.82184621312 then 0.00550587283846
+else
+if beta_institutional_support_poverty <= -2.75857623337 then 0.00493484308638
+else
+if beta_institutional_support_poverty <= -2.69530625363 then 0.00428670795355
+else
+if beta_institutional_support_poverty <= -2.63203627388 then 0.00365082057893
+else
+if beta_institutional_support_poverty <= -2.56876629414 then 0.0030883500915
+else
+if beta_institutional_support_poverty <= -2.50549631439 then 0.00262744748577
+else
+if beta_institutional_support_poverty <= -2.44222633465 then 0.00226845241943
+else
+if beta_institutional_support_poverty <= -2.37895635491 then 0.00199437224231
+else
+if beta_institutional_support_poverty <= -2.31568637516 then 0.00178170623236
+else
+if beta_institutional_support_poverty <= -2.25241639542 then 0.00160842972258
+else
+if beta_institutional_support_poverty <= -2.18914641567 then 0.00145815805609
+else
+if beta_institutional_support_poverty <= -2.12587643593 then 0.00132109930916
+else
+if beta_institutional_support_poverty <= -2.06260645618 then 0.00119303476814
+else
+if beta_institutional_support_poverty <= -1.99933647644 then 0.00107347475517
+else
+if beta_institutional_support_poverty <= -1.9360664967 then 0.000963753624959
+else
+if beta_institutional_support_poverty <= -1.87279651695 then 0.000865465009197
+else
+if beta_institutional_support_poverty <= -1.80952653721 then 0.000779404022105
+else
+if beta_institutional_support_poverty <= -1.74625655746 then 0.000705052604695
+else
+if beta_institutional_support_poverty <= -1.68298657772 then 0.000640567967004
+else
+if beta_institutional_support_poverty <= -1.61971659797 then 0.000583186431065
+else
+if beta_institutional_support_poverty <= -1.55644661823 then 0.000529923005865
+else
+if beta_institutional_support_poverty <= -1.49317663848 then 0.000478412710265
+else
+if beta_institutional_support_poverty <= -1.42990665874 then 0.000427691448423
+else
+if beta_institutional_support_poverty <= -1.366636679 then 0.000378673729332
+else
+if beta_institutional_support_poverty <= -1.30336669925 then 0.000334106133172
+else
+if beta_institutional_support_poverty <= -1.24009671951 then 0.000297902787061
+else
+if beta_institutional_support_poverty <= -1.17682673976 then 0.000273982607676
+else
+if beta_institutional_support_poverty <= -1.11355676002 then 0.000264937487461
+else
+if beta_institutional_support_poverty <= -1.05028678027 then 0.000270958861365
+else
+if beta_institutional_support_poverty <= -0.987016800529 then 0.000289385215933
+else
+if beta_institutional_support_poverty <= -0.923746820785 then 0.000315037805028
+else
+if beta_institutional_support_poverty <= -0.86047684104 then 0.000341271991752
+else
+if beta_institutional_support_poverty <= -0.797206861296 then 0.000361470396472
+else
+if beta_institutional_support_poverty <= -0.733936881552 then 0.000370589658709
+else
+if beta_institutional_support_poverty <= -0.670666901807 then 0.0003663613616
+else
+if beta_institutional_support_poverty <= -0.607396922063 then 0.00034983676395
+else
+if beta_institutional_support_poverty <= -0.544126942318 then 0.000325134036482
+else
+if beta_institutional_support_poverty <= -0.480856962574 then 0.000298453625416
+else
+if beta_institutional_support_poverty <= -0.41758698283 then 0.000276616563566
+else
+if beta_institutional_support_poverty <= -0.354317003085 then 0.000265503014305
+else
+if beta_institutional_support_poverty <= -0.291047023341 then 0.000268795689372
+else
+if beta_institutional_support_poverty <= -0.227777043596 then 0.000287356221029
+else
+if beta_institutional_support_poverty <= -0.164507063852 then 0.000319390142154
+else
+if beta_institutional_support_poverty <= -0.101237084108 then 0.000361322554193
+else
+if beta_institutional_support_poverty <= -0.0379671043632 then 0.000409083597888
+else
+if beta_institutional_support_poverty <= 0.0253028753812 then 0.000459381418387
+else
+if beta_institutional_support_poverty <= 0.0885728551256 then 0.000510579182181
+else
+if beta_institutional_support_poverty <= 0.15184283487 then 0.000562971565791
+else
+if beta_institutional_support_poverty <= 0.215112814614 then 0.000618481226147
+else
+if beta_institutional_support_poverty <= 0.278382794359 then 0.000679961904557
+else
+if beta_institutional_support_poverty <= 0.341652774103 then 0.000750353363361
+else
+if beta_institutional_support_poverty <= 0.404922753848 then 0.000831909197928
+else
+if beta_institutional_support_poverty <= 0.468192733592 then 0.000925669290428
+else
+if beta_institutional_support_poverty <= 0.531462713336 then 0.00103131178322
+else
+if beta_institutional_support_poverty <= 0.594732693081 then 0.00114749596065
+else
+if beta_institutional_support_poverty <= 0.658002672825 then 0.00127278455548
+else
+if beta_institutional_support_poverty <= 0.72127265257 then 0.00140720798008
+else
+if beta_institutional_support_poverty <= 0.784542632314 then 0.00155449918087
+else
+if beta_institutional_support_poverty <= 0.847812612058 then 0.00172495154294
+else
+if beta_institutional_support_poverty <= 0.911082591803 then 0.00193866865102
+else
+if beta_institutional_support_poverty <= 0.974352571547 then 0.00222864486032
+else
+if beta_institutional_support_poverty <= 1.03762255129 then 0.00264270268272
+else
+if beta_institutional_support_poverty <= 1.10089253104 then 0.00324300067393
+else
+if beta_institutional_support_poverty <= 1.16416251078 then 0.00410183956821
+else
+if beta_institutional_support_poverty <= 1.22743249052 then 0.00529297934922
+else
+if beta_institutional_support_poverty <= 1.29070247027 then 0.00687863395207
+else
+if beta_institutional_support_poverty <= 1.35397245001 then 0.00889361793853
+else
+if beta_institutional_support_poverty <= 1.41724242976 then 0.011329594476
+else
+if beta_institutional_support_poverty <= 1.4805124095 then 0.0141236897691
+else
+if beta_institutional_support_poverty <= 1.54378238925 then 0.0171562870696
+else
+if beta_institutional_support_poverty <= 1.60705236899 then 0.020261758484
+else
+if beta_institutional_support_poverty <= 1.67032234874 then 0.0232526808586
+else
+if beta_institutional_support_poverty <= 1.73359232848 then 0.0259532210786
+else
+if beta_institutional_support_poverty <= 1.79686230822 then 0.0282327903257
+else
+if beta_institutional_support_poverty <= 1.86013228797 then 0.0300293550335
+else
+if beta_institutional_support_poverty <= 1.92340226771 then 0.0313545697353
+else
+if beta_institutional_support_poverty <= 1.98667224746 then 0.0322794032018
+else
+if beta_institutional_support_poverty <= 2.0499422272 then 0.0329061622158
+else
+if beta_institutional_support_poverty <= 2.11321220695 then 0.0333372978477
+else
+if beta_institutional_support_poverty <= 2.17648218669 then 0.0336512542133
+else
+if beta_institutional_support_poverty <= 2.23975216644 then 0.0338915414268
+else
+if beta_institutional_support_poverty <= 2.30302214618 then 0.0340695343101
+else
+if beta_institutional_support_poverty <= 2.36629212592 then 0.0341766755354
+else
+if beta_institutional_support_poverty <= 2.42956210567 then 0.0341992374563
+else
+if beta_institutional_support_poverty <= 2.49283208541 then 0.0341288449864
+else
+if beta_institutional_support_poverty <= 2.55610206516 then 0.0339641365394
+else
+if beta_institutional_support_poverty <= 2.6193720449 then 0.033702510848
+else
+if beta_institutional_support_poverty <= 2.68264202465 then 0.0333250173812
+else
+if beta_institutional_support_poverty <= 2.74591200439 then 0.0327810730927
+else
+if beta_institutional_support_poverty <= 2.80918198413 then 0.0319815860474
+else
+if beta_institutional_support_poverty <= 2.87245196388 then 0.0308079403392
+else
+if beta_institutional_support_poverty <= 2.93572194362 then 0.0291394072224
+else
+if beta_institutional_support_poverty <= 2.99899192337 then 0.0268936940378
+else
+if beta_institutional_support_poverty <= 3.06226190311 then 0.0240674825008
+else
+if beta_institutional_support_poverty <= 3.12553188286 then 0.0207602628901
+else 0;
+if beta_institutional_support_food_availability <= -3.13248524207 then 0
+else
+if beta_institutional_support_food_availability <= -3.06954549686 then 0.000310675755809
+else
+if beta_institutional_support_food_availability <= -3.00660575165 then 0.000411871280283
+else
+if beta_institutional_support_food_availability <= -2.94366600645 then 0.000411401119401
+else
+if beta_institutional_support_food_availability <= -2.88072626124 then 0.000310163462827
+else
+if beta_institutional_support_food_availability <= -2.81778651603 then 0.000181545727635
+else
+if beta_institutional_support_food_availability <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_institutional_support_food_availability <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_institutional_support_food_availability <= -2.6289672804 then 0.000129343902655
+else
+if beta_institutional_support_food_availability <= -2.5660275352 then 0.000199974915825
+else
+if beta_institutional_support_food_availability <= -2.50308778999 then 0.000287299390961
+else
+if beta_institutional_support_food_availability <= -2.44014804478 then 0.000388937575126
+else
+if beta_institutional_support_food_availability <= -2.37720829957 then 0.000489626200131
+else
+if beta_institutional_support_food_availability <= -2.31426855436 then 0.00055039531682
+else
+if beta_institutional_support_food_availability <= -2.25132880916 then 0.000537347907336
+else
+if beta_institutional_support_food_availability <= -2.18838906395 then 0.000458345478339
+else
+if beta_institutional_support_food_availability <= -2.12544931874 then 0.000353985668749
+else
+if beta_institutional_support_food_availability <= -2.06250957353 then 0.000256574567968
+else
+if beta_institutional_support_food_availability <= -1.99956982832 then 0.00017439563414
+else
+if beta_institutional_support_food_availability <= -1.93663008312 then 0.000111206458276
+else
+if beta_institutional_support_food_availability <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_institutional_support_food_availability <= -1.8107505927 then 0.000119426893212
+else
+if beta_institutional_support_food_availability <= -1.74781084749 then 0.000224562124795
+else
+if beta_institutional_support_food_availability <= -1.68487110228 then 0.000364021880598
+else
+if beta_institutional_support_food_availability <= -1.62193135707 then 0.00047034366276
+else
+if beta_institutional_support_food_availability <= -1.55899161187 then 0.000509534916823
+else
+if beta_institutional_support_food_availability <= -1.49605186666 then 0.000516342460922
+else
+if beta_institutional_support_food_availability <= -1.43311212145 then 0.000537700839318
+else
+if beta_institutional_support_food_availability <= -1.37017237624 then 0.000574406638394
+else
+if beta_institutional_support_food_availability <= -1.30723263103 then 0.000608104235585
+else
+if beta_institutional_support_food_availability <= -1.24429288583 then 0.000644902052855
+else
+if beta_institutional_support_food_availability <= -1.18135314062 then 0.000701992007375
+else
+if beta_institutional_support_food_availability <= -1.11841339541 then 0.000784304664078
+else
+if beta_institutional_support_food_availability <= -1.0554736502 then 0.00089639467597
+else
+if beta_institutional_support_food_availability <= -0.992533904993 then 0.00104829519864
+else
+if beta_institutional_support_food_availability <= -0.929594159785 then 0.00122740405049
+else
+if beta_institutional_support_food_availability <= -0.866654414577 then 0.00138983161775
+else
+if beta_institutional_support_food_availability <= -0.803714669368 then 0.00150952139976
+else
+if beta_institutional_support_food_availability <= -0.74077492416 then 0.00161638952513
+else
+if beta_institutional_support_food_availability <= -0.677835178952 then 0.00174922777788
+else
+if beta_institutional_support_food_availability <= -0.614895433744 then 0.00188653054685
+else
+if beta_institutional_support_food_availability <= -0.551955688536 then 0.00197158672701
+else
+if beta_institutional_support_food_availability <= -0.489015943328 then 0.00201070911938
+else
+if beta_institutional_support_food_availability <= -0.426076198119 then 0.00211510327528
+else
+if beta_institutional_support_food_availability <= -0.363136452911 then 0.00245776112131
+else
+if beta_institutional_support_food_availability <= -0.300196707703 then 0.00324255437259
+else
+if beta_institutional_support_food_availability <= -0.237256962495 then 0.00470127488144
+else
+if beta_institutional_support_food_availability <= -0.174317217287 then 0.00700244077516
+else
+if beta_institutional_support_food_availability <= -0.111377472079 then 0.010106219431
+else
+if beta_institutional_support_food_availability <= -0.0484377268705 then 0.0138865278167
+else
+if beta_institutional_support_food_availability <= 0.0145020183376 then 0.0184659502833
+else
+if beta_institutional_support_food_availability <= 0.0774417635458 then 0.023919014868
+else
+if beta_institutional_support_food_availability <= 0.140381508754 then 0.0293587033413
+else
+if beta_institutional_support_food_availability <= 0.203321253962 then 0.0331275062983
+else
+if beta_institutional_support_food_availability <= 0.26626099917 then 0.0343974591897
+else
+if beta_institutional_support_food_availability <= 0.329200744378 then 0.0339216761997
+else
+if beta_institutional_support_food_availability <= 0.392140489587 then 0.0330460593074
+else
+if beta_institutional_support_food_availability <= 0.455080234795 then 0.0325815127915
+else
+if beta_institutional_support_food_availability <= 0.518019980003 then 0.0326129526704
+else
+if beta_institutional_support_food_availability <= 0.580959725211 then 0.0329087490927
+else
+if beta_institutional_support_food_availability <= 0.643899470419 then 0.03335642434
+else
+if beta_institutional_support_food_availability <= 0.706839215627 then 0.0340344730984
+else
+if beta_institutional_support_food_availability <= 0.769778960836 then 0.0348635997536
+else
+if beta_institutional_support_food_availability <= 0.832718706044 then 0.0353882791993
+else
+if beta_institutional_support_food_availability <= 0.895658451252 then 0.0351971621559
+else
+if beta_institutional_support_food_availability <= 0.95859819646 then 0.0344484786718
+else
+if beta_institutional_support_food_availability <= 1.02153794167 then 0.0336601961981
+else
+if beta_institutional_support_food_availability <= 1.08447768688 then 0.0331088032065
+else
+if beta_institutional_support_food_availability <= 1.14741743208 then 0.0327398686523
+else
+if beta_institutional_support_food_availability <= 1.21035717729 then 0.0325482227651
+else
+if beta_institutional_support_food_availability <= 1.2732969225 then 0.0327453005034
+else
+if beta_institutional_support_food_availability <= 1.33623666771 then 0.0334671327453
+else
+if beta_institutional_support_food_availability <= 1.39917641292 then 0.0342923276443
+else
+if beta_institutional_support_food_availability <= 1.46211615813 then 0.0340544634498
+else
+if beta_institutional_support_food_availability <= 1.52505590333 then 0.0315280586065
+else
+if beta_institutional_support_food_availability <= 1.58799564854 then 0.0267219764345
+else
+if beta_institutional_support_food_availability <= 1.65093539375 then 0.0210882898543
+else
+if beta_institutional_support_food_availability <= 1.71387513896 then 0.0160427834925
+else
+if beta_institutional_support_food_availability <= 1.77681488417 then 0.0118980099776
+else
+if beta_institutional_support_food_availability <= 1.83975462937 then 0.00845286622124
+else
+if beta_institutional_support_food_availability <= 1.90269437458 then 0.00573495456426
+else
+if beta_institutional_support_food_availability <= 1.96563411979 then 0.00386828545734
+else
+if beta_institutional_support_food_availability <= 2.028573865 then 0.00277786385329
+else
+if beta_institutional_support_food_availability <= 2.09151361021 then 0.00224346426422
+else
+if beta_institutional_support_food_availability <= 2.15445335541 then 0.00204436277242
+else
+if beta_institutional_support_food_availability <= 2.21739310062 then 0.00199198698388
+else
+if beta_institutional_support_food_availability <= 2.28033284583 then 0.00193740145928
+else
+if beta_institutional_support_food_availability <= 2.34327259104 then 0.00182062874954
+else
+if beta_institutional_support_food_availability <= 2.40621233625 then 0.00167867565692
+else
+if beta_institutional_support_food_availability <= 2.46915208146 then 0.0015609037704
+else
+if beta_institutional_support_food_availability <= 2.53209182666 then 0.0014539066214
+else
+if beta_institutional_support_food_availability <= 2.59503157187 then 0.0013129333768
+else
+if beta_institutional_support_food_availability <= 2.65797131708 then 0.00113614148095
+else
+if beta_institutional_support_food_availability <= 2.72091106229 then 0.000966672687062
+else
+if beta_institutional_support_food_availability <= 2.7838508075 then 0.000835472232664
+else
+if beta_institutional_support_food_availability <= 2.8467905527 then 0.00073945081803
+else
+if beta_institutional_support_food_availability <= 2.90973029791 then 0.000668634972475
+else
+if beta_institutional_support_food_availability <= 2.97267004312 then 0.000616995405055
+else
+if beta_institutional_support_food_availability <= 3.03560978833 then 0.000561444562016
+else
+if beta_institutional_support_food_availability <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_road_provision_of_goods_and_services <= -3.13248524207 then 0
+else
+if beta_road_provision_of_goods_and_services <= -3.06954549686 then 0.000310675755809
+else
+if beta_road_provision_of_goods_and_services <= -3.00660575165 then 0.000411871280283
+else
+if beta_road_provision_of_goods_and_services <= -2.94366600645 then 0.000411401119401
+else
+if beta_road_provision_of_goods_and_services <= -2.88072626124 then 0.000310163462827
+else
+if beta_road_provision_of_goods_and_services <= -2.81778651603 then 0.000181545727635
+else
+if beta_road_provision_of_goods_and_services <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_road_provision_of_goods_and_services <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_road_provision_of_goods_and_services <= -2.6289672804 then 0.000129343902655
+else
+if beta_road_provision_of_goods_and_services <= -2.5660275352 then 0.000199974915825
+else
+if beta_road_provision_of_goods_and_services <= -2.50308778999 then 0.000287299390961
+else
+if beta_road_provision_of_goods_and_services <= -2.44014804478 then 0.000388937575126
+else
+if beta_road_provision_of_goods_and_services <= -2.37720829957 then 0.000489626200131
+else
+if beta_road_provision_of_goods_and_services <= -2.31426855436 then 0.00055039531682
+else
+if beta_road_provision_of_goods_and_services <= -2.25132880916 then 0.000537347907336
+else
+if beta_road_provision_of_goods_and_services <= -2.18838906395 then 0.000458345478339
+else
+if beta_road_provision_of_goods_and_services <= -2.12544931874 then 0.000353985668749
+else
+if beta_road_provision_of_goods_and_services <= -2.06250957353 then 0.000256574567968
+else
+if beta_road_provision_of_goods_and_services <= -1.99956982832 then 0.00017439563414
+else
+if beta_road_provision_of_goods_and_services <= -1.93663008312 then 0.000111206458276
+else
+if beta_road_provision_of_goods_and_services <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_road_provision_of_goods_and_services <= -1.8107505927 then 0.000119426893212
+else
+if beta_road_provision_of_goods_and_services <= -1.74781084749 then 0.000224562124795
+else
+if beta_road_provision_of_goods_and_services <= -1.68487110228 then 0.000364021880598
+else
+if beta_road_provision_of_goods_and_services <= -1.62193135707 then 0.00047034366276
+else
+if beta_road_provision_of_goods_and_services <= -1.55899161187 then 0.000509534916823
+else
+if beta_road_provision_of_goods_and_services <= -1.49605186666 then 0.000516342460922
+else
+if beta_road_provision_of_goods_and_services <= -1.43311212145 then 0.000537700839318
+else
+if beta_road_provision_of_goods_and_services <= -1.37017237624 then 0.000574406638394
+else
+if beta_road_provision_of_goods_and_services <= -1.30723263103 then 0.000608104235585
+else
+if beta_road_provision_of_goods_and_services <= -1.24429288583 then 0.000644902052855
+else
+if beta_road_provision_of_goods_and_services <= -1.18135314062 then 0.000701992007375
+else
+if beta_road_provision_of_goods_and_services <= -1.11841339541 then 0.000784304664078
+else
+if beta_road_provision_of_goods_and_services <= -1.0554736502 then 0.00089639467597
+else
+if beta_road_provision_of_goods_and_services <= -0.992533904993 then 0.00104829519864
+else
+if beta_road_provision_of_goods_and_services <= -0.929594159785 then 0.00122740405049
+else
+if beta_road_provision_of_goods_and_services <= -0.866654414577 then 0.00138983161775
+else
+if beta_road_provision_of_goods_and_services <= -0.803714669368 then 0.00150952139976
+else
+if beta_road_provision_of_goods_and_services <= -0.74077492416 then 0.00161638952513
+else
+if beta_road_provision_of_goods_and_services <= -0.677835178952 then 0.00174922777788
+else
+if beta_road_provision_of_goods_and_services <= -0.614895433744 then 0.00188653054685
+else
+if beta_road_provision_of_goods_and_services <= -0.551955688536 then 0.00197158672701
+else
+if beta_road_provision_of_goods_and_services <= -0.489015943328 then 0.00201070911938
+else
+if beta_road_provision_of_goods_and_services <= -0.426076198119 then 0.00211510327528
+else
+if beta_road_provision_of_goods_and_services <= -0.363136452911 then 0.00245776112131
+else
+if beta_road_provision_of_goods_and_services <= -0.300196707703 then 0.00324255437259
+else
+if beta_road_provision_of_goods_and_services <= -0.237256962495 then 0.00470127488144
+else
+if beta_road_provision_of_goods_and_services <= -0.174317217287 then 0.00700244077516
+else
+if beta_road_provision_of_goods_and_services <= -0.111377472079 then 0.010106219431
+else
+if beta_road_provision_of_goods_and_services <= -0.0484377268705 then 0.0138865278167
+else
+if beta_road_provision_of_goods_and_services <= 0.0145020183376 then 0.0184659502833
+else
+if beta_road_provision_of_goods_and_services <= 0.0774417635458 then 0.023919014868
+else
+if beta_road_provision_of_goods_and_services <= 0.140381508754 then 0.0293587033413
+else
+if beta_road_provision_of_goods_and_services <= 0.203321253962 then 0.0331275062983
+else
+if beta_road_provision_of_goods_and_services <= 0.26626099917 then 0.0343974591897
+else
+if beta_road_provision_of_goods_and_services <= 0.329200744378 then 0.0339216761997
+else
+if beta_road_provision_of_goods_and_services <= 0.392140489587 then 0.0330460593074
+else
+if beta_road_provision_of_goods_and_services <= 0.455080234795 then 0.0325815127915
+else
+if beta_road_provision_of_goods_and_services <= 0.518019980003 then 0.0326129526704
+else
+if beta_road_provision_of_goods_and_services <= 0.580959725211 then 0.0329087490927
+else
+if beta_road_provision_of_goods_and_services <= 0.643899470419 then 0.03335642434
+else
+if beta_road_provision_of_goods_and_services <= 0.706839215627 then 0.0340344730984
+else
+if beta_road_provision_of_goods_and_services <= 0.769778960836 then 0.0348635997536
+else
+if beta_road_provision_of_goods_and_services <= 0.832718706044 then 0.0353882791993
+else
+if beta_road_provision_of_goods_and_services <= 0.895658451252 then 0.0351971621559
+else
+if beta_road_provision_of_goods_and_services <= 0.95859819646 then 0.0344484786718
+else
+if beta_road_provision_of_goods_and_services <= 1.02153794167 then 0.0336601961981
+else
+if beta_road_provision_of_goods_and_services <= 1.08447768688 then 0.0331088032065
+else
+if beta_road_provision_of_goods_and_services <= 1.14741743208 then 0.0327398686523
+else
+if beta_road_provision_of_goods_and_services <= 1.21035717729 then 0.0325482227651
+else
+if beta_road_provision_of_goods_and_services <= 1.2732969225 then 0.0327453005034
+else
+if beta_road_provision_of_goods_and_services <= 1.33623666771 then 0.0334671327453
+else
+if beta_road_provision_of_goods_and_services <= 1.39917641292 then 0.0342923276443
+else
+if beta_road_provision_of_goods_and_services <= 1.46211615813 then 0.0340544634498
+else
+if beta_road_provision_of_goods_and_services <= 1.52505590333 then 0.0315280586065
+else
+if beta_road_provision_of_goods_and_services <= 1.58799564854 then 0.0267219764345
+else
+if beta_road_provision_of_goods_and_services <= 1.65093539375 then 0.0210882898543
+else
+if beta_road_provision_of_goods_and_services <= 1.71387513896 then 0.0160427834925
+else
+if beta_road_provision_of_goods_and_services <= 1.77681488417 then 0.0118980099776
+else
+if beta_road_provision_of_goods_and_services <= 1.83975462937 then 0.00845286622124
+else
+if beta_road_provision_of_goods_and_services <= 1.90269437458 then 0.00573495456426
+else
+if beta_road_provision_of_goods_and_services <= 1.96563411979 then 0.00386828545734
+else
+if beta_road_provision_of_goods_and_services <= 2.028573865 then 0.00277786385329
+else
+if beta_road_provision_of_goods_and_services <= 2.09151361021 then 0.00224346426422
+else
+if beta_road_provision_of_goods_and_services <= 2.15445335541 then 0.00204436277242
+else
+if beta_road_provision_of_goods_and_services <= 2.21739310062 then 0.00199198698388
+else
+if beta_road_provision_of_goods_and_services <= 2.28033284583 then 0.00193740145928
+else
+if beta_road_provision_of_goods_and_services <= 2.34327259104 then 0.00182062874954
+else
+if beta_road_provision_of_goods_and_services <= 2.40621233625 then 0.00167867565692
+else
+if beta_road_provision_of_goods_and_services <= 2.46915208146 then 0.0015609037704
+else
+if beta_road_provision_of_goods_and_services <= 2.53209182666 then 0.0014539066214
+else
+if beta_road_provision_of_goods_and_services <= 2.59503157187 then 0.0013129333768
+else
+if beta_road_provision_of_goods_and_services <= 2.65797131708 then 0.00113614148095
+else
+if beta_road_provision_of_goods_and_services <= 2.72091106229 then 0.000966672687062
+else
+if beta_road_provision_of_goods_and_services <= 2.7838508075 then 0.000835472232664
+else
+if beta_road_provision_of_goods_and_services <= 2.8467905527 then 0.00073945081803
+else
+if beta_road_provision_of_goods_and_services <= 2.90973029791 then 0.000668634972475
+else
+if beta_road_provision_of_goods_and_services <= 2.97267004312 then 0.000616995405055
+else
+if beta_road_provision_of_goods_and_services <= 3.03560978833 then 0.000561444562016
+else
+if beta_road_provision_of_goods_and_services <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_food_security_humanitarian_assistance <= -3.13248524207 then 0
+else
+if beta_food_security_humanitarian_assistance <= -3.06954549686 then 0.000310675755809
+else
+if beta_food_security_humanitarian_assistance <= -3.00660575165 then 0.000411871280283
+else
+if beta_food_security_humanitarian_assistance <= -2.94366600645 then 0.000411401119401
+else
+if beta_food_security_humanitarian_assistance <= -2.88072626124 then 0.000310163462827
+else
+if beta_food_security_humanitarian_assistance <= -2.81778651603 then 0.000181545727635
+else
+if beta_food_security_humanitarian_assistance <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_food_security_humanitarian_assistance <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_food_security_humanitarian_assistance <= -2.6289672804 then 0.000129343902655
+else
+if beta_food_security_humanitarian_assistance <= -2.5660275352 then 0.000199974915825
+else
+if beta_food_security_humanitarian_assistance <= -2.50308778999 then 0.000287299390961
+else
+if beta_food_security_humanitarian_assistance <= -2.44014804478 then 0.000388937575126
+else
+if beta_food_security_humanitarian_assistance <= -2.37720829957 then 0.000489626200131
+else
+if beta_food_security_humanitarian_assistance <= -2.31426855436 then 0.00055039531682
+else
+if beta_food_security_humanitarian_assistance <= -2.25132880916 then 0.000537347907336
+else
+if beta_food_security_humanitarian_assistance <= -2.18838906395 then 0.000458345478339
+else
+if beta_food_security_humanitarian_assistance <= -2.12544931874 then 0.000353985668749
+else
+if beta_food_security_humanitarian_assistance <= -2.06250957353 then 0.000256574567968
+else
+if beta_food_security_humanitarian_assistance <= -1.99956982832 then 0.00017439563414
+else
+if beta_food_security_humanitarian_assistance <= -1.93663008312 then 0.000111206458276
+else
+if beta_food_security_humanitarian_assistance <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_food_security_humanitarian_assistance <= -1.8107505927 then 0.000119426893212
+else
+if beta_food_security_humanitarian_assistance <= -1.74781084749 then 0.000224562124795
+else
+if beta_food_security_humanitarian_assistance <= -1.68487110228 then 0.000364021880598
+else
+if beta_food_security_humanitarian_assistance <= -1.62193135707 then 0.00047034366276
+else
+if beta_food_security_humanitarian_assistance <= -1.55899161187 then 0.000509534916823
+else
+if beta_food_security_humanitarian_assistance <= -1.49605186666 then 0.000516342460922
+else
+if beta_food_security_humanitarian_assistance <= -1.43311212145 then 0.000537700839318
+else
+if beta_food_security_humanitarian_assistance <= -1.37017237624 then 0.000574406638394
+else
+if beta_food_security_humanitarian_assistance <= -1.30723263103 then 0.000608104235585
+else
+if beta_food_security_humanitarian_assistance <= -1.24429288583 then 0.000644902052855
+else
+if beta_food_security_humanitarian_assistance <= -1.18135314062 then 0.000701992007375
+else
+if beta_food_security_humanitarian_assistance <= -1.11841339541 then 0.000784304664078
+else
+if beta_food_security_humanitarian_assistance <= -1.0554736502 then 0.00089639467597
+else
+if beta_food_security_humanitarian_assistance <= -0.992533904993 then 0.00104829519864
+else
+if beta_food_security_humanitarian_assistance <= -0.929594159785 then 0.00122740405049
+else
+if beta_food_security_humanitarian_assistance <= -0.866654414577 then 0.00138983161775
+else
+if beta_food_security_humanitarian_assistance <= -0.803714669368 then 0.00150952139976
+else
+if beta_food_security_humanitarian_assistance <= -0.74077492416 then 0.00161638952513
+else
+if beta_food_security_humanitarian_assistance <= -0.677835178952 then 0.00174922777788
+else
+if beta_food_security_humanitarian_assistance <= -0.614895433744 then 0.00188653054685
+else
+if beta_food_security_humanitarian_assistance <= -0.551955688536 then 0.00197158672701
+else
+if beta_food_security_humanitarian_assistance <= -0.489015943328 then 0.00201070911938
+else
+if beta_food_security_humanitarian_assistance <= -0.426076198119 then 0.00211510327528
+else
+if beta_food_security_humanitarian_assistance <= -0.363136452911 then 0.00245776112131
+else
+if beta_food_security_humanitarian_assistance <= -0.300196707703 then 0.00324255437259
+else
+if beta_food_security_humanitarian_assistance <= -0.237256962495 then 0.00470127488144
+else
+if beta_food_security_humanitarian_assistance <= -0.174317217287 then 0.00700244077516
+else
+if beta_food_security_humanitarian_assistance <= -0.111377472079 then 0.010106219431
+else
+if beta_food_security_humanitarian_assistance <= -0.0484377268705 then 0.0138865278167
+else
+if beta_food_security_humanitarian_assistance <= 0.0145020183376 then 0.0184659502833
+else
+if beta_food_security_humanitarian_assistance <= 0.0774417635458 then 0.023919014868
+else
+if beta_food_security_humanitarian_assistance <= 0.140381508754 then 0.0293587033413
+else
+if beta_food_security_humanitarian_assistance <= 0.203321253962 then 0.0331275062983
+else
+if beta_food_security_humanitarian_assistance <= 0.26626099917 then 0.0343974591897
+else
+if beta_food_security_humanitarian_assistance <= 0.329200744378 then 0.0339216761997
+else
+if beta_food_security_humanitarian_assistance <= 0.392140489587 then 0.0330460593074
+else
+if beta_food_security_humanitarian_assistance <= 0.455080234795 then 0.0325815127915
+else
+if beta_food_security_humanitarian_assistance <= 0.518019980003 then 0.0326129526704
+else
+if beta_food_security_humanitarian_assistance <= 0.580959725211 then 0.0329087490927
+else
+if beta_food_security_humanitarian_assistance <= 0.643899470419 then 0.03335642434
+else
+if beta_food_security_humanitarian_assistance <= 0.706839215627 then 0.0340344730984
+else
+if beta_food_security_humanitarian_assistance <= 0.769778960836 then 0.0348635997536
+else
+if beta_food_security_humanitarian_assistance <= 0.832718706044 then 0.0353882791993
+else
+if beta_food_security_humanitarian_assistance <= 0.895658451252 then 0.0351971621559
+else
+if beta_food_security_humanitarian_assistance <= 0.95859819646 then 0.0344484786718
+else
+if beta_food_security_humanitarian_assistance <= 1.02153794167 then 0.0336601961981
+else
+if beta_food_security_humanitarian_assistance <= 1.08447768688 then 0.0331088032065
+else
+if beta_food_security_humanitarian_assistance <= 1.14741743208 then 0.0327398686523
+else
+if beta_food_security_humanitarian_assistance <= 1.21035717729 then 0.0325482227651
+else
+if beta_food_security_humanitarian_assistance <= 1.2732969225 then 0.0327453005034
+else
+if beta_food_security_humanitarian_assistance <= 1.33623666771 then 0.0334671327453
+else
+if beta_food_security_humanitarian_assistance <= 1.39917641292 then 0.0342923276443
+else
+if beta_food_security_humanitarian_assistance <= 1.46211615813 then 0.0340544634498
+else
+if beta_food_security_humanitarian_assistance <= 1.52505590333 then 0.0315280586065
+else
+if beta_food_security_humanitarian_assistance <= 1.58799564854 then 0.0267219764345
+else
+if beta_food_security_humanitarian_assistance <= 1.65093539375 then 0.0210882898543
+else
+if beta_food_security_humanitarian_assistance <= 1.71387513896 then 0.0160427834925
+else
+if beta_food_security_humanitarian_assistance <= 1.77681488417 then 0.0118980099776
+else
+if beta_food_security_humanitarian_assistance <= 1.83975462937 then 0.00845286622124
+else
+if beta_food_security_humanitarian_assistance <= 1.90269437458 then 0.00573495456426
+else
+if beta_food_security_humanitarian_assistance <= 1.96563411979 then 0.00386828545734
+else
+if beta_food_security_humanitarian_assistance <= 2.028573865 then 0.00277786385329
+else
+if beta_food_security_humanitarian_assistance <= 2.09151361021 then 0.00224346426422
+else
+if beta_food_security_humanitarian_assistance <= 2.15445335541 then 0.00204436277242
+else
+if beta_food_security_humanitarian_assistance <= 2.21739310062 then 0.00199198698388
+else
+if beta_food_security_humanitarian_assistance <= 2.28033284583 then 0.00193740145928
+else
+if beta_food_security_humanitarian_assistance <= 2.34327259104 then 0.00182062874954
+else
+if beta_food_security_humanitarian_assistance <= 2.40621233625 then 0.00167867565692
+else
+if beta_food_security_humanitarian_assistance <= 2.46915208146 then 0.0015609037704
+else
+if beta_food_security_humanitarian_assistance <= 2.53209182666 then 0.0014539066214
+else
+if beta_food_security_humanitarian_assistance <= 2.59503157187 then 0.0013129333768
+else
+if beta_food_security_humanitarian_assistance <= 2.65797131708 then 0.00113614148095
+else
+if beta_food_security_humanitarian_assistance <= 2.72091106229 then 0.000966672687062
+else
+if beta_food_security_humanitarian_assistance <= 2.7838508075 then 0.000835472232664
+else
+if beta_food_security_humanitarian_assistance <= 2.8467905527 then 0.00073945081803
+else
+if beta_food_security_humanitarian_assistance <= 2.90973029791 then 0.000668634972475
+else
+if beta_food_security_humanitarian_assistance <= 2.97267004312 then 0.000616995405055
+else
+if beta_food_security_humanitarian_assistance <= 3.03560978833 then 0.000561444562016
+else
+if beta_food_security_humanitarian_assistance <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_food_production_food_availability <= -3.13248524207 then 0
+else
+if beta_food_production_food_availability <= -3.06954549686 then 0.000310675755809
+else
+if beta_food_production_food_availability <= -3.00660575165 then 0.000411871280283
+else
+if beta_food_production_food_availability <= -2.94366600645 then 0.000411401119401
+else
+if beta_food_production_food_availability <= -2.88072626124 then 0.000310163462827
+else
+if beta_food_production_food_availability <= -2.81778651603 then 0.000181545727635
+else
+if beta_food_production_food_availability <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_food_production_food_availability <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_food_production_food_availability <= -2.6289672804 then 0.000129343902655
+else
+if beta_food_production_food_availability <= -2.5660275352 then 0.000199974915825
+else
+if beta_food_production_food_availability <= -2.50308778999 then 0.000287299390961
+else
+if beta_food_production_food_availability <= -2.44014804478 then 0.000388937575126
+else
+if beta_food_production_food_availability <= -2.37720829957 then 0.000489626200131
+else
+if beta_food_production_food_availability <= -2.31426855436 then 0.00055039531682
+else
+if beta_food_production_food_availability <= -2.25132880916 then 0.000537347907336
+else
+if beta_food_production_food_availability <= -2.18838906395 then 0.000458345478339
+else
+if beta_food_production_food_availability <= -2.12544931874 then 0.000353985668749
+else
+if beta_food_production_food_availability <= -2.06250957353 then 0.000256574567968
+else
+if beta_food_production_food_availability <= -1.99956982832 then 0.00017439563414
+else
+if beta_food_production_food_availability <= -1.93663008312 then 0.000111206458276
+else
+if beta_food_production_food_availability <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_food_production_food_availability <= -1.8107505927 then 0.000119426893212
+else
+if beta_food_production_food_availability <= -1.74781084749 then 0.000224562124795
+else
+if beta_food_production_food_availability <= -1.68487110228 then 0.000364021880598
+else
+if beta_food_production_food_availability <= -1.62193135707 then 0.00047034366276
+else
+if beta_food_production_food_availability <= -1.55899161187 then 0.000509534916823
+else
+if beta_food_production_food_availability <= -1.49605186666 then 0.000516342460922
+else
+if beta_food_production_food_availability <= -1.43311212145 then 0.000537700839318
+else
+if beta_food_production_food_availability <= -1.37017237624 then 0.000574406638394
+else
+if beta_food_production_food_availability <= -1.30723263103 then 0.000608104235585
+else
+if beta_food_production_food_availability <= -1.24429288583 then 0.000644902052855
+else
+if beta_food_production_food_availability <= -1.18135314062 then 0.000701992007375
+else
+if beta_food_production_food_availability <= -1.11841339541 then 0.000784304664078
+else
+if beta_food_production_food_availability <= -1.0554736502 then 0.00089639467597
+else
+if beta_food_production_food_availability <= -0.992533904993 then 0.00104829519864
+else
+if beta_food_production_food_availability <= -0.929594159785 then 0.00122740405049
+else
+if beta_food_production_food_availability <= -0.866654414577 then 0.00138983161775
+else
+if beta_food_production_food_availability <= -0.803714669368 then 0.00150952139976
+else
+if beta_food_production_food_availability <= -0.74077492416 then 0.00161638952513
+else
+if beta_food_production_food_availability <= -0.677835178952 then 0.00174922777788
+else
+if beta_food_production_food_availability <= -0.614895433744 then 0.00188653054685
+else
+if beta_food_production_food_availability <= -0.551955688536 then 0.00197158672701
+else
+if beta_food_production_food_availability <= -0.489015943328 then 0.00201070911938
+else
+if beta_food_production_food_availability <= -0.426076198119 then 0.00211510327528
+else
+if beta_food_production_food_availability <= -0.363136452911 then 0.00245776112131
+else
+if beta_food_production_food_availability <= -0.300196707703 then 0.00324255437259
+else
+if beta_food_production_food_availability <= -0.237256962495 then 0.00470127488144
+else
+if beta_food_production_food_availability <= -0.174317217287 then 0.00700244077516
+else
+if beta_food_production_food_availability <= -0.111377472079 then 0.010106219431
+else
+if beta_food_production_food_availability <= -0.0484377268705 then 0.0138865278167
+else
+if beta_food_production_food_availability <= 0.0145020183376 then 0.0184659502833
+else
+if beta_food_production_food_availability <= 0.0774417635458 then 0.023919014868
+else
+if beta_food_production_food_availability <= 0.140381508754 then 0.0293587033413
+else
+if beta_food_production_food_availability <= 0.203321253962 then 0.0331275062983
+else
+if beta_food_production_food_availability <= 0.26626099917 then 0.0343974591897
+else
+if beta_food_production_food_availability <= 0.329200744378 then 0.0339216761997
+else
+if beta_food_production_food_availability <= 0.392140489587 then 0.0330460593074
+else
+if beta_food_production_food_availability <= 0.455080234795 then 0.0325815127915
+else
+if beta_food_production_food_availability <= 0.518019980003 then 0.0326129526704
+else
+if beta_food_production_food_availability <= 0.580959725211 then 0.0329087490927
+else
+if beta_food_production_food_availability <= 0.643899470419 then 0.03335642434
+else
+if beta_food_production_food_availability <= 0.706839215627 then 0.0340344730984
+else
+if beta_food_production_food_availability <= 0.769778960836 then 0.0348635997536
+else
+if beta_food_production_food_availability <= 0.832718706044 then 0.0353882791993
+else
+if beta_food_production_food_availability <= 0.895658451252 then 0.0351971621559
+else
+if beta_food_production_food_availability <= 0.95859819646 then 0.0344484786718
+else
+if beta_food_production_food_availability <= 1.02153794167 then 0.0336601961981
+else
+if beta_food_production_food_availability <= 1.08447768688 then 0.0331088032065
+else
+if beta_food_production_food_availability <= 1.14741743208 then 0.0327398686523
+else
+if beta_food_production_food_availability <= 1.21035717729 then 0.0325482227651
+else
+if beta_food_production_food_availability <= 1.2732969225 then 0.0327453005034
+else
+if beta_food_production_food_availability <= 1.33623666771 then 0.0334671327453
+else
+if beta_food_production_food_availability <= 1.39917641292 then 0.0342923276443
+else
+if beta_food_production_food_availability <= 1.46211615813 then 0.0340544634498
+else
+if beta_food_production_food_availability <= 1.52505590333 then 0.0315280586065
+else
+if beta_food_production_food_availability <= 1.58799564854 then 0.0267219764345
+else
+if beta_food_production_food_availability <= 1.65093539375 then 0.0210882898543
+else
+if beta_food_production_food_availability <= 1.71387513896 then 0.0160427834925
+else
+if beta_food_production_food_availability <= 1.77681488417 then 0.0118980099776
+else
+if beta_food_production_food_availability <= 1.83975462937 then 0.00845286622124
+else
+if beta_food_production_food_availability <= 1.90269437458 then 0.00573495456426
+else
+if beta_food_production_food_availability <= 1.96563411979 then 0.00386828545734
+else
+if beta_food_production_food_availability <= 2.028573865 then 0.00277786385329
+else
+if beta_food_production_food_availability <= 2.09151361021 then 0.00224346426422
+else
+if beta_food_production_food_availability <= 2.15445335541 then 0.00204436277242
+else
+if beta_food_production_food_availability <= 2.21739310062 then 0.00199198698388
+else
+if beta_food_production_food_availability <= 2.28033284583 then 0.00193740145928
+else
+if beta_food_production_food_availability <= 2.34327259104 then 0.00182062874954
+else
+if beta_food_production_food_availability <= 2.40621233625 then 0.00167867565692
+else
+if beta_food_production_food_availability <= 2.46915208146 then 0.0015609037704
+else
+if beta_food_production_food_availability <= 2.53209182666 then 0.0014539066214
+else
+if beta_food_production_food_availability <= 2.59503157187 then 0.0013129333768
+else
+if beta_food_production_food_availability <= 2.65797131708 then 0.00113614148095
+else
+if beta_food_production_food_availability <= 2.72091106229 then 0.000966672687062
+else
+if beta_food_production_food_availability <= 2.7838508075 then 0.000835472232664
+else
+if beta_food_production_food_availability <= 2.8467905527 then 0.00073945081803
+else
+if beta_food_production_food_availability <= 2.90973029791 then 0.000668634972475
+else
+if beta_food_production_food_availability <= 2.97267004312 then 0.000616995405055
+else
+if beta_food_production_food_availability <= 3.03560978833 then 0.000561444562016
+else
+if beta_food_production_food_availability <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_precipitation_death <= -3.12553188286 then 0
+else
+if beta_precipitation_death <= -3.06226190311 then 0.0171687823609
+else
+if beta_precipitation_death <= -2.99899192337 then 0.0207602628901
+else
+if beta_precipitation_death <= -2.93572194362 then 0.0240674825008
+else
+if beta_precipitation_death <= -2.87245196388 then 0.0268936940378
+else
+if beta_precipitation_death <= -2.80918198413 then 0.0291394072224
+else
+if beta_precipitation_death <= -2.74591200439 then 0.0308079403392
+else
+if beta_precipitation_death <= -2.68264202465 then 0.0319815860474
+else
+if beta_precipitation_death <= -2.6193720449 then 0.0327810730927
+else
+if beta_precipitation_death <= -2.55610206516 then 0.0333250173812
+else
+if beta_precipitation_death <= -2.49283208541 then 0.033702510848
+else
+if beta_precipitation_death <= -2.42956210567 then 0.0339641365394
+else
+if beta_precipitation_death <= -2.36629212592 then 0.0341288449864
+else
+if beta_precipitation_death <= -2.30302214618 then 0.0341992374563
+else
+if beta_precipitation_death <= -2.23975216644 then 0.0341766755354
+else
+if beta_precipitation_death <= -2.17648218669 then 0.0340695343101
+else
+if beta_precipitation_death <= -2.11321220695 then 0.0338915414268
+else
+if beta_precipitation_death <= -2.0499422272 then 0.0336512542133
+else
+if beta_precipitation_death <= -1.98667224746 then 0.0333372978477
+else
+if beta_precipitation_death <= -1.92340226771 then 0.0329061622158
+else
+if beta_precipitation_death <= -1.86013228797 then 0.0322794032018
+else
+if beta_precipitation_death <= -1.79686230822 then 0.0313545697353
+else
+if beta_precipitation_death <= -1.73359232848 then 0.0300293550335
+else
+if beta_precipitation_death <= -1.67032234874 then 0.0282327903257
+else
+if beta_precipitation_death <= -1.60705236899 then 0.0259532210786
+else
+if beta_precipitation_death <= -1.54378238925 then 0.0232526808586
+else
+if beta_precipitation_death <= -1.4805124095 then 0.020261758484
+else
+if beta_precipitation_death <= -1.41724242976 then 0.0171562870696
+else
+if beta_precipitation_death <= -1.35397245001 then 0.0141236897691
+else
+if beta_precipitation_death <= -1.29070247027 then 0.011329594476
+else
+if beta_precipitation_death <= -1.22743249052 then 0.00889361793853
+else
+if beta_precipitation_death <= -1.16416251078 then 0.00687863395207
+else
+if beta_precipitation_death <= -1.10089253104 then 0.00529297934922
+else
+if beta_precipitation_death <= -1.03762255129 then 0.00410183956821
+else
+if beta_precipitation_death <= -0.974352571547 then 0.00324300067393
+else
+if beta_precipitation_death <= -0.911082591803 then 0.00264270268272
+else
+if beta_precipitation_death <= -0.847812612058 then 0.00222864486032
+else
+if beta_precipitation_death <= -0.784542632314 then 0.00193866865102
+else
+if beta_precipitation_death <= -0.72127265257 then 0.00172495154294
+else
+if beta_precipitation_death <= -0.658002672825 then 0.00155449918087
+else
+if beta_precipitation_death <= -0.594732693081 then 0.00140720798008
+else
+if beta_precipitation_death <= -0.531462713336 then 0.00127278455548
+else
+if beta_precipitation_death <= -0.468192733592 then 0.00114749596065
+else
+if beta_precipitation_death <= -0.404922753848 then 0.00103131178322
+else
+if beta_precipitation_death <= -0.341652774103 then 0.000925669290428
+else
+if beta_precipitation_death <= -0.278382794359 then 0.000831909197928
+else
+if beta_precipitation_death <= -0.215112814614 then 0.000750353363361
+else
+if beta_precipitation_death <= -0.15184283487 then 0.000679961904557
+else
+if beta_precipitation_death <= -0.0885728551256 then 0.000618481226147
+else
+if beta_precipitation_death <= -0.0253028753812 then 0.000562971565791
+else
+if beta_precipitation_death <= 0.0379671043632 then 0.000510579182181
+else
+if beta_precipitation_death <= 0.101237084108 then 0.000459381418387
+else
+if beta_precipitation_death <= 0.164507063852 then 0.000409083597888
+else
+if beta_precipitation_death <= 0.227777043596 then 0.000361322554193
+else
+if beta_precipitation_death <= 0.291047023341 then 0.000319390142154
+else
+if beta_precipitation_death <= 0.354317003085 then 0.000287356221029
+else
+if beta_precipitation_death <= 0.41758698283 then 0.000268795689372
+else
+if beta_precipitation_death <= 0.480856962574 then 0.000265503014305
+else
+if beta_precipitation_death <= 0.544126942318 then 0.000276616563566
+else
+if beta_precipitation_death <= 0.607396922063 then 0.000298453625416
+else
+if beta_precipitation_death <= 0.670666901807 then 0.000325134036482
+else
+if beta_precipitation_death <= 0.733936881552 then 0.00034983676395
+else
+if beta_precipitation_death <= 0.797206861296 then 0.0003663613616
+else
+if beta_precipitation_death <= 0.86047684104 then 0.000370589658709
+else
+if beta_precipitation_death <= 0.923746820785 then 0.000361470396472
+else
+if beta_precipitation_death <= 0.987016800529 then 0.000341271991752
+else
+if beta_precipitation_death <= 1.05028678027 then 0.000315037805028
+else
+if beta_precipitation_death <= 1.11355676002 then 0.000289385215933
+else
+if beta_precipitation_death <= 1.17682673976 then 0.000270958861365
+else
+if beta_precipitation_death <= 1.24009671951 then 0.000264937487461
+else
+if beta_precipitation_death <= 1.30336669925 then 0.000273982607676
+else
+if beta_precipitation_death <= 1.366636679 then 0.000297902787061
+else
+if beta_precipitation_death <= 1.42990665874 then 0.000334106133172
+else
+if beta_precipitation_death <= 1.49317663848 then 0.000378673729332
+else
+if beta_precipitation_death <= 1.55644661823 then 0.000427691448423
+else
+if beta_precipitation_death <= 1.61971659797 then 0.000478412710265
+else
+if beta_precipitation_death <= 1.68298657772 then 0.000529923005865
+else
+if beta_precipitation_death <= 1.74625655746 then 0.000583186431065
+else
+if beta_precipitation_death <= 1.80952653721 then 0.000640567967004
+else
+if beta_precipitation_death <= 1.87279651695 then 0.000705052604695
+else
+if beta_precipitation_death <= 1.9360664967 then 0.000779404022105
+else
+if beta_precipitation_death <= 1.99933647644 then 0.000865465009197
+else
+if beta_precipitation_death <= 2.06260645618 then 0.000963753624959
+else
+if beta_precipitation_death <= 2.12587643593 then 0.00107347475517
+else
+if beta_precipitation_death <= 2.18914641567 then 0.00119303476814
+else
+if beta_precipitation_death <= 2.25241639542 then 0.00132109930916
+else
+if beta_precipitation_death <= 2.31568637516 then 0.00145815805609
+else
+if beta_precipitation_death <= 2.37895635491 then 0.00160842972258
+else
+if beta_precipitation_death <= 2.44222633465 then 0.00178170623236
+else
+if beta_precipitation_death <= 2.50549631439 then 0.00199437224231
+else
+if beta_precipitation_death <= 2.56876629414 then 0.00226845241943
+else
+if beta_precipitation_death <= 2.63203627388 then 0.00262744748577
+else
+if beta_precipitation_death <= 2.69530625363 then 0.0030883500915
+else
+if beta_precipitation_death <= 2.75857623337 then 0.00365082057893
+else
+if beta_precipitation_death <= 2.82184621312 then 0.00428670795355
+else
+if beta_precipitation_death <= 2.88511619286 then 0.00493484308638
+else
+if beta_precipitation_death <= 2.94838617261 then 0.00550587283846
+else
+if beta_precipitation_death <= 3.01165615235 then 0.00589896762862
+else
+if beta_precipitation_death <= 3.07492613209 then 0.00602715131118
+else
+if beta_precipitation_death <= 3.13819611184 then 0.00584308922137
+else 0;
+if beta_poverty_food_security <= -3.13819611184 then 0
+else
+if beta_poverty_food_security <= -3.07492613209 then 0.0053553578009
+else
+if beta_poverty_food_security <= -3.01165615235 then 0.00584308922137
+else
+if beta_poverty_food_security <= -2.94838617261 then 0.00602715131118
+else
+if beta_poverty_food_security <= -2.88511619286 then 0.00589896762862
+else
+if beta_poverty_food_security <= -2.82184621312 then 0.00550587283846
+else
+if beta_poverty_food_security <= -2.75857623337 then 0.00493484308638
+else
+if beta_poverty_food_security <= -2.69530625363 then 0.00428670795355
+else
+if beta_poverty_food_security <= -2.63203627388 then 0.00365082057893
+else
+if beta_poverty_food_security <= -2.56876629414 then 0.0030883500915
+else
+if beta_poverty_food_security <= -2.50549631439 then 0.00262744748577
+else
+if beta_poverty_food_security <= -2.44222633465 then 0.00226845241943
+else
+if beta_poverty_food_security <= -2.37895635491 then 0.00199437224231
+else
+if beta_poverty_food_security <= -2.31568637516 then 0.00178170623236
+else
+if beta_poverty_food_security <= -2.25241639542 then 0.00160842972258
+else
+if beta_poverty_food_security <= -2.18914641567 then 0.00145815805609
+else
+if beta_poverty_food_security <= -2.12587643593 then 0.00132109930916
+else
+if beta_poverty_food_security <= -2.06260645618 then 0.00119303476814
+else
+if beta_poverty_food_security <= -1.99933647644 then 0.00107347475517
+else
+if beta_poverty_food_security <= -1.9360664967 then 0.000963753624959
+else
+if beta_poverty_food_security <= -1.87279651695 then 0.000865465009197
+else
+if beta_poverty_food_security <= -1.80952653721 then 0.000779404022105
+else
+if beta_poverty_food_security <= -1.74625655746 then 0.000705052604695
+else
+if beta_poverty_food_security <= -1.68298657772 then 0.000640567967004
+else
+if beta_poverty_food_security <= -1.61971659797 then 0.000583186431065
+else
+if beta_poverty_food_security <= -1.55644661823 then 0.000529923005865
+else
+if beta_poverty_food_security <= -1.49317663848 then 0.000478412710265
+else
+if beta_poverty_food_security <= -1.42990665874 then 0.000427691448423
+else
+if beta_poverty_food_security <= -1.366636679 then 0.000378673729332
+else
+if beta_poverty_food_security <= -1.30336669925 then 0.000334106133172
+else
+if beta_poverty_food_security <= -1.24009671951 then 0.000297902787061
+else
+if beta_poverty_food_security <= -1.17682673976 then 0.000273982607676
+else
+if beta_poverty_food_security <= -1.11355676002 then 0.000264937487461
+else
+if beta_poverty_food_security <= -1.05028678027 then 0.000270958861365
+else
+if beta_poverty_food_security <= -0.987016800529 then 0.000289385215933
+else
+if beta_poverty_food_security <= -0.923746820785 then 0.000315037805028
+else
+if beta_poverty_food_security <= -0.86047684104 then 0.000341271991752
+else
+if beta_poverty_food_security <= -0.797206861296 then 0.000361470396472
+else
+if beta_poverty_food_security <= -0.733936881552 then 0.000370589658709
+else
+if beta_poverty_food_security <= -0.670666901807 then 0.0003663613616
+else
+if beta_poverty_food_security <= -0.607396922063 then 0.00034983676395
+else
+if beta_poverty_food_security <= -0.544126942318 then 0.000325134036482
+else
+if beta_poverty_food_security <= -0.480856962574 then 0.000298453625416
+else
+if beta_poverty_food_security <= -0.41758698283 then 0.000276616563566
+else
+if beta_poverty_food_security <= -0.354317003085 then 0.000265503014305
+else
+if beta_poverty_food_security <= -0.291047023341 then 0.000268795689372
+else
+if beta_poverty_food_security <= -0.227777043596 then 0.000287356221029
+else
+if beta_poverty_food_security <= -0.164507063852 then 0.000319390142154
+else
+if beta_poverty_food_security <= -0.101237084108 then 0.000361322554193
+else
+if beta_poverty_food_security <= -0.0379671043632 then 0.000409083597888
+else
+if beta_poverty_food_security <= 0.0253028753812 then 0.000459381418387
+else
+if beta_poverty_food_security <= 0.0885728551256 then 0.000510579182181
+else
+if beta_poverty_food_security <= 0.15184283487 then 0.000562971565791
+else
+if beta_poverty_food_security <= 0.215112814614 then 0.000618481226147
+else
+if beta_poverty_food_security <= 0.278382794359 then 0.000679961904557
+else
+if beta_poverty_food_security <= 0.341652774103 then 0.000750353363361
+else
+if beta_poverty_food_security <= 0.404922753848 then 0.000831909197928
+else
+if beta_poverty_food_security <= 0.468192733592 then 0.000925669290428
+else
+if beta_poverty_food_security <= 0.531462713336 then 0.00103131178322
+else
+if beta_poverty_food_security <= 0.594732693081 then 0.00114749596065
+else
+if beta_poverty_food_security <= 0.658002672825 then 0.00127278455548
+else
+if beta_poverty_food_security <= 0.72127265257 then 0.00140720798008
+else
+if beta_poverty_food_security <= 0.784542632314 then 0.00155449918087
+else
+if beta_poverty_food_security <= 0.847812612058 then 0.00172495154294
+else
+if beta_poverty_food_security <= 0.911082591803 then 0.00193866865102
+else
+if beta_poverty_food_security <= 0.974352571547 then 0.00222864486032
+else
+if beta_poverty_food_security <= 1.03762255129 then 0.00264270268272
+else
+if beta_poverty_food_security <= 1.10089253104 then 0.00324300067393
+else
+if beta_poverty_food_security <= 1.16416251078 then 0.00410183956821
+else
+if beta_poverty_food_security <= 1.22743249052 then 0.00529297934922
+else
+if beta_poverty_food_security <= 1.29070247027 then 0.00687863395207
+else
+if beta_poverty_food_security <= 1.35397245001 then 0.00889361793853
+else
+if beta_poverty_food_security <= 1.41724242976 then 0.011329594476
+else
+if beta_poverty_food_security <= 1.4805124095 then 0.0141236897691
+else
+if beta_poverty_food_security <= 1.54378238925 then 0.0171562870696
+else
+if beta_poverty_food_security <= 1.60705236899 then 0.020261758484
+else
+if beta_poverty_food_security <= 1.67032234874 then 0.0232526808586
+else
+if beta_poverty_food_security <= 1.73359232848 then 0.0259532210786
+else
+if beta_poverty_food_security <= 1.79686230822 then 0.0282327903257
+else
+if beta_poverty_food_security <= 1.86013228797 then 0.0300293550335
+else
+if beta_poverty_food_security <= 1.92340226771 then 0.0313545697353
+else
+if beta_poverty_food_security <= 1.98667224746 then 0.0322794032018
+else
+if beta_poverty_food_security <= 2.0499422272 then 0.0329061622158
+else
+if beta_poverty_food_security <= 2.11321220695 then 0.0333372978477
+else
+if beta_poverty_food_security <= 2.17648218669 then 0.0336512542133
+else
+if beta_poverty_food_security <= 2.23975216644 then 0.0338915414268
+else
+if beta_poverty_food_security <= 2.30302214618 then 0.0340695343101
+else
+if beta_poverty_food_security <= 2.36629212592 then 0.0341766755354
+else
+if beta_poverty_food_security <= 2.42956210567 then 0.0341992374563
+else
+if beta_poverty_food_security <= 2.49283208541 then 0.0341288449864
+else
+if beta_poverty_food_security <= 2.55610206516 then 0.0339641365394
+else
+if beta_poverty_food_security <= 2.6193720449 then 0.033702510848
+else
+if beta_poverty_food_security <= 2.68264202465 then 0.0333250173812
+else
+if beta_poverty_food_security <= 2.74591200439 then 0.0327810730927
+else
+if beta_poverty_food_security <= 2.80918198413 then 0.0319815860474
+else
+if beta_poverty_food_security <= 2.87245196388 then 0.0308079403392
+else
+if beta_poverty_food_security <= 2.93572194362 then 0.0291394072224
+else
+if beta_poverty_food_security <= 2.99899192337 then 0.0268936940378
+else
+if beta_poverty_food_security <= 3.06226190311 then 0.0240674825008
+else
+if beta_poverty_food_security <= 3.12553188286 then 0.0207602628901
+else 0;
+if beta_market_institutional_support <= -3.09854953354 then 0
+else
+if beta_market_institutional_support <= -3.03560978833 then 0.000325281135073
+else
+if beta_market_institutional_support <= -2.97267004312 then 0.000465958647415
+else
+if beta_market_institutional_support <= -2.90973029791 then 0.000561444562016
+else
+if beta_market_institutional_support <= -2.8467905527 then 0.000616995405055
+else
+if beta_market_institutional_support <= -2.7838508075 then 0.000668634972475
+else
+if beta_market_institutional_support <= -2.72091106229 then 0.00073945081803
+else
+if beta_market_institutional_support <= -2.65797131708 then 0.000835472232664
+else
+if beta_market_institutional_support <= -2.59503157187 then 0.000966672687062
+else
+if beta_market_institutional_support <= -2.53209182666 then 0.00113614148095
+else
+if beta_market_institutional_support <= -2.46915208146 then 0.0013129333768
+else
+if beta_market_institutional_support <= -2.40621233625 then 0.0014539066214
+else
+if beta_market_institutional_support <= -2.34327259104 then 0.0015609037704
+else
+if beta_market_institutional_support <= -2.28033284583 then 0.00167867565692
+else
+if beta_market_institutional_support <= -2.21739310062 then 0.00182062874954
+else
+if beta_market_institutional_support <= -2.15445335541 then 0.00193740145928
+else
+if beta_market_institutional_support <= -2.09151361021 then 0.00199198698388
+else
+if beta_market_institutional_support <= -2.028573865 then 0.00204436277242
+else
+if beta_market_institutional_support <= -1.96563411979 then 0.00224346426422
+else
+if beta_market_institutional_support <= -1.90269437458 then 0.00277786385329
+else
+if beta_market_institutional_support <= -1.83975462937 then 0.00386828545734
+else
+if beta_market_institutional_support <= -1.77681488417 then 0.00573495456426
+else
+if beta_market_institutional_support <= -1.71387513896 then 0.00845286622124
+else
+if beta_market_institutional_support <= -1.65093539375 then 0.0118980099776
+else
+if beta_market_institutional_support <= -1.58799564854 then 0.0160427834925
+else
+if beta_market_institutional_support <= -1.52505590333 then 0.0210882898543
+else
+if beta_market_institutional_support <= -1.46211615813 then 0.0267219764345
+else
+if beta_market_institutional_support <= -1.39917641292 then 0.0315280586065
+else
+if beta_market_institutional_support <= -1.33623666771 then 0.0340544634498
+else
+if beta_market_institutional_support <= -1.2732969225 then 0.0342923276443
+else
+if beta_market_institutional_support <= -1.21035717729 then 0.0334671327453
+else
+if beta_market_institutional_support <= -1.14741743208 then 0.0327453005034
+else
+if beta_market_institutional_support <= -1.08447768688 then 0.0325482227651
+else
+if beta_market_institutional_support <= -1.02153794167 then 0.0327398686523
+else
+if beta_market_institutional_support <= -0.95859819646 then 0.0331088032065
+else
+if beta_market_institutional_support <= -0.895658451252 then 0.0336601961981
+else
+if beta_market_institutional_support <= -0.832718706044 then 0.0344484786718
+else
+if beta_market_institutional_support <= -0.769778960836 then 0.0351971621559
+else
+if beta_market_institutional_support <= -0.706839215627 then 0.0353882791993
+else
+if beta_market_institutional_support <= -0.643899470419 then 0.0348635997536
+else
+if beta_market_institutional_support <= -0.580959725211 then 0.0340344730984
+else
+if beta_market_institutional_support <= -0.518019980003 then 0.03335642434
+else
+if beta_market_institutional_support <= -0.455080234795 then 0.0329087490927
+else
+if beta_market_institutional_support <= -0.392140489587 then 0.0326129526704
+else
+if beta_market_institutional_support <= -0.329200744378 then 0.0325815127915
+else
+if beta_market_institutional_support <= -0.26626099917 then 0.0330460593074
+else
+if beta_market_institutional_support <= -0.203321253962 then 0.0339216761997
+else
+if beta_market_institutional_support <= -0.140381508754 then 0.0343974591897
+else
+if beta_market_institutional_support <= -0.0774417635458 then 0.0331275062983
+else
+if beta_market_institutional_support <= -0.0145020183376 then 0.0293587033413
+else
+if beta_market_institutional_support <= 0.0484377268705 then 0.023919014868
+else
+if beta_market_institutional_support <= 0.111377472079 then 0.0184659502833
+else
+if beta_market_institutional_support <= 0.174317217287 then 0.0138865278167
+else
+if beta_market_institutional_support <= 0.237256962495 then 0.010106219431
+else
+if beta_market_institutional_support <= 0.300196707703 then 0.00700244077516
+else
+if beta_market_institutional_support <= 0.363136452911 then 0.00470127488144
+else
+if beta_market_institutional_support <= 0.426076198119 then 0.00324255437259
+else
+if beta_market_institutional_support <= 0.489015943328 then 0.00245776112131
+else
+if beta_market_institutional_support <= 0.551955688536 then 0.00211510327528
+else
+if beta_market_institutional_support <= 0.614895433744 then 0.00201070911938
+else
+if beta_market_institutional_support <= 0.677835178952 then 0.00197158672701
+else
+if beta_market_institutional_support <= 0.74077492416 then 0.00188653054685
+else
+if beta_market_institutional_support <= 0.803714669368 then 0.00174922777788
+else
+if beta_market_institutional_support <= 0.866654414577 then 0.00161638952513
+else
+if beta_market_institutional_support <= 0.929594159785 then 0.00150952139976
+else
+if beta_market_institutional_support <= 0.992533904993 then 0.00138983161775
+else
+if beta_market_institutional_support <= 1.0554736502 then 0.00122740405049
+else
+if beta_market_institutional_support <= 1.11841339541 then 0.00104829519864
+else
+if beta_market_institutional_support <= 1.18135314062 then 0.00089639467597
+else
+if beta_market_institutional_support <= 1.24429288583 then 0.000784304664078
+else
+if beta_market_institutional_support <= 1.30723263103 then 0.000701992007375
+else
+if beta_market_institutional_support <= 1.37017237624 then 0.000644902052855
+else
+if beta_market_institutional_support <= 1.43311212145 then 0.000608104235585
+else
+if beta_market_institutional_support <= 1.49605186666 then 0.000574406638394
+else
+if beta_market_institutional_support <= 1.55899161187 then 0.000537700839318
+else
+if beta_market_institutional_support <= 1.62193135707 then 0.000516342460922
+else
+if beta_market_institutional_support <= 1.68487110228 then 0.000509534916823
+else
+if beta_market_institutional_support <= 1.74781084749 then 0.00047034366276
+else
+if beta_market_institutional_support <= 1.8107505927 then 0.000364021880598
+else
+if beta_market_institutional_support <= 1.87369033791 then 0.000224562124795
+else
+if beta_market_institutional_support <= 1.93663008312 then 0.000119426893212
+else
+if beta_market_institutional_support <= 1.99956982832 then 8.44035639744e-05
+else
+if beta_market_institutional_support <= 2.06250957353 then 0.000111206458276
+else
+if beta_market_institutional_support <= 2.12544931874 then 0.00017439563414
+else
+if beta_market_institutional_support <= 2.18838906395 then 0.000256574567968
+else
+if beta_market_institutional_support <= 2.25132880916 then 0.000353985668749
+else
+if beta_market_institutional_support <= 2.31426855436 then 0.000458345478339
+else
+if beta_market_institutional_support <= 2.37720829957 then 0.000537347907336
+else
+if beta_market_institutional_support <= 2.44014804478 then 0.00055039531682
+else
+if beta_market_institutional_support <= 2.50308778999 then 0.000489626200131
+else
+if beta_market_institutional_support <= 2.5660275352 then 0.000388937575126
+else
+if beta_market_institutional_support <= 2.6289672804 then 0.000287299390961
+else
+if beta_market_institutional_support <= 2.69190702561 then 0.000199974915825
+else
+if beta_market_institutional_support <= 2.75484677082 then 0.000129343902655
+else
+if beta_market_institutional_support <= 2.81778651603 then 8.7632716244e-05
+else
+if beta_market_institutional_support <= 2.88072626124 then 9.9508927148e-05
+else
+if beta_market_institutional_support <= 2.94366600645 then 0.000181545727635
+else
+if beta_market_institutional_support <= 3.00660575165 then 0.000310163462827
+else
+if beta_market_institutional_support <= 3.06954549686 then 0.000411401119401
+else
+if beta_market_institutional_support <= 3.13248524207 then 0.000411871280283
+else 0;
+if beta_poverty_institutional_support <= -3.13819611184 then 0
+else
+if beta_poverty_institutional_support <= -3.07492613209 then 0.0053553578009
+else
+if beta_poverty_institutional_support <= -3.01165615235 then 0.00584308922137
+else
+if beta_poverty_institutional_support <= -2.94838617261 then 0.00602715131118
+else
+if beta_poverty_institutional_support <= -2.88511619286 then 0.00589896762862
+else
+if beta_poverty_institutional_support <= -2.82184621312 then 0.00550587283846
+else
+if beta_poverty_institutional_support <= -2.75857623337 then 0.00493484308638
+else
+if beta_poverty_institutional_support <= -2.69530625363 then 0.00428670795355
+else
+if beta_poverty_institutional_support <= -2.63203627388 then 0.00365082057893
+else
+if beta_poverty_institutional_support <= -2.56876629414 then 0.0030883500915
+else
+if beta_poverty_institutional_support <= -2.50549631439 then 0.00262744748577
+else
+if beta_poverty_institutional_support <= -2.44222633465 then 0.00226845241943
+else
+if beta_poverty_institutional_support <= -2.37895635491 then 0.00199437224231
+else
+if beta_poverty_institutional_support <= -2.31568637516 then 0.00178170623236
+else
+if beta_poverty_institutional_support <= -2.25241639542 then 0.00160842972258
+else
+if beta_poverty_institutional_support <= -2.18914641567 then 0.00145815805609
+else
+if beta_poverty_institutional_support <= -2.12587643593 then 0.00132109930916
+else
+if beta_poverty_institutional_support <= -2.06260645618 then 0.00119303476814
+else
+if beta_poverty_institutional_support <= -1.99933647644 then 0.00107347475517
+else
+if beta_poverty_institutional_support <= -1.9360664967 then 0.000963753624959
+else
+if beta_poverty_institutional_support <= -1.87279651695 then 0.000865465009197
+else
+if beta_poverty_institutional_support <= -1.80952653721 then 0.000779404022105
+else
+if beta_poverty_institutional_support <= -1.74625655746 then 0.000705052604695
+else
+if beta_poverty_institutional_support <= -1.68298657772 then 0.000640567967004
+else
+if beta_poverty_institutional_support <= -1.61971659797 then 0.000583186431065
+else
+if beta_poverty_institutional_support <= -1.55644661823 then 0.000529923005865
+else
+if beta_poverty_institutional_support <= -1.49317663848 then 0.000478412710265
+else
+if beta_poverty_institutional_support <= -1.42990665874 then 0.000427691448423
+else
+if beta_poverty_institutional_support <= -1.366636679 then 0.000378673729332
+else
+if beta_poverty_institutional_support <= -1.30336669925 then 0.000334106133172
+else
+if beta_poverty_institutional_support <= -1.24009671951 then 0.000297902787061
+else
+if beta_poverty_institutional_support <= -1.17682673976 then 0.000273982607676
+else
+if beta_poverty_institutional_support <= -1.11355676002 then 0.000264937487461
+else
+if beta_poverty_institutional_support <= -1.05028678027 then 0.000270958861365
+else
+if beta_poverty_institutional_support <= -0.987016800529 then 0.000289385215933
+else
+if beta_poverty_institutional_support <= -0.923746820785 then 0.000315037805028
+else
+if beta_poverty_institutional_support <= -0.86047684104 then 0.000341271991752
+else
+if beta_poverty_institutional_support <= -0.797206861296 then 0.000361470396472
+else
+if beta_poverty_institutional_support <= -0.733936881552 then 0.000370589658709
+else
+if beta_poverty_institutional_support <= -0.670666901807 then 0.0003663613616
+else
+if beta_poverty_institutional_support <= -0.607396922063 then 0.00034983676395
+else
+if beta_poverty_institutional_support <= -0.544126942318 then 0.000325134036482
+else
+if beta_poverty_institutional_support <= -0.480856962574 then 0.000298453625416
+else
+if beta_poverty_institutional_support <= -0.41758698283 then 0.000276616563566
+else
+if beta_poverty_institutional_support <= -0.354317003085 then 0.000265503014305
+else
+if beta_poverty_institutional_support <= -0.291047023341 then 0.000268795689372
+else
+if beta_poverty_institutional_support <= -0.227777043596 then 0.000287356221029
+else
+if beta_poverty_institutional_support <= -0.164507063852 then 0.000319390142154
+else
+if beta_poverty_institutional_support <= -0.101237084108 then 0.000361322554193
+else
+if beta_poverty_institutional_support <= -0.0379671043632 then 0.000409083597888
+else
+if beta_poverty_institutional_support <= 0.0253028753812 then 0.000459381418387
+else
+if beta_poverty_institutional_support <= 0.0885728551256 then 0.000510579182181
+else
+if beta_poverty_institutional_support <= 0.15184283487 then 0.000562971565791
+else
+if beta_poverty_institutional_support <= 0.215112814614 then 0.000618481226147
+else
+if beta_poverty_institutional_support <= 0.278382794359 then 0.000679961904557
+else
+if beta_poverty_institutional_support <= 0.341652774103 then 0.000750353363361
+else
+if beta_poverty_institutional_support <= 0.404922753848 then 0.000831909197928
+else
+if beta_poverty_institutional_support <= 0.468192733592 then 0.000925669290428
+else
+if beta_poverty_institutional_support <= 0.531462713336 then 0.00103131178322
+else
+if beta_poverty_institutional_support <= 0.594732693081 then 0.00114749596065
+else
+if beta_poverty_institutional_support <= 0.658002672825 then 0.00127278455548
+else
+if beta_poverty_institutional_support <= 0.72127265257 then 0.00140720798008
+else
+if beta_poverty_institutional_support <= 0.784542632314 then 0.00155449918087
+else
+if beta_poverty_institutional_support <= 0.847812612058 then 0.00172495154294
+else
+if beta_poverty_institutional_support <= 0.911082591803 then 0.00193866865102
+else
+if beta_poverty_institutional_support <= 0.974352571547 then 0.00222864486032
+else
+if beta_poverty_institutional_support <= 1.03762255129 then 0.00264270268272
+else
+if beta_poverty_institutional_support <= 1.10089253104 then 0.00324300067393
+else
+if beta_poverty_institutional_support <= 1.16416251078 then 0.00410183956821
+else
+if beta_poverty_institutional_support <= 1.22743249052 then 0.00529297934922
+else
+if beta_poverty_institutional_support <= 1.29070247027 then 0.00687863395207
+else
+if beta_poverty_institutional_support <= 1.35397245001 then 0.00889361793853
+else
+if beta_poverty_institutional_support <= 1.41724242976 then 0.011329594476
+else
+if beta_poverty_institutional_support <= 1.4805124095 then 0.0141236897691
+else
+if beta_poverty_institutional_support <= 1.54378238925 then 0.0171562870696
+else
+if beta_poverty_institutional_support <= 1.60705236899 then 0.020261758484
+else
+if beta_poverty_institutional_support <= 1.67032234874 then 0.0232526808586
+else
+if beta_poverty_institutional_support <= 1.73359232848 then 0.0259532210786
+else
+if beta_poverty_institutional_support <= 1.79686230822 then 0.0282327903257
+else
+if beta_poverty_institutional_support <= 1.86013228797 then 0.0300293550335
+else
+if beta_poverty_institutional_support <= 1.92340226771 then 0.0313545697353
+else
+if beta_poverty_institutional_support <= 1.98667224746 then 0.0322794032018
+else
+if beta_poverty_institutional_support <= 2.0499422272 then 0.0329061622158
+else
+if beta_poverty_institutional_support <= 2.11321220695 then 0.0333372978477
+else
+if beta_poverty_institutional_support <= 2.17648218669 then 0.0336512542133
+else
+if beta_poverty_institutional_support <= 2.23975216644 then 0.0338915414268
+else
+if beta_poverty_institutional_support <= 2.30302214618 then 0.0340695343101
+else
+if beta_poverty_institutional_support <= 2.36629212592 then 0.0341766755354
+else
+if beta_poverty_institutional_support <= 2.42956210567 then 0.0341992374563
+else
+if beta_poverty_institutional_support <= 2.49283208541 then 0.0341288449864
+else
+if beta_poverty_institutional_support <= 2.55610206516 then 0.0339641365394
+else
+if beta_poverty_institutional_support <= 2.6193720449 then 0.033702510848
+else
+if beta_poverty_institutional_support <= 2.68264202465 then 0.0333250173812
+else
+if beta_poverty_institutional_support <= 2.74591200439 then 0.0327810730927
+else
+if beta_poverty_institutional_support <= 2.80918198413 then 0.0319815860474
+else
+if beta_poverty_institutional_support <= 2.87245196388 then 0.0308079403392
+else
+if beta_poverty_institutional_support <= 2.93572194362 then 0.0291394072224
+else
+if beta_poverty_institutional_support <= 2.99899192337 then 0.0268936940378
+else
+if beta_poverty_institutional_support <= 3.06226190311 then 0.0240674825008
+else
+if beta_poverty_institutional_support <= 3.12553188286 then 0.0207602628901
+else 0;
+if beta_humanitarian_assistance_institutional_support <= -3.13248524207 then 0
+else
+if beta_humanitarian_assistance_institutional_support <= -3.06954549686 then 0.000310675755809
+else
+if beta_humanitarian_assistance_institutional_support <= -3.00660575165 then 0.000411871280283
+else
+if beta_humanitarian_assistance_institutional_support <= -2.94366600645 then 0.000411401119401
+else
+if beta_humanitarian_assistance_institutional_support <= -2.88072626124 then 0.000310163462827
+else
+if beta_humanitarian_assistance_institutional_support <= -2.81778651603 then 0.000181545727635
+else
+if beta_humanitarian_assistance_institutional_support <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_humanitarian_assistance_institutional_support <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_humanitarian_assistance_institutional_support <= -2.6289672804 then 0.000129343902655
+else
+if beta_humanitarian_assistance_institutional_support <= -2.5660275352 then 0.000199974915825
+else
+if beta_humanitarian_assistance_institutional_support <= -2.50308778999 then 0.000287299390961
+else
+if beta_humanitarian_assistance_institutional_support <= -2.44014804478 then 0.000388937575126
+else
+if beta_humanitarian_assistance_institutional_support <= -2.37720829957 then 0.000489626200131
+else
+if beta_humanitarian_assistance_institutional_support <= -2.31426855436 then 0.00055039531682
+else
+if beta_humanitarian_assistance_institutional_support <= -2.25132880916 then 0.000537347907336
+else
+if beta_humanitarian_assistance_institutional_support <= -2.18838906395 then 0.000458345478339
+else
+if beta_humanitarian_assistance_institutional_support <= -2.12544931874 then 0.000353985668749
+else
+if beta_humanitarian_assistance_institutional_support <= -2.06250957353 then 0.000256574567968
+else
+if beta_humanitarian_assistance_institutional_support <= -1.99956982832 then 0.00017439563414
+else
+if beta_humanitarian_assistance_institutional_support <= -1.93663008312 then 0.000111206458276
+else
+if beta_humanitarian_assistance_institutional_support <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_humanitarian_assistance_institutional_support <= -1.8107505927 then 0.000119426893212
+else
+if beta_humanitarian_assistance_institutional_support <= -1.74781084749 then 0.000224562124795
+else
+if beta_humanitarian_assistance_institutional_support <= -1.68487110228 then 0.000364021880598
+else
+if beta_humanitarian_assistance_institutional_support <= -1.62193135707 then 0.00047034366276
+else
+if beta_humanitarian_assistance_institutional_support <= -1.55899161187 then 0.000509534916823
+else
+if beta_humanitarian_assistance_institutional_support <= -1.49605186666 then 0.000516342460922
+else
+if beta_humanitarian_assistance_institutional_support <= -1.43311212145 then 0.000537700839318
+else
+if beta_humanitarian_assistance_institutional_support <= -1.37017237624 then 0.000574406638394
+else
+if beta_humanitarian_assistance_institutional_support <= -1.30723263103 then 0.000608104235585
+else
+if beta_humanitarian_assistance_institutional_support <= -1.24429288583 then 0.000644902052855
+else
+if beta_humanitarian_assistance_institutional_support <= -1.18135314062 then 0.000701992007375
+else
+if beta_humanitarian_assistance_institutional_support <= -1.11841339541 then 0.000784304664078
+else
+if beta_humanitarian_assistance_institutional_support <= -1.0554736502 then 0.00089639467597
+else
+if beta_humanitarian_assistance_institutional_support <= -0.992533904993 then 0.00104829519864
+else
+if beta_humanitarian_assistance_institutional_support <= -0.929594159785 then 0.00122740405049
+else
+if beta_humanitarian_assistance_institutional_support <= -0.866654414577 then 0.00138983161775
+else
+if beta_humanitarian_assistance_institutional_support <= -0.803714669368 then 0.00150952139976
+else
+if beta_humanitarian_assistance_institutional_support <= -0.74077492416 then 0.00161638952513
+else
+if beta_humanitarian_assistance_institutional_support <= -0.677835178952 then 0.00174922777788
+else
+if beta_humanitarian_assistance_institutional_support <= -0.614895433744 then 0.00188653054685
+else
+if beta_humanitarian_assistance_institutional_support <= -0.551955688536 then 0.00197158672701
+else
+if beta_humanitarian_assistance_institutional_support <= -0.489015943328 then 0.00201070911938
+else
+if beta_humanitarian_assistance_institutional_support <= -0.426076198119 then 0.00211510327528
+else
+if beta_humanitarian_assistance_institutional_support <= -0.363136452911 then 0.00245776112131
+else
+if beta_humanitarian_assistance_institutional_support <= -0.300196707703 then 0.00324255437259
+else
+if beta_humanitarian_assistance_institutional_support <= -0.237256962495 then 0.00470127488144
+else
+if beta_humanitarian_assistance_institutional_support <= -0.174317217287 then 0.00700244077516
+else
+if beta_humanitarian_assistance_institutional_support <= -0.111377472079 then 0.010106219431
+else
+if beta_humanitarian_assistance_institutional_support <= -0.0484377268705 then 0.0138865278167
+else
+if beta_humanitarian_assistance_institutional_support <= 0.0145020183376 then 0.0184659502833
+else
+if beta_humanitarian_assistance_institutional_support <= 0.0774417635458 then 0.023919014868
+else
+if beta_humanitarian_assistance_institutional_support <= 0.140381508754 then 0.0293587033413
+else
+if beta_humanitarian_assistance_institutional_support <= 0.203321253962 then 0.0331275062983
+else
+if beta_humanitarian_assistance_institutional_support <= 0.26626099917 then 0.0343974591897
+else
+if beta_humanitarian_assistance_institutional_support <= 0.329200744378 then 0.0339216761997
+else
+if beta_humanitarian_assistance_institutional_support <= 0.392140489587 then 0.0330460593074
+else
+if beta_humanitarian_assistance_institutional_support <= 0.455080234795 then 0.0325815127915
+else
+if beta_humanitarian_assistance_institutional_support <= 0.518019980003 then 0.0326129526704
+else
+if beta_humanitarian_assistance_institutional_support <= 0.580959725211 then 0.0329087490927
+else
+if beta_humanitarian_assistance_institutional_support <= 0.643899470419 then 0.03335642434
+else
+if beta_humanitarian_assistance_institutional_support <= 0.706839215627 then 0.0340344730984
+else
+if beta_humanitarian_assistance_institutional_support <= 0.769778960836 then 0.0348635997536
+else
+if beta_humanitarian_assistance_institutional_support <= 0.832718706044 then 0.0353882791993
+else
+if beta_humanitarian_assistance_institutional_support <= 0.895658451252 then 0.0351971621559
+else
+if beta_humanitarian_assistance_institutional_support <= 0.95859819646 then 0.0344484786718
+else
+if beta_humanitarian_assistance_institutional_support <= 1.02153794167 then 0.0336601961981
+else
+if beta_humanitarian_assistance_institutional_support <= 1.08447768688 then 0.0331088032065
+else
+if beta_humanitarian_assistance_institutional_support <= 1.14741743208 then 0.0327398686523
+else
+if beta_humanitarian_assistance_institutional_support <= 1.21035717729 then 0.0325482227651
+else
+if beta_humanitarian_assistance_institutional_support <= 1.2732969225 then 0.0327453005034
+else
+if beta_humanitarian_assistance_institutional_support <= 1.33623666771 then 0.0334671327453
+else
+if beta_humanitarian_assistance_institutional_support <= 1.39917641292 then 0.0342923276443
+else
+if beta_humanitarian_assistance_institutional_support <= 1.46211615813 then 0.0340544634498
+else
+if beta_humanitarian_assistance_institutional_support <= 1.52505590333 then 0.0315280586065
+else
+if beta_humanitarian_assistance_institutional_support <= 1.58799564854 then 0.0267219764345
+else
+if beta_humanitarian_assistance_institutional_support <= 1.65093539375 then 0.0210882898543
+else
+if beta_humanitarian_assistance_institutional_support <= 1.71387513896 then 0.0160427834925
+else
+if beta_humanitarian_assistance_institutional_support <= 1.77681488417 then 0.0118980099776
+else
+if beta_humanitarian_assistance_institutional_support <= 1.83975462937 then 0.00845286622124
+else
+if beta_humanitarian_assistance_institutional_support <= 1.90269437458 then 0.00573495456426
+else
+if beta_humanitarian_assistance_institutional_support <= 1.96563411979 then 0.00386828545734
+else
+if beta_humanitarian_assistance_institutional_support <= 2.028573865 then 0.00277786385329
+else
+if beta_humanitarian_assistance_institutional_support <= 2.09151361021 then 0.00224346426422
+else
+if beta_humanitarian_assistance_institutional_support <= 2.15445335541 then 0.00204436277242
+else
+if beta_humanitarian_assistance_institutional_support <= 2.21739310062 then 0.00199198698388
+else
+if beta_humanitarian_assistance_institutional_support <= 2.28033284583 then 0.00193740145928
+else
+if beta_humanitarian_assistance_institutional_support <= 2.34327259104 then 0.00182062874954
+else
+if beta_humanitarian_assistance_institutional_support <= 2.40621233625 then 0.00167867565692
+else
+if beta_humanitarian_assistance_institutional_support <= 2.46915208146 then 0.0015609037704
+else
+if beta_humanitarian_assistance_institutional_support <= 2.53209182666 then 0.0014539066214
+else
+if beta_humanitarian_assistance_institutional_support <= 2.59503157187 then 0.0013129333768
+else
+if beta_humanitarian_assistance_institutional_support <= 2.65797131708 then 0.00113614148095
+else
+if beta_humanitarian_assistance_institutional_support <= 2.72091106229 then 0.000966672687062
+else
+if beta_humanitarian_assistance_institutional_support <= 2.7838508075 then 0.000835472232664
+else
+if beta_humanitarian_assistance_institutional_support <= 2.8467905527 then 0.00073945081803
+else
+if beta_humanitarian_assistance_institutional_support <= 2.90973029791 then 0.000668634972475
+else
+if beta_humanitarian_assistance_institutional_support <= 2.97267004312 then 0.000616995405055
+else
+if beta_humanitarian_assistance_institutional_support <= 3.03560978833 then 0.000561444562016
+else
+if beta_humanitarian_assistance_institutional_support <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_precipitation_road <= -3.13248524207 then 0
+else
+if beta_precipitation_road <= -3.06954549686 then 0.000310675755809
+else
+if beta_precipitation_road <= -3.00660575165 then 0.000411871280283
+else
+if beta_precipitation_road <= -2.94366600645 then 0.000411401119401
+else
+if beta_precipitation_road <= -2.88072626124 then 0.000310163462827
+else
+if beta_precipitation_road <= -2.81778651603 then 0.000181545727635
+else
+if beta_precipitation_road <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_precipitation_road <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_precipitation_road <= -2.6289672804 then 0.000129343902655
+else
+if beta_precipitation_road <= -2.5660275352 then 0.000199974915825
+else
+if beta_precipitation_road <= -2.50308778999 then 0.000287299390961
+else
+if beta_precipitation_road <= -2.44014804478 then 0.000388937575126
+else
+if beta_precipitation_road <= -2.37720829957 then 0.000489626200131
+else
+if beta_precipitation_road <= -2.31426855436 then 0.00055039531682
+else
+if beta_precipitation_road <= -2.25132880916 then 0.000537347907336
+else
+if beta_precipitation_road <= -2.18838906395 then 0.000458345478339
+else
+if beta_precipitation_road <= -2.12544931874 then 0.000353985668749
+else
+if beta_precipitation_road <= -2.06250957353 then 0.000256574567968
+else
+if beta_precipitation_road <= -1.99956982832 then 0.00017439563414
+else
+if beta_precipitation_road <= -1.93663008312 then 0.000111206458276
+else
+if beta_precipitation_road <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_precipitation_road <= -1.8107505927 then 0.000119426893212
+else
+if beta_precipitation_road <= -1.74781084749 then 0.000224562124795
+else
+if beta_precipitation_road <= -1.68487110228 then 0.000364021880598
+else
+if beta_precipitation_road <= -1.62193135707 then 0.00047034366276
+else
+if beta_precipitation_road <= -1.55899161187 then 0.000509534916823
+else
+if beta_precipitation_road <= -1.49605186666 then 0.000516342460922
+else
+if beta_precipitation_road <= -1.43311212145 then 0.000537700839318
+else
+if beta_precipitation_road <= -1.37017237624 then 0.000574406638394
+else
+if beta_precipitation_road <= -1.30723263103 then 0.000608104235585
+else
+if beta_precipitation_road <= -1.24429288583 then 0.000644902052855
+else
+if beta_precipitation_road <= -1.18135314062 then 0.000701992007375
+else
+if beta_precipitation_road <= -1.11841339541 then 0.000784304664078
+else
+if beta_precipitation_road <= -1.0554736502 then 0.00089639467597
+else
+if beta_precipitation_road <= -0.992533904993 then 0.00104829519864
+else
+if beta_precipitation_road <= -0.929594159785 then 0.00122740405049
+else
+if beta_precipitation_road <= -0.866654414577 then 0.00138983161775
+else
+if beta_precipitation_road <= -0.803714669368 then 0.00150952139976
+else
+if beta_precipitation_road <= -0.74077492416 then 0.00161638952513
+else
+if beta_precipitation_road <= -0.677835178952 then 0.00174922777788
+else
+if beta_precipitation_road <= -0.614895433744 then 0.00188653054685
+else
+if beta_precipitation_road <= -0.551955688536 then 0.00197158672701
+else
+if beta_precipitation_road <= -0.489015943328 then 0.00201070911938
+else
+if beta_precipitation_road <= -0.426076198119 then 0.00211510327528
+else
+if beta_precipitation_road <= -0.363136452911 then 0.00245776112131
+else
+if beta_precipitation_road <= -0.300196707703 then 0.00324255437259
+else
+if beta_precipitation_road <= -0.237256962495 then 0.00470127488144
+else
+if beta_precipitation_road <= -0.174317217287 then 0.00700244077516
+else
+if beta_precipitation_road <= -0.111377472079 then 0.010106219431
+else
+if beta_precipitation_road <= -0.0484377268705 then 0.0138865278167
+else
+if beta_precipitation_road <= 0.0145020183376 then 0.0184659502833
+else
+if beta_precipitation_road <= 0.0774417635458 then 0.023919014868
+else
+if beta_precipitation_road <= 0.140381508754 then 0.0293587033413
+else
+if beta_precipitation_road <= 0.203321253962 then 0.0331275062983
+else
+if beta_precipitation_road <= 0.26626099917 then 0.0343974591897
+else
+if beta_precipitation_road <= 0.329200744378 then 0.0339216761997
+else
+if beta_precipitation_road <= 0.392140489587 then 0.0330460593074
+else
+if beta_precipitation_road <= 0.455080234795 then 0.0325815127915
+else
+if beta_precipitation_road <= 0.518019980003 then 0.0326129526704
+else
+if beta_precipitation_road <= 0.580959725211 then 0.0329087490927
+else
+if beta_precipitation_road <= 0.643899470419 then 0.03335642434
+else
+if beta_precipitation_road <= 0.706839215627 then 0.0340344730984
+else
+if beta_precipitation_road <= 0.769778960836 then 0.0348635997536
+else
+if beta_precipitation_road <= 0.832718706044 then 0.0353882791993
+else
+if beta_precipitation_road <= 0.895658451252 then 0.0351971621559
+else
+if beta_precipitation_road <= 0.95859819646 then 0.0344484786718
+else
+if beta_precipitation_road <= 1.02153794167 then 0.0336601961981
+else
+if beta_precipitation_road <= 1.08447768688 then 0.0331088032065
+else
+if beta_precipitation_road <= 1.14741743208 then 0.0327398686523
+else
+if beta_precipitation_road <= 1.21035717729 then 0.0325482227651
+else
+if beta_precipitation_road <= 1.2732969225 then 0.0327453005034
+else
+if beta_precipitation_road <= 1.33623666771 then 0.0334671327453
+else
+if beta_precipitation_road <= 1.39917641292 then 0.0342923276443
+else
+if beta_precipitation_road <= 1.46211615813 then 0.0340544634498
+else
+if beta_precipitation_road <= 1.52505590333 then 0.0315280586065
+else
+if beta_precipitation_road <= 1.58799564854 then 0.0267219764345
+else
+if beta_precipitation_road <= 1.65093539375 then 0.0210882898543
+else
+if beta_precipitation_road <= 1.71387513896 then 0.0160427834925
+else
+if beta_precipitation_road <= 1.77681488417 then 0.0118980099776
+else
+if beta_precipitation_road <= 1.83975462937 then 0.00845286622124
+else
+if beta_precipitation_road <= 1.90269437458 then 0.00573495456426
+else
+if beta_precipitation_road <= 1.96563411979 then 0.00386828545734
+else
+if beta_precipitation_road <= 2.028573865 then 0.00277786385329
+else
+if beta_precipitation_road <= 2.09151361021 then 0.00224346426422
+else
+if beta_precipitation_road <= 2.15445335541 then 0.00204436277242
+else
+if beta_precipitation_road <= 2.21739310062 then 0.00199198698388
+else
+if beta_precipitation_road <= 2.28033284583 then 0.00193740145928
+else
+if beta_precipitation_road <= 2.34327259104 then 0.00182062874954
+else
+if beta_precipitation_road <= 2.40621233625 then 0.00167867565692
+else
+if beta_precipitation_road <= 2.46915208146 then 0.0015609037704
+else
+if beta_precipitation_road <= 2.53209182666 then 0.0014539066214
+else
+if beta_precipitation_road <= 2.59503157187 then 0.0013129333768
+else
+if beta_precipitation_road <= 2.65797131708 then 0.00113614148095
+else
+if beta_precipitation_road <= 2.72091106229 then 0.000966672687062
+else
+if beta_precipitation_road <= 2.7838508075 then 0.000835472232664
+else
+if beta_precipitation_road <= 2.8467905527 then 0.00073945081803
+else
+if beta_precipitation_road <= 2.90973029791 then 0.000668634972475
+else
+if beta_precipitation_road <= 2.97267004312 then 0.000616995405055
+else
+if beta_precipitation_road <= 3.03560978833 then 0.000561444562016
+else
+if beta_precipitation_road <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_precipitation_poverty <= -3.13819611184 then 0
+else
+if beta_precipitation_poverty <= -3.07492613209 then 0.0053553578009
+else
+if beta_precipitation_poverty <= -3.01165615235 then 0.00584308922137
+else
+if beta_precipitation_poverty <= -2.94838617261 then 0.00602715131118
+else
+if beta_precipitation_poverty <= -2.88511619286 then 0.00589896762862
+else
+if beta_precipitation_poverty <= -2.82184621312 then 0.00550587283846
+else
+if beta_precipitation_poverty <= -2.75857623337 then 0.00493484308638
+else
+if beta_precipitation_poverty <= -2.69530625363 then 0.00428670795355
+else
+if beta_precipitation_poverty <= -2.63203627388 then 0.00365082057893
+else
+if beta_precipitation_poverty <= -2.56876629414 then 0.0030883500915
+else
+if beta_precipitation_poverty <= -2.50549631439 then 0.00262744748577
+else
+if beta_precipitation_poverty <= -2.44222633465 then 0.00226845241943
+else
+if beta_precipitation_poverty <= -2.37895635491 then 0.00199437224231
+else
+if beta_precipitation_poverty <= -2.31568637516 then 0.00178170623236
+else
+if beta_precipitation_poverty <= -2.25241639542 then 0.00160842972258
+else
+if beta_precipitation_poverty <= -2.18914641567 then 0.00145815805609
+else
+if beta_precipitation_poverty <= -2.12587643593 then 0.00132109930916
+else
+if beta_precipitation_poverty <= -2.06260645618 then 0.00119303476814
+else
+if beta_precipitation_poverty <= -1.99933647644 then 0.00107347475517
+else
+if beta_precipitation_poverty <= -1.9360664967 then 0.000963753624959
+else
+if beta_precipitation_poverty <= -1.87279651695 then 0.000865465009197
+else
+if beta_precipitation_poverty <= -1.80952653721 then 0.000779404022105
+else
+if beta_precipitation_poverty <= -1.74625655746 then 0.000705052604695
+else
+if beta_precipitation_poverty <= -1.68298657772 then 0.000640567967004
+else
+if beta_precipitation_poverty <= -1.61971659797 then 0.000583186431065
+else
+if beta_precipitation_poverty <= -1.55644661823 then 0.000529923005865
+else
+if beta_precipitation_poverty <= -1.49317663848 then 0.000478412710265
+else
+if beta_precipitation_poverty <= -1.42990665874 then 0.000427691448423
+else
+if beta_precipitation_poverty <= -1.366636679 then 0.000378673729332
+else
+if beta_precipitation_poverty <= -1.30336669925 then 0.000334106133172
+else
+if beta_precipitation_poverty <= -1.24009671951 then 0.000297902787061
+else
+if beta_precipitation_poverty <= -1.17682673976 then 0.000273982607676
+else
+if beta_precipitation_poverty <= -1.11355676002 then 0.000264937487461
+else
+if beta_precipitation_poverty <= -1.05028678027 then 0.000270958861365
+else
+if beta_precipitation_poverty <= -0.987016800529 then 0.000289385215933
+else
+if beta_precipitation_poverty <= -0.923746820785 then 0.000315037805028
+else
+if beta_precipitation_poverty <= -0.86047684104 then 0.000341271991752
+else
+if beta_precipitation_poverty <= -0.797206861296 then 0.000361470396472
+else
+if beta_precipitation_poverty <= -0.733936881552 then 0.000370589658709
+else
+if beta_precipitation_poverty <= -0.670666901807 then 0.0003663613616
+else
+if beta_precipitation_poverty <= -0.607396922063 then 0.00034983676395
+else
+if beta_precipitation_poverty <= -0.544126942318 then 0.000325134036482
+else
+if beta_precipitation_poverty <= -0.480856962574 then 0.000298453625416
+else
+if beta_precipitation_poverty <= -0.41758698283 then 0.000276616563566
+else
+if beta_precipitation_poverty <= -0.354317003085 then 0.000265503014305
+else
+if beta_precipitation_poverty <= -0.291047023341 then 0.000268795689372
+else
+if beta_precipitation_poverty <= -0.227777043596 then 0.000287356221029
+else
+if beta_precipitation_poverty <= -0.164507063852 then 0.000319390142154
+else
+if beta_precipitation_poverty <= -0.101237084108 then 0.000361322554193
+else
+if beta_precipitation_poverty <= -0.0379671043632 then 0.000409083597888
+else
+if beta_precipitation_poverty <= 0.0253028753812 then 0.000459381418387
+else
+if beta_precipitation_poverty <= 0.0885728551256 then 0.000510579182181
+else
+if beta_precipitation_poverty <= 0.15184283487 then 0.000562971565791
+else
+if beta_precipitation_poverty <= 0.215112814614 then 0.000618481226147
+else
+if beta_precipitation_poverty <= 0.278382794359 then 0.000679961904557
+else
+if beta_precipitation_poverty <= 0.341652774103 then 0.000750353363361
+else
+if beta_precipitation_poverty <= 0.404922753848 then 0.000831909197928
+else
+if beta_precipitation_poverty <= 0.468192733592 then 0.000925669290428
+else
+if beta_precipitation_poverty <= 0.531462713336 then 0.00103131178322
+else
+if beta_precipitation_poverty <= 0.594732693081 then 0.00114749596065
+else
+if beta_precipitation_poverty <= 0.658002672825 then 0.00127278455548
+else
+if beta_precipitation_poverty <= 0.72127265257 then 0.00140720798008
+else
+if beta_precipitation_poverty <= 0.784542632314 then 0.00155449918087
+else
+if beta_precipitation_poverty <= 0.847812612058 then 0.00172495154294
+else
+if beta_precipitation_poverty <= 0.911082591803 then 0.00193866865102
+else
+if beta_precipitation_poverty <= 0.974352571547 then 0.00222864486032
+else
+if beta_precipitation_poverty <= 1.03762255129 then 0.00264270268272
+else
+if beta_precipitation_poverty <= 1.10089253104 then 0.00324300067393
+else
+if beta_precipitation_poverty <= 1.16416251078 then 0.00410183956821
+else
+if beta_precipitation_poverty <= 1.22743249052 then 0.00529297934922
+else
+if beta_precipitation_poverty <= 1.29070247027 then 0.00687863395207
+else
+if beta_precipitation_poverty <= 1.35397245001 then 0.00889361793853
+else
+if beta_precipitation_poverty <= 1.41724242976 then 0.011329594476
+else
+if beta_precipitation_poverty <= 1.4805124095 then 0.0141236897691
+else
+if beta_precipitation_poverty <= 1.54378238925 then 0.0171562870696
+else
+if beta_precipitation_poverty <= 1.60705236899 then 0.020261758484
+else
+if beta_precipitation_poverty <= 1.67032234874 then 0.0232526808586
+else
+if beta_precipitation_poverty <= 1.73359232848 then 0.0259532210786
+else
+if beta_precipitation_poverty <= 1.79686230822 then 0.0282327903257
+else
+if beta_precipitation_poverty <= 1.86013228797 then 0.0300293550335
+else
+if beta_precipitation_poverty <= 1.92340226771 then 0.0313545697353
+else
+if beta_precipitation_poverty <= 1.98667224746 then 0.0322794032018
+else
+if beta_precipitation_poverty <= 2.0499422272 then 0.0329061622158
+else
+if beta_precipitation_poverty <= 2.11321220695 then 0.0333372978477
+else
+if beta_precipitation_poverty <= 2.17648218669 then 0.0336512542133
+else
+if beta_precipitation_poverty <= 2.23975216644 then 0.0338915414268
+else
+if beta_precipitation_poverty <= 2.30302214618 then 0.0340695343101
+else
+if beta_precipitation_poverty <= 2.36629212592 then 0.0341766755354
+else
+if beta_precipitation_poverty <= 2.42956210567 then 0.0341992374563
+else
+if beta_precipitation_poverty <= 2.49283208541 then 0.0341288449864
+else
+if beta_precipitation_poverty <= 2.55610206516 then 0.0339641365394
+else
+if beta_precipitation_poverty <= 2.6193720449 then 0.033702510848
+else
+if beta_precipitation_poverty <= 2.68264202465 then 0.0333250173812
+else
+if beta_precipitation_poverty <= 2.74591200439 then 0.0327810730927
+else
+if beta_precipitation_poverty <= 2.80918198413 then 0.0319815860474
+else
+if beta_precipitation_poverty <= 2.87245196388 then 0.0308079403392
+else
+if beta_precipitation_poverty <= 2.93572194362 then 0.0291394072224
+else
+if beta_precipitation_poverty <= 2.99899192337 then 0.0268936940378
+else
+if beta_precipitation_poverty <= 3.06226190311 then 0.0240674825008
+else
+if beta_precipitation_poverty <= 3.12553188286 then 0.0207602628901
+else 0;
+if beta_precipitation_food_production <= -3.12553188286 then 0
+else
+if beta_precipitation_food_production <= -3.06226190311 then 0.0171687823609
+else
+if beta_precipitation_food_production <= -2.99899192337 then 0.0207602628901
+else
+if beta_precipitation_food_production <= -2.93572194362 then 0.0240674825008
+else
+if beta_precipitation_food_production <= -2.87245196388 then 0.0268936940378
+else
+if beta_precipitation_food_production <= -2.80918198413 then 0.0291394072224
+else
+if beta_precipitation_food_production <= -2.74591200439 then 0.0308079403392
+else
+if beta_precipitation_food_production <= -2.68264202465 then 0.0319815860474
+else
+if beta_precipitation_food_production <= -2.6193720449 then 0.0327810730927
+else
+if beta_precipitation_food_production <= -2.55610206516 then 0.0333250173812
+else
+if beta_precipitation_food_production <= -2.49283208541 then 0.033702510848
+else
+if beta_precipitation_food_production <= -2.42956210567 then 0.0339641365394
+else
+if beta_precipitation_food_production <= -2.36629212592 then 0.0341288449864
+else
+if beta_precipitation_food_production <= -2.30302214618 then 0.0341992374563
+else
+if beta_precipitation_food_production <= -2.23975216644 then 0.0341766755354
+else
+if beta_precipitation_food_production <= -2.17648218669 then 0.0340695343101
+else
+if beta_precipitation_food_production <= -2.11321220695 then 0.0338915414268
+else
+if beta_precipitation_food_production <= -2.0499422272 then 0.0336512542133
+else
+if beta_precipitation_food_production <= -1.98667224746 then 0.0333372978477
+else
+if beta_precipitation_food_production <= -1.92340226771 then 0.0329061622158
+else
+if beta_precipitation_food_production <= -1.86013228797 then 0.0322794032018
+else
+if beta_precipitation_food_production <= -1.79686230822 then 0.0313545697353
+else
+if beta_precipitation_food_production <= -1.73359232848 then 0.0300293550335
+else
+if beta_precipitation_food_production <= -1.67032234874 then 0.0282327903257
+else
+if beta_precipitation_food_production <= -1.60705236899 then 0.0259532210786
+else
+if beta_precipitation_food_production <= -1.54378238925 then 0.0232526808586
+else
+if beta_precipitation_food_production <= -1.4805124095 then 0.020261758484
+else
+if beta_precipitation_food_production <= -1.41724242976 then 0.0171562870696
+else
+if beta_precipitation_food_production <= -1.35397245001 then 0.0141236897691
+else
+if beta_precipitation_food_production <= -1.29070247027 then 0.011329594476
+else
+if beta_precipitation_food_production <= -1.22743249052 then 0.00889361793853
+else
+if beta_precipitation_food_production <= -1.16416251078 then 0.00687863395207
+else
+if beta_precipitation_food_production <= -1.10089253104 then 0.00529297934922
+else
+if beta_precipitation_food_production <= -1.03762255129 then 0.00410183956821
+else
+if beta_precipitation_food_production <= -0.974352571547 then 0.00324300067393
+else
+if beta_precipitation_food_production <= -0.911082591803 then 0.00264270268272
+else
+if beta_precipitation_food_production <= -0.847812612058 then 0.00222864486032
+else
+if beta_precipitation_food_production <= -0.784542632314 then 0.00193866865102
+else
+if beta_precipitation_food_production <= -0.72127265257 then 0.00172495154294
+else
+if beta_precipitation_food_production <= -0.658002672825 then 0.00155449918087
+else
+if beta_precipitation_food_production <= -0.594732693081 then 0.00140720798008
+else
+if beta_precipitation_food_production <= -0.531462713336 then 0.00127278455548
+else
+if beta_precipitation_food_production <= -0.468192733592 then 0.00114749596065
+else
+if beta_precipitation_food_production <= -0.404922753848 then 0.00103131178322
+else
+if beta_precipitation_food_production <= -0.341652774103 then 0.000925669290428
+else
+if beta_precipitation_food_production <= -0.278382794359 then 0.000831909197928
+else
+if beta_precipitation_food_production <= -0.215112814614 then 0.000750353363361
+else
+if beta_precipitation_food_production <= -0.15184283487 then 0.000679961904557
+else
+if beta_precipitation_food_production <= -0.0885728551256 then 0.000618481226147
+else
+if beta_precipitation_food_production <= -0.0253028753812 then 0.000562971565791
+else
+if beta_precipitation_food_production <= 0.0379671043632 then 0.000510579182181
+else
+if beta_precipitation_food_production <= 0.101237084108 then 0.000459381418387
+else
+if beta_precipitation_food_production <= 0.164507063852 then 0.000409083597888
+else
+if beta_precipitation_food_production <= 0.227777043596 then 0.000361322554193
+else
+if beta_precipitation_food_production <= 0.291047023341 then 0.000319390142154
+else
+if beta_precipitation_food_production <= 0.354317003085 then 0.000287356221029
+else
+if beta_precipitation_food_production <= 0.41758698283 then 0.000268795689372
+else
+if beta_precipitation_food_production <= 0.480856962574 then 0.000265503014305
+else
+if beta_precipitation_food_production <= 0.544126942318 then 0.000276616563566
+else
+if beta_precipitation_food_production <= 0.607396922063 then 0.000298453625416
+else
+if beta_precipitation_food_production <= 0.670666901807 then 0.000325134036482
+else
+if beta_precipitation_food_production <= 0.733936881552 then 0.00034983676395
+else
+if beta_precipitation_food_production <= 0.797206861296 then 0.0003663613616
+else
+if beta_precipitation_food_production <= 0.86047684104 then 0.000370589658709
+else
+if beta_precipitation_food_production <= 0.923746820785 then 0.000361470396472
+else
+if beta_precipitation_food_production <= 0.987016800529 then 0.000341271991752
+else
+if beta_precipitation_food_production <= 1.05028678027 then 0.000315037805028
+else
+if beta_precipitation_food_production <= 1.11355676002 then 0.000289385215933
+else
+if beta_precipitation_food_production <= 1.17682673976 then 0.000270958861365
+else
+if beta_precipitation_food_production <= 1.24009671951 then 0.000264937487461
+else
+if beta_precipitation_food_production <= 1.30336669925 then 0.000273982607676
+else
+if beta_precipitation_food_production <= 1.366636679 then 0.000297902787061
+else
+if beta_precipitation_food_production <= 1.42990665874 then 0.000334106133172
+else
+if beta_precipitation_food_production <= 1.49317663848 then 0.000378673729332
+else
+if beta_precipitation_food_production <= 1.55644661823 then 0.000427691448423
+else
+if beta_precipitation_food_production <= 1.61971659797 then 0.000478412710265
+else
+if beta_precipitation_food_production <= 1.68298657772 then 0.000529923005865
+else
+if beta_precipitation_food_production <= 1.74625655746 then 0.000583186431065
+else
+if beta_precipitation_food_production <= 1.80952653721 then 0.000640567967004
+else
+if beta_precipitation_food_production <= 1.87279651695 then 0.000705052604695
+else
+if beta_precipitation_food_production <= 1.9360664967 then 0.000779404022105
+else
+if beta_precipitation_food_production <= 1.99933647644 then 0.000865465009197
+else
+if beta_precipitation_food_production <= 2.06260645618 then 0.000963753624959
+else
+if beta_precipitation_food_production <= 2.12587643593 then 0.00107347475517
+else
+if beta_precipitation_food_production <= 2.18914641567 then 0.00119303476814
+else
+if beta_precipitation_food_production <= 2.25241639542 then 0.00132109930916
+else
+if beta_precipitation_food_production <= 2.31568637516 then 0.00145815805609
+else
+if beta_precipitation_food_production <= 2.37895635491 then 0.00160842972258
+else
+if beta_precipitation_food_production <= 2.44222633465 then 0.00178170623236
+else
+if beta_precipitation_food_production <= 2.50549631439 then 0.00199437224231
+else
+if beta_precipitation_food_production <= 2.56876629414 then 0.00226845241943
+else
+if beta_precipitation_food_production <= 2.63203627388 then 0.00262744748577
+else
+if beta_precipitation_food_production <= 2.69530625363 then 0.0030883500915
+else
+if beta_precipitation_food_production <= 2.75857623337 then 0.00365082057893
+else
+if beta_precipitation_food_production <= 2.82184621312 then 0.00428670795355
+else
+if beta_precipitation_food_production <= 2.88511619286 then 0.00493484308638
+else
+if beta_precipitation_food_production <= 2.94838617261 then 0.00550587283846
+else
+if beta_precipitation_food_production <= 3.01165615235 then 0.00589896762862
+else
+if beta_precipitation_food_production <= 3.07492613209 then 0.00602715131118
+else
+if beta_precipitation_food_production <= 3.13819611184 then 0.00584308922137
+else 0;
+if beta_poverty_provision_of_goods_and_services <= -3.13248524207 then 0
+else
+if beta_poverty_provision_of_goods_and_services <= -3.06954549686 then 0.000310675755809
+else
+if beta_poverty_provision_of_goods_and_services <= -3.00660575165 then 0.000411871280283
+else
+if beta_poverty_provision_of_goods_and_services <= -2.94366600645 then 0.000411401119401
+else
+if beta_poverty_provision_of_goods_and_services <= -2.88072626124 then 0.000310163462827
+else
+if beta_poverty_provision_of_goods_and_services <= -2.81778651603 then 0.000181545727635
+else
+if beta_poverty_provision_of_goods_and_services <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_poverty_provision_of_goods_and_services <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_poverty_provision_of_goods_and_services <= -2.6289672804 then 0.000129343902655
+else
+if beta_poverty_provision_of_goods_and_services <= -2.5660275352 then 0.000199974915825
+else
+if beta_poverty_provision_of_goods_and_services <= -2.50308778999 then 0.000287299390961
+else
+if beta_poverty_provision_of_goods_and_services <= -2.44014804478 then 0.000388937575126
+else
+if beta_poverty_provision_of_goods_and_services <= -2.37720829957 then 0.000489626200131
+else
+if beta_poverty_provision_of_goods_and_services <= -2.31426855436 then 0.00055039531682
+else
+if beta_poverty_provision_of_goods_and_services <= -2.25132880916 then 0.000537347907336
+else
+if beta_poverty_provision_of_goods_and_services <= -2.18838906395 then 0.000458345478339
+else
+if beta_poverty_provision_of_goods_and_services <= -2.12544931874 then 0.000353985668749
+else
+if beta_poverty_provision_of_goods_and_services <= -2.06250957353 then 0.000256574567968
+else
+if beta_poverty_provision_of_goods_and_services <= -1.99956982832 then 0.00017439563414
+else
+if beta_poverty_provision_of_goods_and_services <= -1.93663008312 then 0.000111206458276
+else
+if beta_poverty_provision_of_goods_and_services <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_poverty_provision_of_goods_and_services <= -1.8107505927 then 0.000119426893212
+else
+if beta_poverty_provision_of_goods_and_services <= -1.74781084749 then 0.000224562124795
+else
+if beta_poverty_provision_of_goods_and_services <= -1.68487110228 then 0.000364021880598
+else
+if beta_poverty_provision_of_goods_and_services <= -1.62193135707 then 0.00047034366276
+else
+if beta_poverty_provision_of_goods_and_services <= -1.55899161187 then 0.000509534916823
+else
+if beta_poverty_provision_of_goods_and_services <= -1.49605186666 then 0.000516342460922
+else
+if beta_poverty_provision_of_goods_and_services <= -1.43311212145 then 0.000537700839318
+else
+if beta_poverty_provision_of_goods_and_services <= -1.37017237624 then 0.000574406638394
+else
+if beta_poverty_provision_of_goods_and_services <= -1.30723263103 then 0.000608104235585
+else
+if beta_poverty_provision_of_goods_and_services <= -1.24429288583 then 0.000644902052855
+else
+if beta_poverty_provision_of_goods_and_services <= -1.18135314062 then 0.000701992007375
+else
+if beta_poverty_provision_of_goods_and_services <= -1.11841339541 then 0.000784304664078
+else
+if beta_poverty_provision_of_goods_and_services <= -1.0554736502 then 0.00089639467597
+else
+if beta_poverty_provision_of_goods_and_services <= -0.992533904993 then 0.00104829519864
+else
+if beta_poverty_provision_of_goods_and_services <= -0.929594159785 then 0.00122740405049
+else
+if beta_poverty_provision_of_goods_and_services <= -0.866654414577 then 0.00138983161775
+else
+if beta_poverty_provision_of_goods_and_services <= -0.803714669368 then 0.00150952139976
+else
+if beta_poverty_provision_of_goods_and_services <= -0.74077492416 then 0.00161638952513
+else
+if beta_poverty_provision_of_goods_and_services <= -0.677835178952 then 0.00174922777788
+else
+if beta_poverty_provision_of_goods_and_services <= -0.614895433744 then 0.00188653054685
+else
+if beta_poverty_provision_of_goods_and_services <= -0.551955688536 then 0.00197158672701
+else
+if beta_poverty_provision_of_goods_and_services <= -0.489015943328 then 0.00201070911938
+else
+if beta_poverty_provision_of_goods_and_services <= -0.426076198119 then 0.00211510327528
+else
+if beta_poverty_provision_of_goods_and_services <= -0.363136452911 then 0.00245776112131
+else
+if beta_poverty_provision_of_goods_and_services <= -0.300196707703 then 0.00324255437259
+else
+if beta_poverty_provision_of_goods_and_services <= -0.237256962495 then 0.00470127488144
+else
+if beta_poverty_provision_of_goods_and_services <= -0.174317217287 then 0.00700244077516
+else
+if beta_poverty_provision_of_goods_and_services <= -0.111377472079 then 0.010106219431
+else
+if beta_poverty_provision_of_goods_and_services <= -0.0484377268705 then 0.0138865278167
+else
+if beta_poverty_provision_of_goods_and_services <= 0.0145020183376 then 0.0184659502833
+else
+if beta_poverty_provision_of_goods_and_services <= 0.0774417635458 then 0.023919014868
+else
+if beta_poverty_provision_of_goods_and_services <= 0.140381508754 then 0.0293587033413
+else
+if beta_poverty_provision_of_goods_and_services <= 0.203321253962 then 0.0331275062983
+else
+if beta_poverty_provision_of_goods_and_services <= 0.26626099917 then 0.0343974591897
+else
+if beta_poverty_provision_of_goods_and_services <= 0.329200744378 then 0.0339216761997
+else
+if beta_poverty_provision_of_goods_and_services <= 0.392140489587 then 0.0330460593074
+else
+if beta_poverty_provision_of_goods_and_services <= 0.455080234795 then 0.0325815127915
+else
+if beta_poverty_provision_of_goods_and_services <= 0.518019980003 then 0.0326129526704
+else
+if beta_poverty_provision_of_goods_and_services <= 0.580959725211 then 0.0329087490927
+else
+if beta_poverty_provision_of_goods_and_services <= 0.643899470419 then 0.03335642434
+else
+if beta_poverty_provision_of_goods_and_services <= 0.706839215627 then 0.0340344730984
+else
+if beta_poverty_provision_of_goods_and_services <= 0.769778960836 then 0.0348635997536
+else
+if beta_poverty_provision_of_goods_and_services <= 0.832718706044 then 0.0353882791993
+else
+if beta_poverty_provision_of_goods_and_services <= 0.895658451252 then 0.0351971621559
+else
+if beta_poverty_provision_of_goods_and_services <= 0.95859819646 then 0.0344484786718
+else
+if beta_poverty_provision_of_goods_and_services <= 1.02153794167 then 0.0336601961981
+else
+if beta_poverty_provision_of_goods_and_services <= 1.08447768688 then 0.0331088032065
+else
+if beta_poverty_provision_of_goods_and_services <= 1.14741743208 then 0.0327398686523
+else
+if beta_poverty_provision_of_goods_and_services <= 1.21035717729 then 0.0325482227651
+else
+if beta_poverty_provision_of_goods_and_services <= 1.2732969225 then 0.0327453005034
+else
+if beta_poverty_provision_of_goods_and_services <= 1.33623666771 then 0.0334671327453
+else
+if beta_poverty_provision_of_goods_and_services <= 1.39917641292 then 0.0342923276443
+else
+if beta_poverty_provision_of_goods_and_services <= 1.46211615813 then 0.0340544634498
+else
+if beta_poverty_provision_of_goods_and_services <= 1.52505590333 then 0.0315280586065
+else
+if beta_poverty_provision_of_goods_and_services <= 1.58799564854 then 0.0267219764345
+else
+if beta_poverty_provision_of_goods_and_services <= 1.65093539375 then 0.0210882898543
+else
+if beta_poverty_provision_of_goods_and_services <= 1.71387513896 then 0.0160427834925
+else
+if beta_poverty_provision_of_goods_and_services <= 1.77681488417 then 0.0118980099776
+else
+if beta_poverty_provision_of_goods_and_services <= 1.83975462937 then 0.00845286622124
+else
+if beta_poverty_provision_of_goods_and_services <= 1.90269437458 then 0.00573495456426
+else
+if beta_poverty_provision_of_goods_and_services <= 1.96563411979 then 0.00386828545734
+else
+if beta_poverty_provision_of_goods_and_services <= 2.028573865 then 0.00277786385329
+else
+if beta_poverty_provision_of_goods_and_services <= 2.09151361021 then 0.00224346426422
+else
+if beta_poverty_provision_of_goods_and_services <= 2.15445335541 then 0.00204436277242
+else
+if beta_poverty_provision_of_goods_and_services <= 2.21739310062 then 0.00199198698388
+else
+if beta_poverty_provision_of_goods_and_services <= 2.28033284583 then 0.00193740145928
+else
+if beta_poverty_provision_of_goods_and_services <= 2.34327259104 then 0.00182062874954
+else
+if beta_poverty_provision_of_goods_and_services <= 2.40621233625 then 0.00167867565692
+else
+if beta_poverty_provision_of_goods_and_services <= 2.46915208146 then 0.0015609037704
+else
+if beta_poverty_provision_of_goods_and_services <= 2.53209182666 then 0.0014539066214
+else
+if beta_poverty_provision_of_goods_and_services <= 2.59503157187 then 0.0013129333768
+else
+if beta_poverty_provision_of_goods_and_services <= 2.65797131708 then 0.00113614148095
+else
+if beta_poverty_provision_of_goods_and_services <= 2.72091106229 then 0.000966672687062
+else
+if beta_poverty_provision_of_goods_and_services <= 2.7838508075 then 0.000835472232664
+else
+if beta_poverty_provision_of_goods_and_services <= 2.8467905527 then 0.00073945081803
+else
+if beta_poverty_provision_of_goods_and_services <= 2.90973029791 then 0.000668634972475
+else
+if beta_poverty_provision_of_goods_and_services <= 2.97267004312 then 0.000616995405055
+else
+if beta_poverty_provision_of_goods_and_services <= 3.03560978833 then 0.000561444562016
+else
+if beta_poverty_provision_of_goods_and_services <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_food_security_food_availability <= -3.13248524207 then 0
+else
+if beta_food_security_food_availability <= -3.06954549686 then 0.000310675755809
+else
+if beta_food_security_food_availability <= -3.00660575165 then 0.000411871280283
+else
+if beta_food_security_food_availability <= -2.94366600645 then 0.000411401119401
+else
+if beta_food_security_food_availability <= -2.88072626124 then 0.000310163462827
+else
+if beta_food_security_food_availability <= -2.81778651603 then 0.000181545727635
+else
+if beta_food_security_food_availability <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_food_security_food_availability <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_food_security_food_availability <= -2.6289672804 then 0.000129343902655
+else
+if beta_food_security_food_availability <= -2.5660275352 then 0.000199974915825
+else
+if beta_food_security_food_availability <= -2.50308778999 then 0.000287299390961
+else
+if beta_food_security_food_availability <= -2.44014804478 then 0.000388937575126
+else
+if beta_food_security_food_availability <= -2.37720829957 then 0.000489626200131
+else
+if beta_food_security_food_availability <= -2.31426855436 then 0.00055039531682
+else
+if beta_food_security_food_availability <= -2.25132880916 then 0.000537347907336
+else
+if beta_food_security_food_availability <= -2.18838906395 then 0.000458345478339
+else
+if beta_food_security_food_availability <= -2.12544931874 then 0.000353985668749
+else
+if beta_food_security_food_availability <= -2.06250957353 then 0.000256574567968
+else
+if beta_food_security_food_availability <= -1.99956982832 then 0.00017439563414
+else
+if beta_food_security_food_availability <= -1.93663008312 then 0.000111206458276
+else
+if beta_food_security_food_availability <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_food_security_food_availability <= -1.8107505927 then 0.000119426893212
+else
+if beta_food_security_food_availability <= -1.74781084749 then 0.000224562124795
+else
+if beta_food_security_food_availability <= -1.68487110228 then 0.000364021880598
+else
+if beta_food_security_food_availability <= -1.62193135707 then 0.00047034366276
+else
+if beta_food_security_food_availability <= -1.55899161187 then 0.000509534916823
+else
+if beta_food_security_food_availability <= -1.49605186666 then 0.000516342460922
+else
+if beta_food_security_food_availability <= -1.43311212145 then 0.000537700839318
+else
+if beta_food_security_food_availability <= -1.37017237624 then 0.000574406638394
+else
+if beta_food_security_food_availability <= -1.30723263103 then 0.000608104235585
+else
+if beta_food_security_food_availability <= -1.24429288583 then 0.000644902052855
+else
+if beta_food_security_food_availability <= -1.18135314062 then 0.000701992007375
+else
+if beta_food_security_food_availability <= -1.11841339541 then 0.000784304664078
+else
+if beta_food_security_food_availability <= -1.0554736502 then 0.00089639467597
+else
+if beta_food_security_food_availability <= -0.992533904993 then 0.00104829519864
+else
+if beta_food_security_food_availability <= -0.929594159785 then 0.00122740405049
+else
+if beta_food_security_food_availability <= -0.866654414577 then 0.00138983161775
+else
+if beta_food_security_food_availability <= -0.803714669368 then 0.00150952139976
+else
+if beta_food_security_food_availability <= -0.74077492416 then 0.00161638952513
+else
+if beta_food_security_food_availability <= -0.677835178952 then 0.00174922777788
+else
+if beta_food_security_food_availability <= -0.614895433744 then 0.00188653054685
+else
+if beta_food_security_food_availability <= -0.551955688536 then 0.00197158672701
+else
+if beta_food_security_food_availability <= -0.489015943328 then 0.00201070911938
+else
+if beta_food_security_food_availability <= -0.426076198119 then 0.00211510327528
+else
+if beta_food_security_food_availability <= -0.363136452911 then 0.00245776112131
+else
+if beta_food_security_food_availability <= -0.300196707703 then 0.00324255437259
+else
+if beta_food_security_food_availability <= -0.237256962495 then 0.00470127488144
+else
+if beta_food_security_food_availability <= -0.174317217287 then 0.00700244077516
+else
+if beta_food_security_food_availability <= -0.111377472079 then 0.010106219431
+else
+if beta_food_security_food_availability <= -0.0484377268705 then 0.0138865278167
+else
+if beta_food_security_food_availability <= 0.0145020183376 then 0.0184659502833
+else
+if beta_food_security_food_availability <= 0.0774417635458 then 0.023919014868
+else
+if beta_food_security_food_availability <= 0.140381508754 then 0.0293587033413
+else
+if beta_food_security_food_availability <= 0.203321253962 then 0.0331275062983
+else
+if beta_food_security_food_availability <= 0.26626099917 then 0.0343974591897
+else
+if beta_food_security_food_availability <= 0.329200744378 then 0.0339216761997
+else
+if beta_food_security_food_availability <= 0.392140489587 then 0.0330460593074
+else
+if beta_food_security_food_availability <= 0.455080234795 then 0.0325815127915
+else
+if beta_food_security_food_availability <= 0.518019980003 then 0.0326129526704
+else
+if beta_food_security_food_availability <= 0.580959725211 then 0.0329087490927
+else
+if beta_food_security_food_availability <= 0.643899470419 then 0.03335642434
+else
+if beta_food_security_food_availability <= 0.706839215627 then 0.0340344730984
+else
+if beta_food_security_food_availability <= 0.769778960836 then 0.0348635997536
+else
+if beta_food_security_food_availability <= 0.832718706044 then 0.0353882791993
+else
+if beta_food_security_food_availability <= 0.895658451252 then 0.0351971621559
+else
+if beta_food_security_food_availability <= 0.95859819646 then 0.0344484786718
+else
+if beta_food_security_food_availability <= 1.02153794167 then 0.0336601961981
+else
+if beta_food_security_food_availability <= 1.08447768688 then 0.0331088032065
+else
+if beta_food_security_food_availability <= 1.14741743208 then 0.0327398686523
+else
+if beta_food_security_food_availability <= 1.21035717729 then 0.0325482227651
+else
+if beta_food_security_food_availability <= 1.2732969225 then 0.0327453005034
+else
+if beta_food_security_food_availability <= 1.33623666771 then 0.0334671327453
+else
+if beta_food_security_food_availability <= 1.39917641292 then 0.0342923276443
+else
+if beta_food_security_food_availability <= 1.46211615813 then 0.0340544634498
+else
+if beta_food_security_food_availability <= 1.52505590333 then 0.0315280586065
+else
+if beta_food_security_food_availability <= 1.58799564854 then 0.0267219764345
+else
+if beta_food_security_food_availability <= 1.65093539375 then 0.0210882898543
+else
+if beta_food_security_food_availability <= 1.71387513896 then 0.0160427834925
+else
+if beta_food_security_food_availability <= 1.77681488417 then 0.0118980099776
+else
+if beta_food_security_food_availability <= 1.83975462937 then 0.00845286622124
+else
+if beta_food_security_food_availability <= 1.90269437458 then 0.00573495456426
+else
+if beta_food_security_food_availability <= 1.96563411979 then 0.00386828545734
+else
+if beta_food_security_food_availability <= 2.028573865 then 0.00277786385329
+else
+if beta_food_security_food_availability <= 2.09151361021 then 0.00224346426422
+else
+if beta_food_security_food_availability <= 2.15445335541 then 0.00204436277242
+else
+if beta_food_security_food_availability <= 2.21739310062 then 0.00199198698388
+else
+if beta_food_security_food_availability <= 2.28033284583 then 0.00193740145928
+else
+if beta_food_security_food_availability <= 2.34327259104 then 0.00182062874954
+else
+if beta_food_security_food_availability <= 2.40621233625 then 0.00167867565692
+else
+if beta_food_security_food_availability <= 2.46915208146 then 0.0015609037704
+else
+if beta_food_security_food_availability <= 2.53209182666 then 0.0014539066214
+else
+if beta_food_security_food_availability <= 2.59503157187 then 0.0013129333768
+else
+if beta_food_security_food_availability <= 2.65797131708 then 0.00113614148095
+else
+if beta_food_security_food_availability <= 2.72091106229 then 0.000966672687062
+else
+if beta_food_security_food_availability <= 2.7838508075 then 0.000835472232664
+else
+if beta_food_security_food_availability <= 2.8467905527 then 0.00073945081803
+else
+if beta_food_security_food_availability <= 2.90973029791 then 0.000668634972475
+else
+if beta_food_security_food_availability <= 2.97267004312 then 0.000616995405055
+else
+if beta_food_security_food_availability <= 3.03560978833 then 0.000561444562016
+else
+if beta_food_security_food_availability <= 3.09854953354 then 0.000465958647415
+else 0;
+if beta_provision_of_goods_and_services_market <= -3.13248524207 then 0
+else
+if beta_provision_of_goods_and_services_market <= -3.06954549686 then 0.000310675755809
+else
+if beta_provision_of_goods_and_services_market <= -3.00660575165 then 0.000411871280283
+else
+if beta_provision_of_goods_and_services_market <= -2.94366600645 then 0.000411401119401
+else
+if beta_provision_of_goods_and_services_market <= -2.88072626124 then 0.000310163462827
+else
+if beta_provision_of_goods_and_services_market <= -2.81778651603 then 0.000181545727635
+else
+if beta_provision_of_goods_and_services_market <= -2.75484677082 then 9.9508927148e-05
+else
+if beta_provision_of_goods_and_services_market <= -2.69190702561 then 8.7632716244e-05
+else
+if beta_provision_of_goods_and_services_market <= -2.6289672804 then 0.000129343902655
+else
+if beta_provision_of_goods_and_services_market <= -2.5660275352 then 0.000199974915825
+else
+if beta_provision_of_goods_and_services_market <= -2.50308778999 then 0.000287299390961
+else
+if beta_provision_of_goods_and_services_market <= -2.44014804478 then 0.000388937575126
+else
+if beta_provision_of_goods_and_services_market <= -2.37720829957 then 0.000489626200131
+else
+if beta_provision_of_goods_and_services_market <= -2.31426855436 then 0.00055039531682
+else
+if beta_provision_of_goods_and_services_market <= -2.25132880916 then 0.000537347907336
+else
+if beta_provision_of_goods_and_services_market <= -2.18838906395 then 0.000458345478339
+else
+if beta_provision_of_goods_and_services_market <= -2.12544931874 then 0.000353985668749
+else
+if beta_provision_of_goods_and_services_market <= -2.06250957353 then 0.000256574567968
+else
+if beta_provision_of_goods_and_services_market <= -1.99956982832 then 0.00017439563414
+else
+if beta_provision_of_goods_and_services_market <= -1.93663008312 then 0.000111206458276
+else
+if beta_provision_of_goods_and_services_market <= -1.87369033791 then 8.44035639744e-05
+else
+if beta_provision_of_goods_and_services_market <= -1.8107505927 then 0.000119426893212
+else
+if beta_provision_of_goods_and_services_market <= -1.74781084749 then 0.000224562124795
+else
+if beta_provision_of_goods_and_services_market <= -1.68487110228 then 0.000364021880598
+else
+if beta_provision_of_goods_and_services_market <= -1.62193135707 then 0.00047034366276
+else
+if beta_provision_of_goods_and_services_market <= -1.55899161187 then 0.000509534916823
+else
+if beta_provision_of_goods_and_services_market <= -1.49605186666 then 0.000516342460922
+else
+if beta_provision_of_goods_and_services_market <= -1.43311212145 then 0.000537700839318
+else
+if beta_provision_of_goods_and_services_market <= -1.37017237624 then 0.000574406638394
+else
+if beta_provision_of_goods_and_services_market <= -1.30723263103 then 0.000608104235585
+else
+if beta_provision_of_goods_and_services_market <= -1.24429288583 then 0.000644902052855
+else
+if beta_provision_of_goods_and_services_market <= -1.18135314062 then 0.000701992007375
+else
+if beta_provision_of_goods_and_services_market <= -1.11841339541 then 0.000784304664078
+else
+if beta_provision_of_goods_and_services_market <= -1.0554736502 then 0.00089639467597
+else
+if beta_provision_of_goods_and_services_market <= -0.992533904993 then 0.00104829519864
+else
+if beta_provision_of_goods_and_services_market <= -0.929594159785 then 0.00122740405049
+else
+if beta_provision_of_goods_and_services_market <= -0.866654414577 then 0.00138983161775
+else
+if beta_provision_of_goods_and_services_market <= -0.803714669368 then 0.00150952139976
+else
+if beta_provision_of_goods_and_services_market <= -0.74077492416 then 0.00161638952513
+else
+if beta_provision_of_goods_and_services_market <= -0.677835178952 then 0.00174922777788
+else
+if beta_provision_of_goods_and_services_market <= -0.614895433744 then 0.00188653054685
+else
+if beta_provision_of_goods_and_services_market <= -0.551955688536 then 0.00197158672701
+else
+if beta_provision_of_goods_and_services_market <= -0.489015943328 then 0.00201070911938
+else
+if beta_provision_of_goods_and_services_market <= -0.426076198119 then 0.00211510327528
+else
+if beta_provision_of_goods_and_services_market <= -0.363136452911 then 0.00245776112131
+else
+if beta_provision_of_goods_and_services_market <= -0.300196707703 then 0.00324255437259
+else
+if beta_provision_of_goods_and_services_market <= -0.237256962495 then 0.00470127488144
+else
+if beta_provision_of_goods_and_services_market <= -0.174317217287 then 0.00700244077516
+else
+if beta_provision_of_goods_and_services_market <= -0.111377472079 then 0.010106219431
+else
+if beta_provision_of_goods_and_services_market <= -0.0484377268705 then 0.0138865278167
+else
+if beta_provision_of_goods_and_services_market <= 0.0145020183376 then 0.0184659502833
+else
+if beta_provision_of_goods_and_services_market <= 0.0774417635458 then 0.023919014868
+else
+if beta_provision_of_goods_and_services_market <= 0.140381508754 then 0.0293587033413
+else
+if beta_provision_of_goods_and_services_market <= 0.203321253962 then 0.0331275062983
+else
+if beta_provision_of_goods_and_services_market <= 0.26626099917 then 0.0343974591897
+else
+if beta_provision_of_goods_and_services_market <= 0.329200744378 then 0.0339216761997
+else
+if beta_provision_of_goods_and_services_market <= 0.392140489587 then 0.0330460593074
+else
+if beta_provision_of_goods_and_services_market <= 0.455080234795 then 0.0325815127915
+else
+if beta_provision_of_goods_and_services_market <= 0.518019980003 then 0.0326129526704
+else
+if beta_provision_of_goods_and_services_market <= 0.580959725211 then 0.0329087490927
+else
+if beta_provision_of_goods_and_services_market <= 0.643899470419 then 0.03335642434
+else
+if beta_provision_of_goods_and_services_market <= 0.706839215627 then 0.0340344730984
+else
+if beta_provision_of_goods_and_services_market <= 0.769778960836 then 0.0348635997536
+else
+if beta_provision_of_goods_and_services_market <= 0.832718706044 then 0.0353882791993
+else
+if beta_provision_of_goods_and_services_market <= 0.895658451252 then 0.0351971621559
+else
+if beta_provision_of_goods_and_services_market <= 0.95859819646 then 0.0344484786718
+else
+if beta_provision_of_goods_and_services_market <= 1.02153794167 then 0.0336601961981
+else
+if beta_provision_of_goods_and_services_market <= 1.08447768688 then 0.0331088032065
+else
+if beta_provision_of_goods_and_services_market <= 1.14741743208 then 0.0327398686523
+else
+if beta_provision_of_goods_and_services_market <= 1.21035717729 then 0.0325482227651
+else
+if beta_provision_of_goods_and_services_market <= 1.2732969225 then 0.0327453005034
+else
+if beta_provision_of_goods_and_services_market <= 1.33623666771 then 0.0334671327453
+else
+if beta_provision_of_goods_and_services_market <= 1.39917641292 then 0.0342923276443
+else
+if beta_provision_of_goods_and_services_market <= 1.46211615813 then 0.0340544634498
+else
+if beta_provision_of_goods_and_services_market <= 1.52505590333 then 0.0315280586065
+else
+if beta_provision_of_goods_and_services_market <= 1.58799564854 then 0.0267219764345
+else
+if beta_provision_of_goods_and_services_market <= 1.65093539375 then 0.0210882898543
+else
+if beta_provision_of_goods_and_services_market <= 1.71387513896 then 0.0160427834925
+else
+if beta_provision_of_goods_and_services_market <= 1.77681488417 then 0.0118980099776
+else
+if beta_provision_of_goods_and_services_market <= 1.83975462937 then 0.00845286622124
+else
+if beta_provision_of_goods_and_services_market <= 1.90269437458 then 0.00573495456426
+else
+if beta_provision_of_goods_and_services_market <= 1.96563411979 then 0.00386828545734
+else
+if beta_provision_of_goods_and_services_market <= 2.028573865 then 0.00277786385329
+else
+if beta_provision_of_goods_and_services_market <= 2.09151361021 then 0.00224346426422
+else
+if beta_provision_of_goods_and_services_market <= 2.15445335541 then 0.00204436277242
+else
+if beta_provision_of_goods_and_services_market <= 2.21739310062 then 0.00199198698388
+else
+if beta_provision_of_goods_and_services_market <= 2.28033284583 then 0.00193740145928
+else
+if beta_provision_of_goods_and_services_market <= 2.34327259104 then 0.00182062874954
+else
+if beta_provision_of_goods_and_services_market <= 2.40621233625 then 0.00167867565692
+else
+if beta_provision_of_goods_and_services_market <= 2.46915208146 then 0.0015609037704
+else
+if beta_provision_of_goods_and_services_market <= 2.53209182666 then 0.0014539066214
+else
+if beta_provision_of_goods_and_services_market <= 2.59503157187 then 0.0013129333768
+else
+if beta_provision_of_goods_and_services_market <= 2.65797131708 then 0.00113614148095
+else
+if beta_provision_of_goods_and_services_market <= 2.72091106229 then 0.000966672687062
+else
+if beta_provision_of_goods_and_services_market <= 2.7838508075 then 0.000835472232664
+else
+if beta_provision_of_goods_and_services_market <= 2.8467905527 then 0.00073945081803
+else
+if beta_provision_of_goods_and_services_market <= 2.90973029791 then 0.000668634972475
+else
+if beta_provision_of_goods_and_services_market <= 2.97267004312 then 0.000616995405055
+else
+if beta_provision_of_goods_and_services_market <= 3.03560978833 then 0.000561444562016
+else
+if beta_provision_of_goods_and_services_market <= 3.09854953354 then 0.000465958647415
+else 0;

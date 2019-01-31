@@ -1,0 +1,75 @@
+random NonCereals_Food_aid_shipments : Integer -> Real;
+random Beans_dry_Production : Integer -> Real;
+random Closed_shrubland_Burned_Area : Integer -> Real;
+random conflict : Integer -> Real;
+random conflict' : Integer -> Real;
+random food_insecurity : Integer -> Real;
+random food_insecurity' : Integer -> Real;
+random intervention : Integer -> Real;
+random intervention' : Integer -> Real;
+random crop_technology : Integer -> Real;
+random crop_technology' : Integer -> Real;
+random precipitation : Integer -> Real;
+random precipitation' : Integer -> Real;
+random flooding : Integer -> Real;
+random flooding' : Integer -> Real;
+
+
+random beta_conflict_food_insecurity : Real;
+random beta_conflict_intervention : Real;
+random beta_conflict_crop_technology : Real;
+random beta_precipitation_food_insecurity : Real;
+random beta_precipitation_flooding : Real;
+for all t in Integer : conflict'(t+1) = conflict'(t) + 1;
+for all t in Integer : food_insecurity'(t+1) = food_insecurity'(t) + 1;
+for all t in Integer : intervention'(t+1) = intervention'(t) + 1;
+for all t in Integer : conflict'(t+1) = conflict'(t) + 1;
+for all t in Integer : crop_technology'(t+1) = crop_technology'(t) + 1;
+for all t in Integer : precipitation'(t+1) = precipitation'(t) + 1;
+for all t in Integer : flooding'(t+1) = flooding'(t) + 1;
+for all t in Integer :
+        conflict(t+1) = conflict(t)
+                 + beta_conflict_food_insecurity * food_insecurity'(t)
+                 + beta_conflict_intervention * intervention'(t)
+                 + beta_conflict_crop_technology * crop_technology'(t)
+                 + conflict'(t);
+for all t in Integer : NonCereals_Food_aid_shipments(t) = Normal(29265.0 * intervention(t), 2926.5);
+for all t in Integer : Beans_dry_Production(t) = Normal(6000.0 * precipitation(t), 600.0);
+for all t in Integer : Closed_shrubland_Burned_Area(t) = Normal(121929.0437 * flooding(t), 12192.90437);
+
+for all t in Integer :
+        food_insecurity(t+1) = food_insecurity(t)
+                 + food_insecurity'(t);
+for all t in Integer :
+        intervention(t+1) = intervention(t)
+                 + intervention'(t);
+for all t in Integer :
+        crop_technology(t+1) = crop_technology(t)
+                 + crop_technology'(t);
+for all t in Integer :
+        precipitation(t+1) = precipitation(t)
+                 + beta_precipitation_food_insecurity * food_insecurity'(t)
+                 + beta_precipitation_flooding * flooding'(t)
+                 + precipitation'(t);
+for all t in Integer :
+        flooding(t+1) = flooding(t)
+                 + flooding'(t);
+if beta_conflict_food_insecurity <= -3.11336722818822 then 0
+else
+if beta_conflict_food_insecurity <= -3.0502966055283958 then 7.990534121802594e-05
+else
+if beta_conflict_food_insecurity <= -2.987225982868571 then 0.00010312435158738152
+else
+if beta_conflict_food_insecurity <= -2.9241553602087462 then 8.816795494429565e-05
+else
+if beta_conflict_food_insecurity <= -2.861084737548922 then 6.593234088372799e-05
+else
+if beta_conflict_food_insecurity <= -2.7980141148890976 then 5.322326819247656e-05
+else
+if beta_conflict_food_insecurity <= -2.734943492229273 then 4.4846472618990145e-05
+else
+if beta_conflict_food_insecurity <= -2.671872869569448 then 2.3209620391684518e-05
+else
+if beta_conflict_food_insecurity <= -2.6088022469096237 then 1.8084185109495994e-05
+
+else 0;

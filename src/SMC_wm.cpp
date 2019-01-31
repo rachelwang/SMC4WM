@@ -73,6 +73,7 @@ where:
 #include "Tools.h"
 #include "ModelSearch.h"
 #include <map>
+#include "interface.hpp"
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -86,6 +87,8 @@ using std::vector;
 using namespace std;
 #define MAXLINE 1024
 // base class for every statistical test
+
+double tempResult;
 class Test
 {
   protected:
@@ -109,6 +112,8 @@ class Test
         return (out != NOTDONE);
     }
 
+    virtual double getEstimate() = 0;
+
     virtual void doTest(unsigned long int n, unsigned long int x) = 0;
 
     virtual void printResult() = 0;
@@ -128,7 +133,10 @@ class HTest : public Test
     HTest(string v) : Test(v), theta(0.0)
     {
     }
-
+    double getEstimate()
+    {
+        return 0;
+    }
     void printResult()
     {
 
@@ -166,8 +174,12 @@ class Estim : public Test
 
     // defined later because it uses a method from class CHB
     void printResult();
+    double getEstimate();
 };
-
+double Estim::getEstimate()
+{
+    return estimate;
+}
 // Chernoff-Hoeffding bound
 class CHB : public Estim
 {
@@ -927,11 +939,8 @@ void creatFolder(string pDir)
     iRet = mkdir(pszDir, 0755);
     free(pszDir);
 }
-int main(int argc, char **argv)
+void SMC(map<string, string> mapArgv)
 {
-    Tools tools;
-    map<string, string> mapArgv;
-    mapArgv = tools.getArgvMap(argc, argv);
     cout << "This is a paralleled version." << endl;
     //cout << mapArgv["-testfile"] << endl;
     //cout << mapArgv["-modelfile"] << endl;
@@ -1063,7 +1072,8 @@ int main(int argc, char **argv)
             callTC += " " + mapArgv["-interfile"];
         if (mapArgv["-initfile"] != "")
             callTC += " " + mapArgv["-initfile"];
-        else callTC += " ../testcase/initConfig.txt";
+        else
+            callTC += " ../testcase/initConfig.txt";
 
         ofstream infofile(folderName + "/INFO");
         infofile << "testfile: " << mapArgv["-testfile"] << endl;
@@ -1075,7 +1085,7 @@ int main(int argc, char **argv)
         {
             string callTC_temp = callTC + " " + to_string(numTrace);
             //cout<<callTC<<endl;
-            
+
             numTrace += 1;
             // call TC
             /**/
@@ -1092,19 +1102,26 @@ int main(int argc, char **argv)
             {
             }
             ret = pclose(fp);
-            if (-1 == ret)
+            //cout<<ret<<endl;
+            if (ret != 0 && ret != 256)
             {
                 cerr << "Error: system() call to the trace checker unsuccessful: " << callTC_temp << endl;
                 exit(EXIT_FAILURE);
             }
             ret = WEXITSTATUS(ret);
+            //cout<<ret<<"***"<<endl;
             if (ret == 1)
             {
                 result[tid] = 1;
             }
-            else
+            else if (ret == 0)
             {
                 result[tid] = 0;
+            }
+            else
+            {
+                cerr << "Error: system() call to the trace checker unsuccessful: " << endl;
+                exit(EXIT_FAILURE);
             }
 
 #pragma omp barrier
@@ -1140,20 +1157,20 @@ int main(int argc, char **argv)
     if (mapArgv["-getstruct"] == "true")
     {
         vector<string> satTraceFiles;
-        string satFolder = folderName+"/SAT";
-        getFiles(satTraceFiles,satFolder, "trace");
+        string satFolder = folderName + "/SAT";
+        getFiles(satTraceFiles, satFolder, "trace");
         ModelSearch MS(folderName);
         MS.getStruct("../tetrad/trace.txt");
         MS.readstruct();
-        for(int i=0;i<satTraceFiles.size();i++)
+        for (int i = 0; i < satTraceFiles.size(); i++)
         {
             MS.setNewKnowladge();
             satTraceFiles[i] = satFolder + "/" + satTraceFiles[i];
             MS.getStruct(satTraceFiles[i]);
             MS.readstruct();
-            cout<<satTraceFiles[i]<<endl;
+            cout << satTraceFiles[i] << endl;
         }
-        
+
         /*
         string callTC1 = "java -jar ../tetrad/tetradcmd-5.0.0-19.jar -data ../tetrad/trace.txt -datatype continuous -algorithm pc -verbose";
         callTC1 += " -graphtxt " + folderName + "/STRUCTINFO/graph.txt";
@@ -1162,11 +1179,403 @@ int main(int argc, char **argv)
         FILE *fp1;
         fp1 = popen(callTC1.c_str(), "r");
         */
-        
     }
     cout << "Number of processors: " << omp_get_num_procs() << endl;
     cout << "Number of threads: " << maxthreads << endl;
     cout << "Elapsed cpu time: " << (clock() - tic) / (double)(maxthreads * CLOCKS_PER_SEC) << endl;
     cout << "Elapsed wall time: " << (time(NULL) - start) << endl;
     exit(EXIT_SUCCESS);
+}
+double getSampleResult(Sampler s, string v, int n, bool r)
+{
+    double result;
+    if (r == 1)
+        s.resetBeta();
+    for (int i = 0; i < n; i++)
+    {
+        s.get_one_sample();
+    }
+    //cout<<s.sample_size<<" "<<s.all_results.size()<<endl;
+    //cout << v << " " << n << " " << s.getResult(v, n) << endl;
+    return s.getResult(v, n);
+}
+bool judgeResult(double r, string op, double n)
+{
+    if (op == ">")
+    {
+        if (r > n)
+            return 1;
+        else
+            return 0;
+    }
+    else if (op == "<")
+    {
+        if (r < n)
+            return 1;
+        else
+            return 0;
+    }
+    else if (op == ">=")
+    {
+        if (r >= n)
+            return 1;
+        else
+            return 0;
+    }
+    else if (op == "<=")
+    {
+        if (r <= n)
+            return 1;
+        else
+            return 0;
+    }
+    else
+        return 0;
+}
+double check(Sampler s, string v, int n, vector<string> op, vector<double> x)
+{
+    //cout << "This is a paralleled version." << endl;
+
+    bool alldone = false; // all tests done
+    bool done;
+    unsigned long int satnum = 0; // number of sat samples
+    unsigned long int totnum = 0; // number of total samples
+    unsigned int numtests = 0;    // number of tests to perform
+    double checkResult = 0;
+    Test *myTests = new BayesEstim("BEST 0.05 0.99 1 1"); //test to perform
+    myTests->init();
+    omp_set_dynamic(0);
+
+    // get the maximum number of threads
+    int maxthreads = omp_get_max_threads();
+
+    // record trace checking result for each thread
+    vector<int> result(maxthreads, 0);
+#pragma omp parallel num_threads(maxthreads) shared(result, alldone, checkResult)
+    {
+        int ret; // code returned by trace checker
+        int tid = omp_get_thread_num();
+        // check whether we got all the threads requested
+        if (tid == 0)
+        {
+            if (maxthreads != omp_get_num_threads())
+            {
+                cerr << "Error: cannot use maximum number of threads" << endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        while (!alldone)
+        {
+            int isSat = 1;
+            for (int j = 0; j < op.size(); j++)
+            {
+                bool tempR = judgeResult(getSampleResult(s, v, n, 1), op[j], x[j]);
+                if (tempR == 0)
+                    isSat = 0;
+            }
+            result[tid] = isSat;
+#pragma omp barrier
+            // only the master thread executes this
+            if (tid == 0)
+            {
+                // update the num of sat samples and total samples
+                totnum += maxthreads;
+                satnum += accumulate(result.begin(), result.end(), 0);
+                result.assign(maxthreads, 0);
+
+                // do all the tests
+                alldone = true;
+                // do a test, if not done
+                done = myTests->done();
+                if (!done)
+                {
+                    myTests->doTest(totnum, satnum);
+                    done = myTests->done();
+                    if (done)
+                    {
+                        //myTests->printResult();
+                        checkResult = myTests->getEstimate();
+                    }
+                }
+                alldone = alldone && done;
+            }
+#pragma omp barrier
+        }
+    }
+    //cout << "Number of processors: " << omp_get_num_procs() << endl;
+    //cout << "Number of threads: " << maxthreads << endl;
+    return checkResult;
+}
+Sampler getSamplerWithoutRandomness(Sampler s)
+{
+    for (int i = 0; i < s.net_DBN.cpd_list.size(); i++)
+    {
+        if (s.net_DBN.cpd_list[i].cpd_type == 1)
+        {
+            s.net_DBN.cpd_list[i].var = 0;
+            for (int j = 0; j < s.net_DBN.cpd_list[i].intervention.size(); j++)
+            {
+                s.net_DBN.cpd_list[i].intervention[j].var = 0;
+            }
+        }
+        else if (s.net_DBN.cpd_list[i].cpd_type == 2)
+        {
+            s.value[s.NOW][i] = s.net_DBN.cpd_list[i].betaExpexted;
+            //cout<<s.net_DBN.cpd_list[i].betaExpexted<<endl;
+        }
+    }
+    return s;
+}
+double getV1(Sampler s, string v, double e, int n)
+{
+    int index = s.getVariableX(v);
+    if (s.net_DBN.cpd_list[index].cpd_type == 1)
+    {
+        return s.net_DBN.cpd_list[index].intervention[0].var;
+    }
+    else if (abs(e) > 3)
+        return e / 3;
+    else
+        return 1;
+}
+double getV2(Sampler s, string v, double e, int n)
+{
+    vector<double> r;
+    for (int i = 0; i < 100; i++)
+    {
+        r.push_back(getSampleResult(s, v, n, 1));
+    }
+    Tools t;
+    double var = sqrt(t.getVar(r));
+    if (var < 2)
+        return 1;
+    else
+        return var;
+}
+void setInterval(vector<double> &I, double e, double v, int n)
+{
+    v = v * 8 / n;
+    for (int i = 0; i < n + 1; i++)
+    {
+        I.push_back(e - v * n / 2 + i * v);
+    }
+}
+void setInterval2(vector<double> &I, int n, double l, double r)
+{
+    for (int i = 0; i <= n; i++)
+    {
+        double temp = 0;
+        temp = l + (r - l) / n * i;
+        I.push_back(temp);
+    }
+}
+void getProb(vector<double> I, Sampler S, string v, int n, string output, int haveRange)
+{
+    if (output == "")
+        output = "../Distribution.txt";
+    ofstream file_out(output);
+    if (!file_out)
+    {
+        cout << "Error: Wrong path of output file." << endl;
+        exit(EXIT_FAILURE);
+    }
+    vector<double> D;
+    double p;
+    if (haveRange == 0)
+    {
+        for (int i = 0; i < I.size() + 1; i++)
+        {
+            vector<string> ops;
+            vector<double> conditions;
+            if (i == 0)
+            {
+                ops.push_back("<=");
+                conditions.push_back(I[0]);
+                p = check(S, v, n, ops, conditions);
+                D.push_back(p);
+                ops.clear();
+                conditions.clear();
+                //cout << v << " <= " << I[0] << "   Prob: " << p << endl;
+            }
+            else if (i < I.size())
+            {
+                ops.push_back(">");
+                conditions.push_back(I[i - 1]);
+                ops.push_back("<=");
+                conditions.push_back(I[i]);
+                p = check(S, v, n, ops, conditions);
+                D.push_back(p);
+                ops.clear();
+                conditions.clear();
+                //cout << I[i - 1] << " < " << v << " <= " << I[i] << "   Prob: " << p << endl;
+            }
+            else if (i == I.size())
+            {
+                ops.push_back(">");
+                conditions.push_back(I[i - 1]);
+                p = check(S, v, n, ops, conditions);
+                D.push_back(p);
+                ops.clear();
+                conditions.clear();
+                //cout << v << " > " << I[i] << "   Prob: " << (now) << endl;
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < I.size() - 1; i++)
+        {
+            vector<string> ops;
+            vector<double> conditions;
+            if (i == 0)
+            {
+                ops.push_back(">=");
+                conditions.push_back(I[i]);
+                ops.push_back("<=");
+                conditions.push_back(I[i + 1]);
+                p = check(S, v, n, ops, conditions);
+                D.push_back(p);
+                ops.clear();
+                conditions.clear();
+            }
+            else
+            {
+                ops.push_back(">");
+                conditions.push_back(I[i]);
+                ops.push_back("<=");
+                conditions.push_back(I[i + 1]);
+                p = check(S, v, n, ops, conditions);
+                D.push_back(p);
+                ops.clear();
+                conditions.clear();
+            }
+        }
+    }
+    double sum = 0;
+    for (int i = 0; i < D.size(); i++)
+    {
+        sum += D[i];
+    }
+    file_out << "variable name : " << v << endl;
+    file_out << "steps : " << n << endl;
+    for (int i = 0; i < D.size(); i++)
+    {
+        if (haveRange == 0)
+        {
+            if (i == 0)
+                file_out << "(-∞," << I[0] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+            else if (i != D.size() - 1)
+                file_out << "(" << I[i - 1] << "," << I[i] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+
+            else
+                file_out << "(" << I[i - 1] << ",+∞)        Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+        }
+        else
+        {
+            if (i == 0)
+                file_out << "[" << I[i] << "," << I[i + 1] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+            else
+                file_out << "(" << I[i] << "," << I[i + 1] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+        }
+    }
+}
+void getDistribution(map<string, string> mapArgv)
+{
+    cout << "This is a paralleled version." << endl;
+    time_t start = time(NULL);
+    clock_t tic = clock();
+    cout << "Loading network." << endl;
+    Tools tools;
+    string targetVariable = "";
+    string tempInt = "";
+    int targetTime = -1;
+    string tempS = mapArgv["-getDistribution"];
+    tools.string_replace(tempS, " ", "");
+    int state = 0;
+    for (int i = 0; i < tempS.length(); i++)
+    {
+        if (tempS[i] == '[' || tempS[i] == ']')
+        {
+            state += 1;
+            continue;
+        }
+        if (state == 0)
+        {
+            targetVariable += tempS[i];
+        }
+        else if (state == 1)
+        {
+            tempInt += tempS[i];
+        }
+    }
+    if (tempInt == "")
+    {
+        cout << "Error: Please input interval number." << endl;
+        cout << tools.USAGE2 << endl;
+        exit(EXIT_FAILURE);
+    }
+    targetTime = tools.str2int(tempInt);
+    if (targetTime < 1)
+    {
+        cout << "Error: Interval numbers must greater than 1";
+        exit(EXIT_FAILURE);
+    }
+    string modelfile = mapArgv["-modelfile"];
+    string interfile = mapArgv["-interfile"];
+    string initfile = mapArgv["-initfile"];
+    string outputfile = mapArgv["-outputfile"];
+    Sampler sample1(modelfile, interfile);
+    sample1.getInital(initfile);
+    cout << "Getting interval information." << endl;
+    //sample1.net_DBN.get_network_info();
+    Sampler sample2 = getSamplerWithoutRandomness(sample1);
+    //sample1.net_DBN.get_network_info();
+    //cout << check(sample1, targetVariable, targetTime, ">", 2608) << endl;
+    //cout<<targetTime<<" "<<targetVariable<<endl;
+    double E = getSampleResult(sample2, targetVariable, targetTime, 0);
+    double V = getV2(sample1, targetVariable, E, targetTime);
+    vector<double> Interval;
+    int intervalNum = tools.str2int(mapArgv["-interval"]);
+    if (intervalNum < 1)
+        intervalNum = 1;
+    int haveRange = 0;
+    int vIndex = sample1.getVariableX(targetVariable);
+    if (sample1.net_DBN.cpd_list[vIndex].haveRange)
+        haveRange = 1;
+    else
+        haveRange = 0;
+    if (haveRange == 0)
+        setInterval(Interval, E, V, intervalNum);
+    else
+        setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeR, sample1.net_DBN.cpd_list[vIndex].rangeL);
+    //for (int i = 0; i < Interval.size(); i++)
+    //    cout << Interval[i] << " ";
+    //cout << endl;
+    //cout << E << " "
+    //     << " " << V << " " << intervalNum << endl;
+    cout << "Checking..." << endl;
+    getProb(Interval, sample1, targetVariable, targetTime, outputfile, haveRange);
+    //cout << "Elapsed cpu time: " << (clock() - tic) / (double)(maxthreads * CLOCKS_PER_SEC) << endl;
+    cout << "Elapsed wall time: " << (time(NULL) - start) << endl;
+    exit(EXIT_SUCCESS);
+}
+int main(int argc, char **argv)
+{
+    Tools tools;
+    map<string, string> mapArgv;
+    mapArgv = tools.getArgvMap(argc, argv);
+
+    if (mapArgv["-propfile"] != "")
+    {
+        SMC(mapArgv);
+    }
+    else if (mapArgv["-getDistribution"] != "")
+    {
+        getDistribution(mapArgv);
+    }
+    else
+    {
+        cout << "Error:Please input query." << endl;
+        exit(EXIT_FAILURE);
+    }
 }
