@@ -1456,26 +1456,26 @@ void getProb(vector<double> I, Sampler S, string v, int n, string output, int ha
     {
         sum += D[i];
     }
-    file_out << "variable name : " << v << endl;
-    file_out << "steps : " << n << endl;
+    file_out <<v<< "[" << n <<"]"<< endl;
+    file_out << "Interval   Estimated Probability   Normalized Probability"<<endl;
     for (int i = 0; i < D.size(); i++)
     {
         if (haveRange == 0)
         {
             if (i == 0)
-                file_out << "(-∞," << I[0] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+                file_out << "(-∞," << I[0] << "]    " << D[i] << "    " << D[i] / sum << endl;
             else if (i != D.size() - 1)
-                file_out << "(" << I[i - 1] << "," << I[i] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+                file_out << "(" << I[i - 1] << "," << I[i] << "]    " << D[i] << "    " << D[i] / sum << endl;
 
             else
-                file_out << "(" << I[i - 1] << ",+∞)        Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+                file_out << "(" << I[i - 1] << ",+∞)        " << D[i] << "    " << D[i] / sum << endl;
         }
         else
         {
             if (i == 0)
-                file_out << "[" << I[i] << "," << I[i + 1] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+                file_out << "[" << I[i] << "," << I[i + 1] << "]    " << D[i] << "    " << D[i] / sum << endl;
             else
-                file_out << "(" << I[i] << "," << I[i + 1] << "]    Prob:" << D[i] << "    Normalized:" << D[i] / sum << endl;
+                file_out << "(" << I[i] << "," << I[i + 1] << "]    " << D[i] << "    " << D[i] / sum << endl;
         }
     }
 }
