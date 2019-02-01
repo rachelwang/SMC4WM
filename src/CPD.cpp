@@ -103,7 +103,7 @@ void CPD::Pushn(string ss, vector<Operator> &post_temp)
 	string_replace(ss," ","");
 	if (isVariable(ss))
 	{
-		cout<<ss<<endl;
+		//cout<<ss<<endl;
 		temp_num.name = ss;
 		temp_num.type = 0;
 	}
