@@ -49,7 +49,9 @@ class Tools
 	};
 	string USAGE =
 
-		"\nUsage:   ./SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -initfile <initialfile>\n"
+		"\nUsage: \n"
+		"(1)Checker:\n"
+		" ./SMC_wm -testfile <testfile> -modelfile <modelfile> -propfile <propertyfile> -interfile <interventionfile> -initfile <initialfile>\n"
         "where:\n"
         	"<testfile> is a text file containing a sequence of test specifications, give the path to it;\n"
     		"<modelfile> is the file name and path of the WM model under analysis;\n"
@@ -71,8 +73,9 @@ class Tools
 		"Sampling method:\n"
 		" Naive sampling: NSAM <#samples> \n\n"
 		"Empty lines and lines beginning with '#' are ignored.\n"
-		"";
-	string USAGE2 = "\nUsage:   ./SMC_wm -modelfile <modelfile> -interfile <interventionfile> -initfile <initialfile> -getDistribution <varriableInfo> -interval <intervalNum> -outputfile <outputfile>\n"
+		"\n"
+	    "(2)Distribution: \n"
+		"  ./SMC_wm -modelfile <modelfile> -interfile <interventionfile> -initfile <initialfile> -getDistribution <varriableInfo> -interval <intervalNum> -outputfile <outputfile>\n"
         "where:\n"
     		"<modelfile> is the file name and path of the WM model under analysis;\n"
     		"<interventionfile> is the file name and path of Intervention to be implemented. This parameter is optional;\n"

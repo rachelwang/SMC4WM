@@ -1073,7 +1073,7 @@ void SMC(map<string, string> mapArgv)
         if (mapArgv["-initfile"] != "")
             callTC += " " + mapArgv["-initfile"];
         else
-            callTC += " ../testcase/initConfig.txt";
+            callTC += " ../testcase/bmi_config.txt";
 
         ofstream infofile(folderName + "/INFO");
         infofile << "testfile: " << mapArgv["-testfile"] << endl;
@@ -1456,8 +1456,8 @@ void getProb(vector<double> I, Sampler S, string v, int n, string output, int ha
     {
         sum += D[i];
     }
-    file_out <<v<< "[" << n <<"]"<< endl;
-    file_out << "Interval   Estimated Probability   Normalized Probability"<<endl;
+    file_out << v << "[" << n << "]" << endl;
+    file_out << "Interval   Estimated Probability   Normalized Probability" << endl;
     for (int i = 0; i < D.size(); i++)
     {
         if (haveRange == 0)
@@ -1511,7 +1511,7 @@ void getDistribution(map<string, string> mapArgv)
     if (tempInt == "")
     {
         cout << "Error: Please input interval number." << endl;
-        cout << tools.USAGE2 << endl;
+        cout << tools.USAGE << endl;
         exit(EXIT_FAILURE);
     }
     targetTime = tools.str2int(tempInt);

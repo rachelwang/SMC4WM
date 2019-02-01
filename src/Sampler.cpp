@@ -157,13 +157,17 @@ double Sampler::Calculate(int cpd_index)
 
 				if (nPos2 == string::npos)
 				{
+					//cout<<" 1 "<<var_name<<endl;
 					temp_index = getVariableX(var_name);
+					//cout<<"11"<<endl;
 					result.push(value[NOW][temp_index]);
 				}
 				else
 				{
 					string_replace(var_name, "_next", "");
+					//cout<<" 1"<<endl;
 					temp_index = getVariableX(var_name);
+					//cout<<"11"<<endl;
 					if (flag[temp_index] == 0)
 					{
 						result.push(Calculate(temp_index));
@@ -379,6 +383,7 @@ int Sampler::getVariableX(string v)
 		}
 	}
 	cout << "Error Variable doesn't exist." << endl;
+	cout<<"\""<<v<<"\""<<endl;
 	exit(EXIT_FAILURE);
 	return 0;
 }
@@ -388,7 +393,7 @@ double Sampler::getResult(string v, int n)
 	if(n<1||n>all_results.size())
 	{
 		cout<<"Error: Wrong input number."<<endl;
-		cout<<USAGE2<<endl;
+		cout<<USAGE<<endl;
 		exit(EXIT_FAILURE);
 		
 	}

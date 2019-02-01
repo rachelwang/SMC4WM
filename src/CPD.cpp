@@ -100,8 +100,10 @@ void CPD::get_cpd_info()
 void CPD::Pushn(string ss, vector<Operator> &post_temp)
 {
 	Operator temp_num;
+	string_replace(ss," ","");
 	if (isVariable(ss))
 	{
+		cout<<ss<<endl;
 		temp_num.name = ss;
 		temp_num.type = 0;
 	}

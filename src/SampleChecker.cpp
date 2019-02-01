@@ -4,7 +4,7 @@ int main(int argc, char *argv[])
     interface in;
 
     char prop_file[] = "../testcase/prop";
-    char model_file[] = "../testcase/cra_cag_praise_2019-01-18_01-13-25.dat";
+    char model_file[] = "../testcase/cra_cag_praise_2019-01-30_histogram.dat";
     char folder[] = "../trace/test";
     string interfile = "../testcase/intervention";
     int result;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
         try
         {
-            result = in.checkmodel(model_file, prop_file, folder, 0, interfile, "../testcase/initConfig.txt");
+            result = in.checkmodel(model_file, prop_file, folder, 0, interfile, "../testcase/bmi_config.txt");
         } 
         catch(...)
         {

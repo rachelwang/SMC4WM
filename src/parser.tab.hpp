@@ -1,13 +1,14 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* Skeleton interface for Bison's Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
-   This program is free software: you can redistribute it and/or modify
+   This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +16,9 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -30,74 +33,91 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
-# define YY_YY_PARSER_TAB_HPP_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token type.  */
+/* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-  enum yytokentype
-  {
-    ID = 258,
-    T_DOUBLE = 259,
-    T_INT = 260,
-    TRUE = 261,
-    FALSE = 262,
-    L_PAREN = 263,
-    R_PAREN = 264,
-    L_SQUARE = 265,
-    R_SQUARE = 266,
-    COMMA = 267,
-    EQ = 268,
-    NEQ = 269,
-    LTE = 270,
-    LT = 271,
-    GTE = 272,
-    GT = 273,
-    MUL = 274,
-    ADD = 275,
-    SUB = 276,
-    DIV = 277,
-    NEG = 278,
-    AND = 279,
-    OR = 280,
-    NEXT = 281,
-    FUTURE = 282,
-    GLOBAL = 283,
-    UNTIL = 284,
-    UNKN = 285,
-    ENDOFFILE = 286
-  };
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     ID = 258,
+     T_DOUBLE = 259,
+     T_INT = 260,
+     TRUE = 261,
+     FALSE = 262,
+     L_PAREN = 263,
+     R_PAREN = 264,
+     L_SQUARE = 265,
+     R_SQUARE = 266,
+     COMMA = 267,
+     EQ = 268,
+     NEQ = 269,
+     LTE = 270,
+     LT = 271,
+     GTE = 272,
+     GT = 273,
+     MUL = 274,
+     ADD = 275,
+     SUB = 276,
+     DIV = 277,
+     NEG = 278,
+     AND = 279,
+     OR = 280,
+     NEXT = 281,
+     FUTURE = 282,
+     GLOBAL = 283,
+     UNTIL = 284,
+     UNKN = 285,
+     ENDOFFILE = 286
+   };
 #endif
+/* Tokens.  */
+#define ID 258
+#define T_DOUBLE 259
+#define T_INT 260
+#define TRUE 261
+#define FALSE 262
+#define L_PAREN 263
+#define R_PAREN 264
+#define L_SQUARE 265
+#define R_SQUARE 266
+#define COMMA 267
+#define EQ 268
+#define NEQ 269
+#define LTE 270
+#define LT 271
+#define GTE 272
+#define GT 273
+#define MUL 274
+#define ADD 275
+#define SUB 276
+#define DIV 277
+#define NEG 278
+#define AND 279
+#define OR 280
+#define NEXT 281
+#define FUTURE 282
+#define GLOBAL 283
+#define UNTIL 284
+#define UNKN 285
+#define ENDOFFILE 286
 
-/* Value type.  */
+
+
+
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
-union YYSTYPE
+typedef union YYSTYPE
+#line 75 "parser.ypp"
 {
-#line 75 "parser.ypp" /* yacc.c:1909  */
-
   double constant;
   Node *tree_node;
-
-#line 91 "parser.tab.hpp" /* yacc.c:1909  */
-};
-
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
+}
+/* Line 1529 of yacc.c.  */
+#line 116 "parser.tab.hpp"
+	YYSTYPE;
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
 #endif
-
 
 extern YYSTYPE yylval;
 
-int yyparse (void);
-
-#endif /* !YY_YY_PARSER_TAB_HPP_INCLUDED  */
