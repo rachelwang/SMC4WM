@@ -12,6 +12,7 @@ void DBN::get_network_info()
 DBN::DBN(string filename)
 {
 	load_network(filename);
+	//cout<<"123"<<endl;
 }
 void DBN::add_intervention(int b_t, int e_t, string inter_str, int func_type)
 {
@@ -188,12 +189,14 @@ void DBN::getIntervention(string filename)
 }
 void DBN::load_network(string filename)
 {
+	//cout<<"123"<<endl;
 	ifstream fin(filename);
 	string s;
 	string::size_type nPos1 = 0;
 	string::size_type nPos2 = 0;
 	while (fin >> s)
 	{
+		//cout << s << endl;
 		if (s == "random")
 		{
 			fin >> s;
@@ -231,10 +234,19 @@ void DBN::load_network(string filename)
 			string function_str = "";
 			string s2;
 			int function_type = 0;
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 4; i++)
+			{
 				fin >> s;
+				nPos1 = 0;
+				nPos1 = s2.find(":", nPos1);
+				nPos2 = 0;
+				nPos2 = s2.find("\n", nPos2);
+				if (nPos2 != string::npos || nPos1 != string::npos)
+					break;
+			}
 			while (fin >> s2)
 			{
+				if(s2 == ":")continue;
 				nPos1 = 0;
 				nPos1 = s2.find(";", nPos1);
 				nPos2 = 0;
@@ -285,7 +297,7 @@ void DBN::load_network(string filename)
 		}
 		else if (s == "if")
 		{
-			vector<string>str_beta;
+			vector<string> str_beta;
 			string tempS;
 			for (int i = 0; i < 5; i++)
 			{
@@ -298,6 +310,7 @@ void DBN::load_network(string filename)
 				{
 					if (isDouble(str_beta[2]) && isDouble(str_beta[4]))
 					{
+						//cout<<"123"<<endl;
 						cpd_list[i].beta_p.push_back(atof(str_beta[4].c_str()));
 						cpd_list[i].beta_v.push_back(atof(str_beta[2].c_str()));
 						break;
