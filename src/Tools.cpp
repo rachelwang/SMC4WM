@@ -227,7 +227,7 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 	}
 	if (argvMap.count("-modelfile") == 0)
 	{
-		argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2019-01-30_histogram.dat"));
+		argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2019-02-03_01-14-16_histogram.dat"));
 	}
 	if (argvMap.count("-propfile") == 0 && argvMap.count("-getDistribution") == 0)
 	{

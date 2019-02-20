@@ -38,12 +38,15 @@ set(EXTRA_LIBS ${EXTRA_LIBS} ModelSearch)
 add_library(BN ${CMAKE_SOURCE_DIR}/BN.cpp)
 set(SC_LIBS ${SC_LIBS} BN)
 set(EXTRA_LIBS ${EXTRA_LIBS} BN)
+
 add_library(DBN ${CMAKE_SOURCE_DIR}/DBN.cpp)
 set(SC_LIBS ${SC_LIBS} DBN)
 set(EXTRA_LIBS ${EXTRA_LIBS} DBN)
+
 add_library(CPD ${CMAKE_SOURCE_DIR}/CPD.cpp)
 set(SC_LIBS ${SC_LIBS} CPD)
 set(EXTRA_LIBS ${EXTRA_LIBS} CPD)
+
 add_library(Sampler ${CMAKE_SOURCE_DIR}/Sampler.cpp)
 set(SC_LIBS ${SC_LIBS} Sampler)
 set(EXTRA_LIBS ${EXTRA_LIBS} Sampler)
@@ -59,13 +62,15 @@ set(SC_LIBS ${SC_LIBS} parser.tab)
 set(EXTRA_LIBS ${EXTRA_LIBS} parser.tab)
 
 
-add_executable(SMC_wm ${CMAKE_SOURCE_DIR}/SMC_wm.cpp)
-target_link_libraries(SMC_wm ${EXTRA_LIBS})
-
 add_library(SampleChecker ${CMAKE_SOURCE_DIR}/SampleChecker.cpp)
 set(EXTRA_LIBS1 ${EXTRA_LIBS1} SampleChecker)
 set(EXTRA_LIBS1 ${SC_LIBS} ${EXTRA_LIBS1})
+
+
 add_executable (Check ${EXTRA_LIBS1})
 
-
-
+add_executable(SMC_wm ${CMAKE_SOURCE_DIR}/SMC_wm.cpp)
+target_link_libraries(SMC_wm ${EXTRA_LIBS})
+target_link_libraries(SMC_wm BN)
+target_link_libraries(SMC_wm DBN)
+target_link_libraries(SMC_wm CPD)
