@@ -4,7 +4,7 @@ int main(int argc, char *argv[])
     interface in;
 
     char prop_file[] = "../testcase/prop";
-    char model_file[] = "../testcase/cra_cag_praise_2019-01-30_histogram.dat";
+    char model_file[] = "../testcase/cra_cag_praise_2019-02-03_01-14-16_histogram.dat";
     char folder[] = "../trace/test";
     string interfile = "../testcase/intervention";
     int result;
@@ -44,6 +44,6 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-    cout<<result<<endl;
+    cout<<"result: "<<result<<endl;
     return result;
 }
