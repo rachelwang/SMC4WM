@@ -1566,7 +1566,7 @@ void getDistribution(map<string, string> mapArgv)
         setInterval(Interval, E, V, intervalNum);
     }
     else
-        setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeR, sample1.net_DBN.cpd_list[vIndex].rangeL);
+        setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeL, sample1.net_DBN.cpd_list[vIndex].rangeR);
     //for (int i = 0; i < Interval.size(); i++)
     //    cout << Interval[i] << " ";
     //cout << endl;
