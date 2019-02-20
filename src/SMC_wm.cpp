@@ -1354,14 +1354,32 @@ double getV2(Sampler s, string v, double e, int n)
 }
 void setInterval(vector<double> &I, double e, double v, int n)
 {
+    if(n>=1)
+    {
     v = v * 8 / n;
     for (int i = 0; i < n + 1; i++)
     {
         I.push_back(e - v * n / 2 + i * v);
     }
+    }
+    else if(n==0)
+    {
+        I.push_back(v);
+    }
+    else
+    {
+        cout<<"Error: Wrong interval number!"<<endl;
+        exit(EXIT_FAILURE);
+    }
+    
 }
 void setInterval2(vector<double> &I, int n, double l, double r)
 {
+    if(n<1)
+    {
+        cout<<"Error: Wrong interval number!"<<endl;
+        exit(EXIT_FAILURE);
+    }
     for (int i = 0; i <= n; i++)
     {
         double temp = 0;
@@ -1536,8 +1554,6 @@ void getDistribution(map<string, string> mapArgv)
     double V = getV2(sample1, targetVariable, E, targetTime);
     vector<double> Interval;
     int intervalNum = tools.str2int(mapArgv["-interval"]);
-    if (intervalNum < 1)
-        intervalNum = 1;
     int haveRange = 0;
     int vIndex = sample1.getVariableX(targetVariable);
     if (sample1.net_DBN.cpd_list[vIndex].haveRange)
@@ -1545,7 +1561,10 @@ void getDistribution(map<string, string> mapArgv)
     else
         haveRange = 0;
     if (haveRange == 0)
+    {
+        intervalNum -= 2;
         setInterval(Interval, E, V, intervalNum);
+    }
     else
         setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeR, sample1.net_DBN.cpd_list[vIndex].rangeL);
     //for (int i = 0; i < Interval.size(); i++)
