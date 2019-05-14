@@ -301,7 +301,7 @@ void BN::readUAI(string filename)
 			int variable_card;
 			infile >> variable_card;
 			temp_cpd.variable_card = variable_card;
-			temp_cpd.cpd_name = to_string(i);
+			temp_cpd.cpd_name = "v" + to_string(i);
 			if (variable_card != 0)
 			{
 				temp_cpd.cpd_type = 3;

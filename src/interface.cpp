@@ -235,7 +235,7 @@ int interface::checkmodel(string modelfile, char *propfile, string folder_name, 
     trace_num = numTrace;
     Sampler sample1(modelfile, interfile);
     sample1.getInital(initfile);
-    sample1.net_DBN.get_network_info();
+    sample1.net_BN.get_cpd_info();
 
     //cout<<modelfile<<endl;
     //gm.bayesnet.get_cpd_info();

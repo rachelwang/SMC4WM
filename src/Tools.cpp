@@ -126,6 +126,7 @@ double Tools::Execute(double b, char op, double a)
 
 int Tools::randomint(int min, int max)
 {
+	srand((unsigned)time(NULL)); 
 	return rand() % (max - min) + min;
 }
 
@@ -162,6 +163,7 @@ int Tools::RandomChosse(vector<double> possiblelist)
 {
 	double sumpossible = 0.0;
 	double randomfloatnum = randomfloat(0.0, 1.0);
+	//cout<<randomfloatnum<<endl;
 	for (int i = 0; i < possiblelist.size(); i++)
 	{
 		sumpossible += possiblelist[i];
@@ -270,7 +272,7 @@ int Tools::str2int(string a)
 		return atoi(a.c_str());
 	else
 	{
-		cout << "Error:: Not a int number" << endl;
+		cout << "Error: Not a int number" << endl;
 		exit(EXIT_FAILURE);
 		return 0;
 	}
@@ -283,6 +285,8 @@ bool Tools::isInt(string s)
 {
 	for (int i = 0; i < s.length(); i++)
 	{
+		if(i==0&&s[i]=='-')
+		    continue;
 		if (s[i] < '0' || s[i] > '9')
 			return false;
 	}

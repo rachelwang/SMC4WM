@@ -24,7 +24,7 @@ Sampler::Sampler(string filename, string interfile)
 				nPos2 = this->net_DBN.cpd_list[i].cpd_name.find("'", nPos2);
 				if (nPos2 != string::npos)
 				{
-					this->value[NOW][i] = 0.0;
+					this->value[NOW][i] = 0.1;
 				}
 				else
 				{
@@ -37,6 +37,17 @@ Sampler::Sampler(string filename, string interfile)
 				this->value[NOW][i] = get_beta_value(net_DBN.cpd_list[i].beta_v, net_DBN.cpd_list[i].beta_p);
 			}
 		}
+		setMatrix();
+		/*
+		for(int i=0;i<variable_num;i++)
+		    cout<<net_DBN.cpd_list[i].cpd_name<<" ";
+		cout<<endl;
+		for(int i=0;i<variable_num;i++)
+		{
+			for(int j=0;j<variable_num+1;j++)
+			    cout<<CM[i][j]<<" ";
+			cout<<endl;
+		}*/
 	}
 	else if (sampler_type == 0)
 	{
@@ -89,9 +100,9 @@ void Sampler::get_one_sample()
 			for (int i = 0; i < variable_num; i++)
 			{
 				one_sample.push_back(value[NEXT][i]);
-				if(!net_DBN.cpd_list[i].inRange(value[NEXT][i]))
-			    {
-					cout<<"Error: Varriable "<<net_DBN.cpd_list[i].cpd_name<<" = "<<value[NEXT][i]<<", out of range."<<endl;
+				if (!net_DBN.cpd_list[i].inRange(value[NEXT][i]))
+				{
+					cout << "Error: Varriable " << net_DBN.cpd_list[i].cpd_name << " = " << value[NEXT][i] << ", out of range." << endl;
 					exit(EXIT_FAILURE);
 				}
 			}
@@ -120,6 +131,7 @@ double Sampler::Calculate(int cpd_index)
 		type = net_BN.cpd_list[cpd_index].cpd_type;
 	else
 		type = net_DBN.cpd_list[cpd_index].cpd_type;
+	//cout<<sampler_type<<" "<<type<<endl;
 	if (type <= 2)
 	{
 		if (type == 2)
@@ -211,11 +223,25 @@ double Sampler::Calculate(int cpd_index)
 	{
 		double most_possible_result;
 		vector<double> possible_list;
+		for(int i=0;i<net_BN.cpd_list.size();i++)
+		{
+             evidence[net_BN.cpd_list[i].cpd_name] = value[NOW][i];
+			 //cout<<value[NOW][i]<<" ";
+		}//cout<<endl;
 		for (int i = 0; i < net_BN.cpd_list[cpd_index].variable_card; i++)
 		{
 			evidence[net_BN.cpd_list[cpd_index].cpd_name] = i;
+			//cout<<net_BN.cpd_list[cpd_index].cpd_name<<" "<<value[NOW][cpd_index]<<endl;
 			possible_list.push_back(net_BN.query_discrete_cpd(net_BN.cpd_list[cpd_index], evidence));
+			//cout<<net_BN.cpd_list[cpd_index]<<" "<<evidence<<endl;
 		}
+		/*
+		for(int i=0;i<possible_list.size();i++)
+		{
+			cout<<possible_list[i]<<" ";
+		}
+		cout<<endl;
+		*/
 		return double(RandomChosse(possible_list));
 	}
 	else
@@ -228,9 +254,9 @@ double Sampler::Calculate(int cpd_index)
 
 double Sampler::get_beta_value(vector<double> beta_value, vector<double> possiblelist)
 {
-	if(beta_value.size()!=possiblelist.size()||beta_value.size()==0)
+	if (beta_value.size() != possiblelist.size() || beta_value.size() == 0)
 	{
-		cout<<"Error: Wrong beta distribution input."<<endl;
+		cout << "Error: Wrong beta distribution input." << endl;
 		exit(EXIT_FAILURE);
 	}
 	//cout<<beta_value[0]<<" "<<possiblelist[0]<<endl;
@@ -260,9 +286,9 @@ double Sampler::get_beta_value(vector<double> beta_value, vector<double> possibl
 int Sampler::judge_file_type(string filename)
 {
 	ifstream fin(filename);
-	if(!fin)
+	if (!fin)
 	{
-		cout<<"Error: Wrong modelfile input."<<endl;
+		cout << "Error: Wrong modelfile input." << endl;
 		exit(EXIT_FAILURE);
 		return 0;
 	}
@@ -309,8 +335,8 @@ void Sampler::checkSampleResult(string filename)
 void Sampler::getInital(string initfile)
 {
 	ifstream fin(initfile);
-	if(initfile == "")
-	    return;
+	if (initfile == "")
+		return;
 	if (!fin)
 	{
 		cout << "Error: Wrong inital file name." << endl;
@@ -320,7 +346,7 @@ void Sampler::getInital(string initfile)
 	int cpd_index;
 	while (fin >> temp_s)
 	{
-		string_replace(temp_s," ","");
+		string_replace(temp_s, " ", "");
 		vector<string> VT1 = split(temp_s, ",");
 		if (VT1.size() != 2)
 		{
@@ -332,15 +358,14 @@ void Sampler::getInital(string initfile)
 		string num = VT1[1];
 		nameStr = getNamefromInit(nameStr);
 		cpd_index = getVariableX(nameStr);
-		if(isDouble(num))
-		    value[NOW][cpd_index] = atof(num.c_str());
+		if (isDouble(num))
+			value[NOW][cpd_index] = atof(num.c_str());
 		else
 		{
 			cout << "Error: Wrong inital input." << endl;
 			exit(EXIT_FAILURE);
 			return;
 		}
-		
 	}
 }
 string Sampler::getNamefromInit(string s)
@@ -350,7 +375,7 @@ string Sampler::getNamefromInit(string s)
 	nPos1 = s.find("∂", nPos1);
 	if (nPos1 != string::npos)
 	{
-		flag =1;
+		flag = 1;
 		string t = "";
 		int st = 0;
 		for (int i = 0; i < s.length(); i++)
@@ -375,6 +400,7 @@ string Sampler::getNamefromInit(string s)
 }
 int Sampler::getVariableX(string v)
 {
+	//cout<<v<<endl;
 	for (int i = 0; i < cpd_order.size(); i++)
 	{
 		if (v == cpd_order[i])
@@ -383,19 +409,19 @@ int Sampler::getVariableX(string v)
 		}
 	}
 	cout << "Error Variable doesn't exist." << endl;
-	cout<<"\""<<v<<"\""<<endl;
+	cout << "\"" << v << "\"" << endl;
 	exit(EXIT_FAILURE);
 	return 0;
 }
 double Sampler::getResult(string v, int n)
 {
 	int X = getVariableX(v);
-	if(n<1||n>all_results.size())
+	if(n<0)n=-n;
+	if (n < 1 || n > all_results.size())
 	{
-		cout<<"Error: Wrong input number."<<endl;
-		cout<<USAGE<<endl;
+		cout << "Error: Wrong input number." << endl;
+		cout << USAGE << endl;
 		exit(EXIT_FAILURE);
-		
 	}
 	return all_results[n - 1][X];
 }
@@ -408,4 +434,151 @@ void Sampler::resetBeta()
 			value[NOW][i] = get_beta_value(net_DBN.cpd_list[i].beta_v, net_DBN.cpd_list[i].beta_p);
 		}
 	}
+}
+void Sampler::setMatrix()
+{
+	variable_num = net_DBN.cpd_list.size();
+	for (int i = 0; i < variable_num; i++)
+	{
+		vector<double> tempd;
+		net_DBN.cpd_list[i].var = 0;
+		if(net_DBN.cpd_list[i].intervention.size()!=0)
+		    net_DBN.cpd_list[i].var = net_DBN.cpd_list[i].intervention[0].var;
+		var.push_back(net_DBN.cpd_list[i].var);
+		for (int j = 0; j < variable_num + 1; j++)
+		{
+			tempd.push_back(0);
+		}
+        CM.push_back(tempd);
+		if (net_DBN.cpd_list[i].cpd_type == 2||net_DBN.cpd_list[i].pns.size()==0)
+		{
+			net_DBN.cpd_list[i].setBetaPN();
+		}
+		flagLR[i] = 1;
+		int k = net_DBN.cpd_list[i].pns.size();
+		for(int j=0;j<k;j++)
+		{
+			string::size_type nPos1 = 0;
+	        nPos1 = net_DBN.cpd_list[i].pns[j].name.find("_next", nPos1);
+	        if (nPos1 == string::npos&&net_DBN.cpd_list[i].pns[j].type!=2)
+			{
+                flagLR[i] = 0;
+				//cout<<"type: "<<net_DBN.cpd_list[i].pns[j].type<<endl;
+				break;
+			}
+		}
+		//cout<<"flag:  "<<flagLR[i]<<endl;
+	}
+	for (int i = 0; i < variable_num; i++)
+	{
+		int k = net_DBN.cpd_list[i].pns.size();
+		int j = 0;
+		if(flagLR[i]==1)
+		{
+            CM[i][i] = 1;
+			continue;
+		}
+		while (j < k)
+		{
+			//cout<<i<<" "<<j<<" "<<endl;
+			//cout<<net_DBN.cpd_list[i].cpd_name<<" "<<net_DBN.cpd_list[i].pns[j].name<<" "<<net_DBN.cpd_list[i].pns[j].type<<endl;
+			if(net_DBN.cpd_list[i].pns[j].type == 1)
+			{
+				int indt = getVariableX(net_DBN.cpd_list[i].pns[j].beta);
+				net_DBN.cpd_list[i].pns[j].c *= value[NOW][indt];
+			}
+			else if(net_DBN.cpd_list[i].pns[j].type == 2)
+			{
+                CM[i][variable_num] += net_DBN.cpd_list[i].pns[j].c;
+				j++;
+				continue;
+			}
+			string::size_type nPos1 = 0;
+	        nPos1 = net_DBN.cpd_list[i].pns[j].name.find("_next", nPos1);
+	        if (nPos1 != string::npos)
+			{
+				//cout<<"123"<<endl;
+				string_replace(net_DBN.cpd_list[i].pns[j].name,"_next","");
+				int indt = getVariableX(net_DBN.cpd_list[i].pns[j].name); 
+				//cout<<indt<<" "<< net_DBN.cpd_list[i].pns[i].name<<" "<<net_DBN.cpd_list[indt].pns.size()<<endl;
+				for(int ij = 0;ij<net_DBN.cpd_list[indt].pns.size();ij++)
+				{
+					net_DBN.cpd_list[indt].pns[ij].c *= net_DBN.cpd_list[i].pns[j].c;
+					net_DBN.cpd_list[i].pns.push_back(net_DBN.cpd_list[indt].pns[ij]);
+					k++;
+				}
+			}
+			else
+			{
+				int indt = getVariableX(net_DBN.cpd_list[i].pns[j].name);
+                CM[i][indt] += net_DBN.cpd_list[i].pns[j].c;
+                var[i] += net_DBN.cpd_list[i].pns[j].c * var[indt];
+			}
+			j++;		
+		}
+	}
+}
+void Sampler::getBackwardSample()
+{
+	
+	vector<double> one_sample;
+	if (sample_size == 0)
+	{
+		LE.setCM(CM);
+		LE.setVar(var);
+		for (int i = 0; i < variable_num; i++)
+		{
+			one_sample.push_back(value[NOW][i]);
+		}
+		all_results.push_back(one_sample);
+		sample_size++;
+	}
+	else
+	{
+		vector<double>query;
+		for(int i=0;i<variable_num;i++)
+		{
+			query.push_back(value[NOW][i]);
+			//cout<<value[NOW][i]<<endl;
+		}
+		one_sample = LE.getResult(query);
+
+        for(int i=0;i<variable_num;i++)
+		{
+			if(flagLR[i]==1)
+			{
+				one_sample[i] = 0;
+				for(int j=0;j<net_DBN.cpd_list[i].pns.size();j++)
+				{
+					if(net_DBN.cpd_list[i].pns[j].type == 1)
+			        {
+				        int indt = getVariableX(net_DBN.cpd_list[i].pns[j].beta);
+				        net_DBN.cpd_list[i].pns[j].c *= value[NOW][indt];
+			        }
+					if(net_DBN.cpd_list[i].pns[j].type !=2)
+					{
+						string temp = net_DBN.cpd_list[i].pns[j].name;
+						string_replace(temp,"_next","");
+						int indt = getVariableX(temp);
+                        one_sample[i] += net_DBN.cpd_list[i].pns[j].c * one_sample[indt];
+						var[i] += net_DBN.cpd_list[i].pns[j].c * var[indt];
+					}
+					else
+					{
+						one_sample[i] += net_DBN.cpd_list[i].pns[j].c;
+					}
+				}
+			}
+			one_sample[i]+=var[i]*gaussrand();
+		}
+	}
+	for(int i=0;i<variable_num;i++)
+		{
+			//cout<<one_sample[i]<<" ";
+			value[NOW][i] = one_sample[i];
+		}
+		//cout<<endl;
+	all_results.push_back(one_sample);
+		one_sample.clear();
+		sample_size++;
 }

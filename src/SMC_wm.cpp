@@ -91,12 +91,12 @@ using namespace std;
 double tempResult;
 class Test
 {
-  protected:
+protected:
     string args;
     unsigned int out;                     // current result of the test
     unsigned long int samples, successes; // number of samples, successes
 
-  public:
+public:
     static const unsigned int NOTDONE = 0;
     static const unsigned int DONE = 1;
 
@@ -122,11 +122,11 @@ class Test
 // base class for hypothesis tests
 class HTest : public Test
 {
-  protected:
+protected:
     double theta; // threshold
                   // Null hypothesis is (theta, 1)
 
-  public:
+public:
     static const unsigned int NULLHYP = 2;
     static const unsigned int ALTHYP = 1;
 
@@ -162,12 +162,12 @@ class HTest : public Test
 // base class for statistical estimation
 class Estim : public Test
 {
-  protected:
+protected:
     double delta;    // half-interval width
     double c;        // coverage probability
     double estimate; // the estimate
 
-  public:
+public:
     Estim(string v) : Test(v), delta(0.0), c(0.0), estimate(0.0)
     {
     }
@@ -183,10 +183,10 @@ double Estim::getEstimate()
 // Chernoff-Hoeffding bound
 class CHB : public Estim
 {
-  private:
+private:
     unsigned long int N; // the bound
 
-  public:
+public:
     CHB(string v) : Estim(v)
     {
         N = 0;
@@ -249,10 +249,10 @@ class CHB : public Estim
 // class for naive sampling
 class NSAM : public Estim
 {
-  private:
+private:
     unsigned long int N; // the given sample num
 
-  public:
+public:
     NSAM(string v) : Estim(v)
     {
         N = 0;
@@ -342,10 +342,10 @@ void Estim::printResult()
 //
 class BayesEstim : public Estim
 {
-  private:
+private:
     double alpha, beta; // Beta prior parameters
 
-  public:
+public:
     BayesEstim(string v) : Estim(v), alpha(0.0), beta(0.0)
     {
     }
@@ -450,13 +450,13 @@ class BayesEstim : public Estim
 
 class Lai : public HTest
 {
-  private:
+private:
     double cpo; // cost per observation
 
     gsl_rng *r; // pseudo-random number generator
     double pi;  // 3.14159
 
-  public:
+public:
     Lai(string v) : HTest(v), cpo(0.0), r(NULL), pi(0.0)
     {
     }
@@ -572,12 +572,12 @@ class Lai : public HTest
 
 class BFT : public HTest
 {
-  private:
+private:
     double T;           // ratio threshold
     double podds;       // prior odds
     double alpha, beta; // Beta prior parameters
 
-  public:
+public:
     BFT(string v) : HTest(v), T(0.0), podds(0.0), alpha(0.0), beta(0.0)
     {
     }
@@ -681,14 +681,14 @@ class BFT : public HTest
 
 class BFTI : public HTest
 {
-  private:
+private:
     double T;              // ratio threshold
     double podds;          // prior odds
     double alpha, beta;    // Beta prior parameters
     double delta;          // half indifference region
     double theta1, theta2; // theta1 < theta2 (indifference region)
 
-  public:
+public:
     BFTI(string v) : HTest(v), T(0.0), podds(0.0), alpha(0.0), beta(0.0), delta(0.0), theta1(0.0), theta2(0.0)
     {
     }
@@ -798,12 +798,12 @@ class BFTI : public HTest
 
 class SPRT : public HTest
 {
-  private:
+private:
     double delta;          // half indifference region
     double theta1, theta2; // theta1 < theta2 (indifference region)
     double T;              // ratio threshold
 
-  public:
+public:
     SPRT(string v) : HTest(v), delta(0.0), theta1(0.0), theta2(0.0), T(0.0)
     {
     }
@@ -1191,9 +1191,19 @@ double getSampleResult(Sampler s, string v, int n, bool r)
     double result;
     if (r == 1)
         s.resetBeta();
-    for (int i = 0; i < n; i++)
+    if(n>=0)
     {
-        s.get_one_sample();
+        for (int i = 0; i < n; i++)
+        {
+            s.get_one_sample();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < -n; i++)
+        {
+            s.getBackwardSample();
+        }
     }
     //cout<<s.sample_size<<" "<<s.all_results.size()<<endl;
     //cout << v << " " << n << " " << s.getResult(v, n) << endl;
@@ -1211,6 +1221,13 @@ bool judgeResult(double r, string op, double n)
     else if (op == "<")
     {
         if (r < n)
+            return 1;
+        else
+            return 0;
+    }
+    else if (op == "==")
+    {
+        if (r == n)
             return 1;
         else
             return 0;
@@ -1242,7 +1259,7 @@ double check(Sampler s, string v, int n, vector<string> op, vector<double> x)
     unsigned long int totnum = 0; // number of total samples
     unsigned int numtests = 0;    // number of tests to perform
     double checkResult = 0;
-    Test *myTests = new BayesEstim("BEST 0.05 0.99 1 1"); //test to perform
+    Test *myTests = new BayesEstim("BEST 0.02 0.99 1 1"); //test to perform
     myTests->init();
     omp_set_dynamic(0);
 
@@ -1354,30 +1371,29 @@ double getV2(Sampler s, string v, double e, int n)
 }
 void setInterval(vector<double> &I, double e, double v, int n)
 {
-    if(n>=1)
+    if (n >= 1)
     {
-    v = v * 8 / n;
-    for (int i = 0; i < n + 1; i++)
-    {
-        I.push_back(e - v * n / 2 + i * v);
+        v = v * 8 / n;
+        for (int i = 0; i < n + 1; i++)
+        {
+            I.push_back(e - v * n / 2 + i * v);
+        }
     }
-    }
-    else if(n==0)
+    else if (n == 0)
     {
         I.push_back(v);
     }
     else
     {
-        cout<<"Error: Wrong interval number!"<<endl;
+        cout << "Error: Wrong interval number!" << endl;
         exit(EXIT_FAILURE);
     }
-    
 }
 void setInterval2(vector<double> &I, int n, double l, double r)
 {
-    if(n<1)
+    if (n < 1)
     {
-        cout<<"Error: Wrong interval number!"<<endl;
+        cout << "Error: Wrong interval number!" << endl;
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i <= n; i++)
@@ -1385,6 +1401,38 @@ void setInterval2(vector<double> &I, int n, double l, double r)
         double temp = 0;
         temp = l + (r - l) / n * i;
         I.push_back(temp);
+    }
+}
+void getPorbDiscute(Sampler S, string v, int n, string output)
+{
+    if (output == "")
+        output = "../Distribution.txt";
+    ofstream file_out(output);
+    if (!file_out)
+    {
+        cout << "Error: Wrong path of output file." << endl;
+        exit(EXIT_FAILURE);
+    }
+    vector<double> D;
+    double p;
+    double sum = 0;
+    int index = S.net_BN.cpd_map[v];
+    for(int i=0;i<S.net_BN.cpd_list[index].variable_card;i++)
+    {
+        cout <<"Calculating interal:"<< i << endl;
+        vector<string> ops;
+        vector<double> conditions;
+        ops.push_back("==");
+        conditions.push_back(i);
+        p = check(S, v, n, ops, conditions);
+        D.push_back(p);
+        sum+=p;
+    }
+    file_out << v << "[" << n << "]" << endl;
+    file_out << "Interval   Estimated Probability   Normalized Probability" << endl;
+    for(int i=0;i<S.net_BN.cpd_list[index].variable_card;i++)
+    {
+        file_out<<v<<"="<<i<<" "<<D[i]<<D[i]/sum<<endl;
     }
 }
 void getProb(vector<double> I, Sampler S, string v, int n, string output, int haveRange)
@@ -1403,6 +1451,7 @@ void getProb(vector<double> I, Sampler S, string v, int n, string output, int ha
     {
         for (int i = 0; i < I.size() + 1; i++)
         {
+            cout << i << endl;
             vector<string> ops;
             vector<double> conditions;
             if (i == 0)
@@ -1533,48 +1582,48 @@ void getDistribution(map<string, string> mapArgv)
         exit(EXIT_FAILURE);
     }
     targetTime = tools.str2int(tempInt);
-    if (targetTime < 1)
+    cout<<targetTime<<endl;
+    if (targetTime == 0)
     {
         cout << "Error: Interval numbers must greater than 1";
         exit(EXIT_FAILURE);
     }
     string modelfile = mapArgv["-modelfile"];
     string interfile = mapArgv["-interfile"];
+
     string initfile = mapArgv["-initfile"];
     string outputfile = mapArgv["-outputfile"];
     Sampler sample1(modelfile, interfile);
-    sample1.getInital(initfile);
-    cout << "Getting interval information." << endl;
-    //sample1.net_DBN.get_network_info();
-    Sampler sample2 = getSamplerWithoutRandomness(sample1);
-    //sample1.net_DBN.get_network_info();
-    //cout << check(sample1, targetVariable, targetTime, ">", 2608) << endl;
-    //cout<<targetTime<<" "<<targetVariable<<endl;
-    double E = getSampleResult(sample2, targetVariable, targetTime, 0);
-    double V = getV2(sample1, targetVariable, E, targetTime);
-    vector<double> Interval;
-    int intervalNum = tools.str2int(mapArgv["-interval"]);
-    int haveRange = 0;
-    int vIndex = sample1.getVariableX(targetVariable);
-    if (sample1.net_DBN.cpd_list[vIndex].haveRange)
-        haveRange = 1;
-    else
-        haveRange = 0;
-    if (haveRange == 0)
+    if (sample1.sampler_type == 1)
     {
-        intervalNum -= 2;
-        setInterval(Interval, E, V, intervalNum);
+        sample1.getInital(initfile);
+        cout << "Getting interval information." << endl;
+        Sampler sample2 = getSamplerWithoutRandomness(sample1);
+        double E = getSampleResult(sample2, targetVariable, targetTime, 0);
+        double V = getV2(sample1, targetVariable, E, targetTime);
+        vector<double> Interval;
+        int intervalNum = tools.str2int(mapArgv["-interval"]);
+        int haveRange = 0;
+        int vIndex = sample1.getVariableX(targetVariable);
+        if (sample1.net_DBN.cpd_list[vIndex].haveRange)
+            haveRange = 1;
+        else
+            haveRange = 0;
+        if (haveRange == 0)
+        {
+            intervalNum -= 2;
+            setInterval(Interval, E, V, intervalNum);
+        }
+        else
+            setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeL, sample1.net_DBN.cpd_list[vIndex].rangeR);
+        cout << "Checking..." << endl;
+        getProb(Interval, sample1, targetVariable, targetTime, outputfile, haveRange);
     }
     else
-        setInterval2(Interval, intervalNum, sample1.net_DBN.cpd_list[vIndex].rangeL, sample1.net_DBN.cpd_list[vIndex].rangeR);
-    //for (int i = 0; i < Interval.size(); i++)
-    //    cout << Interval[i] << " ";
-    //cout << endl;
-    //cout << E << " "
-    //     << " " << V << " " << intervalNum << endl;
-    cout << "Checking..." << endl;
-    getProb(Interval, sample1, targetVariable, targetTime, outputfile, haveRange);
-    //cout << "Elapsed cpu time: " << (clock() - tic) / (double)(maxthreads * CLOCKS_PER_SEC) << endl;
+    {
+        cout << "Checking..." << endl;
+        getPorbDiscute(sample1,targetVariable, targetTime, outputfile);
+    }
     cout << "Elapsed wall time: " << (time(NULL) - start) << endl;
     exit(EXIT_SUCCESS);
 }
@@ -1590,6 +1639,7 @@ int main(int argc, char **argv)
     }
     else if (mapArgv["-getDistribution"] != "")
     {
+
         getDistribution(mapArgv);
     }
     else

@@ -26,6 +26,9 @@ void CPD::set_cpd_info(int b_t, int e_t, string function_str, int func_type)
 		temp.clear();
 	}
 	temp = strT.split(function_str, "=");
+
+	getParentNodes(function_str);
+
 	function_str = temp[1] + "#";
 
 	temp_o.begin_t = b_t;
@@ -100,7 +103,7 @@ void CPD::get_cpd_info()
 void CPD::Pushn(string ss, vector<Operator> &post_temp)
 {
 	Operator temp_num;
-	string_replace(ss," ","");
+	string_replace(ss, " ", "");
 	if (isVariable(ss))
 	{
 		//cout<<ss<<endl;
@@ -284,5 +287,118 @@ bool CPD::inRange(double a)
 			return true;
 		else
 			return false;
+	}
+}
+void CPD::getParentNodes(string func)
+{
+	vector<string> temps;
+	vector<string> temps1;
+	string ss = "";
+	string funcl, funcr;
+	temps1 = split(func, "=");
+	funcl = temps1[0];
+	funcr = temps1[1];
+	for (int i = 0; i < funcr.length(); i++)
+	{
+		if (funcr[i] != '+' && funcr[i] != '-')
+		{
+			if (ss == "")
+				ss += '+';
+		}
+		else
+		{
+			temps.push_back(ss);
+			ss = "";
+		}
+		ss += funcr[i];
+	}
+	if (ss != "")
+		temps.push_back(ss);
+		/*
+	cout << funcl << endl;
+	for (int i = 0; i < temps.size(); i++)
+		cout << temps[i] << endl;
+	cout << endl;
+	*/
+	for (int i = 0; i < temps.size(); i++)
+	{
+		string func_temp;
+		int flag = 0;
+		if (temps[i][0] == '-')
+			flag = 1;
+		for (int j = 0; j < temps[i].size() - 1; j++)
+		{
+			func_temp += temps[i][j + 1];
+		}
+		parentNode PN;
+		PN.c = 1;
+		PN.name = "";
+		PN.beta = "";
+		PN.type = -1;
+		string c_temp, v_temp;
+		vector<string> temps2;
+		temps2 = split(func_temp, "*");
+		if (temps2.size() == 1)
+		{
+			c_temp = temps2[0];
+			if (isVariable(c_temp))
+			{
+				PN.type = 0;
+				PN.name = c_temp;
+				PN.c = 1;
+			}
+			else
+			{
+				PN.type = 2;
+				PN.c = atof(c_temp.c_str());
+			}
+		}
+		else if (temps2.size() == 2)
+		{
+			c_temp = temps2[0];
+			v_temp = temps2[1];
+			if (isVariable(c_temp))
+			{
+				PN.c = 1;
+				PN.beta = c_temp;
+				PN.name = v_temp;
+				PN.type = 1;
+			}
+			else
+			{
+				PN.c = atof(c_temp.c_str());
+				PN.name = v_temp;
+				PN.type = 0;
+			}
+		}
+		if (flag == 1)
+		{
+			PN.c *= -1;
+		}
+		this->pns.push_back(PN);
+	}
+	for (int i = 0; i < pns.size(); i++)
+	{
+		//cout << pns[i].name << " " << pns[i].c << " " << pns[i].beta << " " << pns[i].type << endl;
+	}
+	//cout<<endl;
+}
+void CPD::setBetaPN()
+{
+	if (cpd_type == 2)
+	{
+		parentNode PN;
+		PN.c = 1;
+		PN.name = cpd_name;
+		PN.type = 0;
+		pns.push_back(PN);
+	}
+	else if(pns.size()== 0)
+	{
+		parentNode PN;
+		PN.c = 1;
+		PN.name = cpd_name;
+		PN.type = 0;
+		pns.push_back(PN);
 	}
 }

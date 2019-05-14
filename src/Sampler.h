@@ -2,6 +2,7 @@
 #include"DBN.h"
 #include"BN.h"
 #include"CPD.h"
+#include"linearEquation.h"
 #include<fstream>
 class Sampler :private Tools
 {
@@ -25,7 +26,10 @@ public:
 	int getVariableX(string v);
 	vector<double> getLikehood(vector<double>);
 	vector<vector<double> >all_results;
+	void getBackwardSample();
+	void getForwardSample();
 	void resetBeta();
+	void setMatrix();
 private:
 	int flag[1000];
 	double Calculate(int cpd_index);
@@ -34,6 +38,9 @@ private:
 	map<string, double>evidence;
 	void checkSampleResult(string);
     string getNamefromInit(string);
-    
+	vector<vector<double> > CM;
+	vector<double>var;
+    linearEquation LE;
+	int flagLR[1000];
 };
 
