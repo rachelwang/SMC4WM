@@ -39,6 +39,7 @@ class Tools
 	string int2str(int);
 	bool isInt(string);
 	bool isDouble(string);
+	bool findString(string , string );
 	char ops[8] = {'+', '-', '*','/','^', '#', '(', ')'};
 	int cmp[5][5] = {
 		{2, 2, 1, 1, 1},

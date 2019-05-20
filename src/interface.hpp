@@ -18,7 +18,9 @@ class interface :private Tools
 {
 public:
     interface();
+    interface(string);
     string tracefile;
+    string propFile;
     vector<string> state_vars;
     vector<pair<string, double> > state;
     int length_explored;
@@ -30,7 +32,10 @@ public:
     int checkmodel(string modelfile, char *propfile, string folder_name, int numTrace, string interfile, string initfile);
     bool check_trace(Sampler,char*,string);
     void sample(int,string,string);
+    int CheckBLTrace(vector<string> varName, vector<vector<int> > trace);
 private:
+    int varNum;
+    int traceLength;
     void outputStruct(string, Sampler);
     void getGraph(Sampler);
 };

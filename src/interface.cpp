@@ -27,6 +27,19 @@ interface::interface()
 {
     trace_num = 0;
 }
+interface::interface(string File)
+{
+    trace_num = 0;
+    propFile = File;
+    yyin = fopen(propFile.c_str(), "r");
+    if (!yyin)
+    {
+        fprintf(stderr, "ERROR: Property file does not exist\n");
+        exit(EXIT_FAILURE);
+    }
+    yyparse();
+    fclose(yyin);
+}
 /**
  * assuming the external software is a C code
 
@@ -84,35 +97,6 @@ void interface::init_signals(vector<string> list)
     /* create a new checker */
     delete c;
     c = new Checker();
-}
-void getFiles(vector<string> &files, string folder_name, string file_name)
-{
-    DIR *dp;
-    struct dirent *dirp;
-    if (!(dp = opendir(folder_name.c_str())))
-        printf("can't open");
-    string::size_type idx;
-    while (((dirp = readdir(dp)) != NULL))
-    {
-        string a = dirp->d_name;
-        idx = a.find(file_name);
-        if (idx == string::npos)
-        {
-        }
-        else
-            files.push_back(a);
-    }
-    closedir(dp);
-}
-string gettracefilename(string folder_name, string file_name)
-{
-    vector<string> files;
-    getFiles(files, folder_name, file_name);
-    int size1 = files.size();
-    string newfile = folder_name + "/" + file_name + "_";
-
-    newfile += to_string(size1);
-    return newfile;
 }
 /**
  * advances model checking the trace by one step
@@ -466,4 +450,45 @@ void interface::getGraph(Sampler sample)
         }
         sample.saveSampleResult("../tetrad/trace.txt");
     }
+}
+int interface::CheckBLTrace(vector<string> varName, vector<vector<int> > trace)
+{
+    //cout<<endl;
+    state.clear();
+    state_vars.clear();
+    varNum = varName.size();
+    traceLength = trace.size();
+    valType t;
+    double ts;
+    c = new Checker();
+    //cout<<"check"<<endl;
+    ts = 0;
+    
+    for(int k=0;k<traceLength;k++)
+    {
+        if(k==0)
+        {
+            for (int i = 0; i < varName.size(); i++)
+            {
+                state_vars.push_back(varName[i]);
+                //cout<<varName[i]<<" ";
+            }
+        }
+        for(int j=0;j<varNum;j++)
+        {
+            state.push_back(make_pair(state_vars[j], double(trace[k][j])));
+        }
+        if ((t = (*c).advance(state, ts)) == SAT)
+        {
+            return 1;
+        }
+        else if (t == UNSAT)
+        {
+            return 0;
+        }
+        state.clear();
+        ts += 1;
+        /**/
+    }
+    return -1;
 }

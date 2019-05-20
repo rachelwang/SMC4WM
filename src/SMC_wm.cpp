@@ -73,6 +73,7 @@ where:
 #include "Tools.h"
 #include "ModelSearch.h"
 #include <map>
+#include"BooleanNet.hpp"
 #include "interface.hpp"
 using std::cerr;
 using std::cout;
@@ -899,7 +900,7 @@ void getFiles(vector<string> &files, string folder_name, string file_name)
     }
     closedir(dp);
 }
-string gettracefilename(string folder_name, string file_name)
+string getmodelfilename(string folder_name, string file_name)
 {
     vector<string> files;
     getFiles(files, folder_name, file_name);
@@ -1038,7 +1039,7 @@ void SMC(map<string, string> mapArgv)
     vector<int> result(maxthreads, 0);
     char str_temp[20] = "../trace";
     creatFolder("../trace");
-    string folderName = gettracefilename("../trace", "SMC_wm");
+    string folderName = getmodelfilename("../trace", "SMC_wm");
     creatFolder(folderName);
     creatFolder(folderName + "/SAT");
     creatFolder(folderName + "/UNSAT");
@@ -1156,19 +1157,19 @@ void SMC(map<string, string> mapArgv)
     } // pragma parallel declaration
     if (mapArgv["-getstruct"] == "true")
     {
-        vector<string> satTraceFiles;
+        vector<string> satmodelfiles;
         string satFolder = folderName + "/SAT";
-        getFiles(satTraceFiles, satFolder, "trace");
+        getFiles(satmodelfiles, satFolder, "trace");
         ModelSearch MS(folderName);
         MS.getStruct("../tetrad/trace.txt");
         MS.readstruct();
-        for (int i = 0; i < satTraceFiles.size(); i++)
+        for (int i = 0; i < satmodelfiles.size(); i++)
         {
             MS.setNewKnowladge();
-            satTraceFiles[i] = satFolder + "/" + satTraceFiles[i];
-            MS.getStruct(satTraceFiles[i]);
+            satmodelfiles[i] = satFolder + "/" + satmodelfiles[i];
+            MS.getStruct(satmodelfiles[i]);
             MS.readstruct();
-            cout << satTraceFiles[i] << endl;
+            cout << satmodelfiles[i] << endl;
         }
 
         /*
@@ -1627,20 +1628,193 @@ void getDistribution(map<string, string> mapArgv)
     cout << "Elapsed wall time: " << (time(NULL) - start) << endl;
     exit(EXIT_SUCCESS);
 }
+void SMC4BL(map<string, string> mapArgv)
+{
+    Tools tools;
+    string file = mapArgv["-tracesfile"];
+    BooleanNet b(file);
+    //b.showTraces();
+    interface I(mapArgv["-propfile"]);
+    cout << "This is a paralleled version." << endl;
+    bool alldone = false; // all tests done
+    bool done;
+    unsigned long int satnum = 0; // number of sat samples
+    unsigned long int totnum = 0; // number of total samples
+    unsigned int numtests = 0;    // number of tests to perform
+
+    vector<string> lines; // variables for string processing
+    string line, keyword;
+
+    vector<Test *> myTests; // list of tests to perform
+    ifstream input(mapArgv["-testfile"]);
+    if (!input.is_open())
+    {
+        cerr << "Error: cannot open testfile: " << mapArgv["-testfile"] << endl;
+        exit(EXIT_FAILURE);
+    }
+    while (getline(input, line))
+        lines.push_back(line);
+
+    // for each test create object, pass arguments, and initialize
+    for (vector<string>::size_type i = 0; i < lines.size(); i++)
+    {
+
+        istringstream iline(lines[i]); // each line is a test specification
+
+        // by default, extraction >> skips whitespaces
+        keyword = "";
+        iline >> keyword;
+
+        // discard comments (lines starting with '#') or empty lines
+        if ((keyword.compare(0, 1, "#") != 0) && (keyword.length() > 0))
+        {
+
+            transform(keyword.begin(), keyword.end(), keyword.begin(), ::toupper); // convert to uppercase
+
+            // create the corresponding object
+            if (keyword == "SPRT")
+                myTests.push_back(new SPRT(lines[i]));
+            else if (keyword == "BFT")
+                myTests.push_back(new BFT(lines[i]));
+            else if (keyword == "LAI")
+                myTests.push_back(new Lai(lines[i]));
+            else if (keyword == "CHB")
+                myTests.push_back(new CHB(lines[i]));
+            else if (keyword == "BEST")
+                myTests.push_back(new BayesEstim(lines[i]));
+            else if (keyword == "BFTI")
+                myTests.push_back(new BFTI(lines[i]));
+            else if (keyword == "NSAM")
+                myTests.push_back(new NSAM(lines[i]));
+            else
+            {
+                cerr << "Test unknown: " << lines[i] << endl;
+                exit(EXIT_FAILURE);
+            }
+
+            myTests[numtests]->init(); // initializes the object
+            numtests++;
+        }
+    }
+
+    if (numtests == 0)
+    {
+        cout << "No test requested - exiting ..." << endl;
+        exit(EXIT_SUCCESS);
+    }
+
+    // timing stuff
+    time_t start = time(NULL);
+    clock_t tic = clock();
+
+    // disable dynamic threads
+    omp_set_dynamic(0);
+
+    // get the maximum number of threads
+    int maxthreads = omp_get_max_threads();
+
+    // record trace checking result for each thread
+    vector<int> result(maxthreads, 0);
+    int numTrace = 0;
+#pragma omp parallel num_threads(maxthreads) shared(result, alldone, numTrace, I)
+{
+        // @Ziqiang, make sure that TC will return 1 if the trace checkers says unsat, and 0 otherwise
+        int ret; // code returned by trace checker
+
+        int tid = omp_get_thread_num();
+        // check whether we got all the threads requested
+        if (tid == 0)
+        {
+            if (maxthreads != omp_get_num_threads())
+            {
+                cerr << "Error: cannot use maximum number of threads" << endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        while (!alldone)
+        {
+            if(numTrace>=b.sampleNum)
+            {
+                cerr << "Error: More traces is needed: " << endl;
+                for (unsigned int j = 0; j < numtests; j++)
+                {
+                    if (!done)
+                    {
+                        myTests[j]->printResult();
+                    }
+                }
+                break;
+            }
+            interface I1 = I;
+            ret = I1.CheckBLTrace(b.varriableList,b.traces[numTrace]);
+            numTrace += 1;
+            if (ret == 1)
+            {
+                result[tid] = 1;
+            }
+            else if (ret == 0)
+            {
+                result[tid] = 0;
+            }
+            else
+            {
+                cerr << "Error: system() call to the trace checker unsuccessful: " << endl;
+                exit(EXIT_FAILURE);
+            }
+
+#pragma omp barrier
+            // only the master thread executes this
+            if (tid == 0)
+            {
+                // update the num of sat samples and total samples
+                totnum += maxthreads;
+                satnum += accumulate(result.begin(), result.end(), 0);
+                result.assign(maxthreads, 0);
+
+                // do all the tests
+                alldone = true;
+                for (unsigned int j = 0; j < numtests; j++)
+                {
+
+                    // do a test, if not done
+                    done = myTests[j]->done();
+                    if (!done)
+                    {
+                        myTests[j]->doTest(totnum, satnum);
+                        done = myTests[j]->done();
+                        if (done)
+                            myTests[j]->printResult();
+                    }
+                    alldone = alldone && done;
+                }
+            }
+#pragma omp barrier
+        } //loop
+    } // pragma parallel declaration
+    cout << "Number of processors: " << omp_get_num_procs() << endl;
+    cout << "Number of threads: " << maxthreads << endl;
+    cout << "Elapsed cpu time: " << (clock() - tic) / (double)(maxthreads * CLOCKS_PER_SEC) << endl;
+    cout << "Elapsed wall time: " << (time(NULL) - start) << endl;
+    exit(EXIT_SUCCESS);
+}
 int main(int argc, char **argv)
 {
     Tools tools;
     map<string, string> mapArgv;
     mapArgv = tools.getArgvMap(argc, argv);
 
-    if (mapArgv["-propfile"] != "")
+    if (mapArgv["-modelfile"] != ""&&mapArgv["-propfile"] != "")
     {
         SMC(mapArgv);
     }
-    else if (mapArgv["-getDistribution"] != "")
+    else if (mapArgv["-modelfile"] != ""&&mapArgv["-getDistribution"] != "")
     {
 
         getDistribution(mapArgv);
+    }
+    else if (mapArgv["-tracesfile"] != "")
+    {
+        SMC4BL(mapArgv);
     }
     else
     {

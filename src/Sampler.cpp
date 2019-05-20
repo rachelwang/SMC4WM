@@ -24,7 +24,7 @@ Sampler::Sampler(string filename, string interfile)
 				nPos2 = this->net_DBN.cpd_list[i].cpd_name.find("'", nPos2);
 				if (nPos2 != string::npos)
 				{
-					this->value[NOW][i] = 0.1;
+					this->value[NOW][i] = 1.0;
 				}
 				else
 				{

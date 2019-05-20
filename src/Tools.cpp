@@ -227,7 +227,7 @@ map<string, string> Tools::getArgvMap(int argc, char **argv)
 	{
 		argvMap.insert(pair<string, string>("-testfile", "../testcase/test"));
 	}
-	if (argvMap.count("-modelfile") == 0)
+	if (argvMap.count("-modelfile") == 0&&argvMap.count("-tracesfile") == 0)
 	{
 		argvMap.insert(pair<string, string>("-modelfile", "../testcase/cra_cag_praise_2019-02-03_01-14-16_histogram.dat"));
 	}
@@ -309,4 +309,12 @@ bool Tools::isDouble(string s)
 		return false;
 	else
 		return true;
+}
+bool Tools::findString(string a, string b)
+{
+	string::size_type nPos1 = 0;
+	nPos1 = a.find(b, nPos1);
+	if (nPos1 != string::npos)
+	    return true;
+	else return false;
 }
